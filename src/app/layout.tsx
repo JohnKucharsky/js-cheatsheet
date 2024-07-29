@@ -17,11 +17,7 @@ function Heading({
   level: 1 | 2 | 3 | 4 | 5 | 6;
 }) {
   const tag = `h${level}`;
-  return React.createElement(
-    tag,
-    props,
-    <a href={`#${props.id}`}>{children}</a>,
-  );
+  return React.createElement(tag, props);
 }
 
 export default function RootLayout({ children }: { children: ReactNode }) {

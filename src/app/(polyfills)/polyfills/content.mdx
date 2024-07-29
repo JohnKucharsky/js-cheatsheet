@@ -1,0 +1,52 @@
+### Concat
+```js title="Array.prototype.concat"
+Array.prototype.myConcat = function (...arrays) {
+  const result = [];
+  for (let i = 0; i < this.length; i++) {
+    result[result.length] = this[i];
+  }
+  for (const array of arrays) {
+    if (Array.isArray(array)) {
+      for (let i = 0; i < array.length; i++) {
+        result[result.length] = array[i];
+      }
+    } else {
+      result[result.length] = array;
+    }
+  }
+  return result;
+};
+
+const arr = [1, 2, 3];
+const arr2 = [4, 5, 6, [1]];
+const arr3 = [7, 8, 9];
+const concat = arr.myConcat(arr2, arr3, 10);
+console.log(concat);
+// Output: [1, 2, 3, 4, 5, 6, [1], 7, 8, 9, 10]
+```
+
+### Filter
+```js title="Array.prototype.filter()"
+Array.prototype.myFilter = function (callback) {
+  //Store the new array
+  const result = [];
+
+  for (let i = 0; i < this.length; i++) {
+    //call the callback with the current element, index, and context.
+    //if it passes the test then add the element in the new array.
+    if (callback(this[i], i, this)) {
+      result.push(this[i]);
+    }
+  }
+
+  //return the array
+  return result;
+};
+
+const filter = [
+  1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19,
+].myFilter((item) => item % 2 === 0);
+
+console.log(filter);
+// [2, 4, 6, 8, 10, 12, 14, 16, 18]
+```

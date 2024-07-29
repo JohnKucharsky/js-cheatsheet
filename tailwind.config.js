@@ -24,7 +24,7 @@ module.exports = {
             pre: {
               background: "rgba(205, 200, 255, 0.05)",
               code: {
-                fontSize: "1rem",
+                fontSize: "0.85rem",
               },
             },
             "h2 a": linkHeadingStyles,
