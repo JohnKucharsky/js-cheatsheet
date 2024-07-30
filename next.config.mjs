@@ -1,34 +1,34 @@
-import process from 'node:process';
-Object.assign(process.env, { NEXT_TELEMETRY_DISABLED: '1' });
+import process from "node:process";
+Object.assign(process.env, { NEXT_TELEMETRY_DISABLED: "1" });
 
 /**
  * @typedef {import('next').NextConfig} NextConfig
  * @typedef {Array<((config: NextConfig) => NextConfig)>} NextConfigPlugins
  */
-import nextMDX from '@next/mdx';
-import rehypeSlug from 'rehype-slug';
-import rehypePrettyCode from 'rehype-pretty-code';
-import moonlightTheme from './assets/moonlight-ii.json' with { type: 'json' };
+import nextMDX from "@next/mdx";
+import rehypeSlug from "rehype-slug";
+import rehypePrettyCode from "rehype-pretty-code";
+import githubDark from "./assets/github-dark.json" with { type: "json" };
 
 /** @type {NextConfigPlugins} */
 const plugins = [];
 
 /** @type {NextConfig} */
 const nextConfig = {
-  output: 'export',
+  output: "export",
   cleanDistDir: true,
   reactStrictMode: true,
   poweredByHeader: false,
-  pageExtensions: ['md', 'mdx', 'tsx', 'ts', 'jsx', 'js'],
+  pageExtensions: ["md", "mdx", "tsx", "ts", "jsx", "js"],
   env: {
-    NEXT_TELEMETRY_DISABLED: '1',
+    NEXT_TELEMETRY_DISABLED: "1",
   },
 };
 
 /** @type {import('rehype-pretty-code').Options} */
 const options = {
   keepBackground: false,
-  theme: moonlightTheme,
+  theme: githubDark,
 };
 
 plugins.push(

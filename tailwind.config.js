@@ -22,7 +22,7 @@ module.exports = {
         DEFAULT: {
           css: {
             pre: {
-              background: "rgba(205, 200, 255, 0.05)",
+              background: colors.stone[900],
               code: {
                 fontSize: "0.85rem",
               },
