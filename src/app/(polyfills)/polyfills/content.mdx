@@ -265,3 +265,153 @@ function isPrime(num) {
 
 console.log(array.myFilter(isPrime)); // [2, 3, 5, 7, 11, 13]
 ```
+
+### find
+
+Returns the first element in the provided array that satisfies the
+provided testing function. If no values satisfy the testing function,
+undefined is returned.
+
+```js title="Array.prototype.find()"
+Array.prototype.customFind = function (callback) {
+  if (!callback) {
+    throw new TypeError("callback must be a function");
+  }
+
+  for (let i = 0; i < this.length; i++) {
+    if (callback.call(this, this[i])) {
+      return this[i];
+    }
+  }
+
+  return undefined;
+};
+
+const array1 = [5, 12, 8, 130, 44];
+const found = array1.customFind((element) => element > 10);
+console.log(found);
+// Expected output: 12
+
+const inventory = [
+  { name: "apples", quantity: 2 },
+  { name: "bananas", quantity: 0 },
+  { name: "cherries", quantity: 5 },
+];
+
+const result = inventory.customFind(({ name }) => name === "cherries");
+console.log(result); // { name: 'cherries', quantity: 5 }
+
+const result1 = inventory.customFind(({ name }) => name === "nothing");
+console.log(result1); // undefined
+```
+
+### findIndex
+
+Returns the index of the first element in an array that satisfies
+the provided testing function. If no elements satisfy the testing function,
+-1 is returned.
+
+```js title="Array.prototype.findIndex()"
+Array.prototype.customFindIndex = function (callback) {
+  if (!callback) {
+    throw new TypeError("callback must be a function");
+  }
+
+  for (let i = 0; i < this.length; i++) {
+    if (callback.call(this, this[i])) {
+      return i;
+    }
+  }
+
+  return -1;
+};
+
+const array1 = [5, 12, 8, 130, 44];
+const found = array1.customFindIndex((element) => element > 10);
+console.log(found); // 1
+
+const inventory = [
+  { name: "apples", quantity: 2 },
+  { name: "bananas", quantity: 0 },
+  { name: "cherries", quantity: 5 },
+];
+
+const result = inventory.customFindIndex(({ name }) => name === "cherries");
+console.log(result); // 2
+
+const result1 = inventory.customFindIndex(({ name }) => name === "nothing");
+console.log(result1); // -1
+```
+
+### findLast
+
+Iterates the array in reverse order and returns the value of the first element that
+satisfies the provided testing function. If no elements satisfy the testing function,
+undefined is returned.
+
+```js title="Array.prototype.findLast()"
+Array.prototype.customFindLast = function (callback) {
+  if (!callback) {
+    throw new TypeError("callback must be a function");
+  }
+
+  for (let i = this.length; i >= 0; i--) {
+    if (callback.call(this, this[i])) {
+      return this[i];
+    }
+  }
+
+  return undefined;
+};
+
+const array1 = [5, 12, 8, 130, 44];
+const found = array1.customFindLast((element) => element > 10);
+console.log(found);
+// Expected output: 44
+```
+
+### flat
+
+Creates a new array with all sub-array elements concatenated
+into it recursively up to the specified depth.
+
+```js title="Array.prototype.flat()"
+Array.prototype.customFlat = function (d = 1) {
+  function flat(depth) {
+    if (depth) {
+      return Array.prototype.reduce.call(
+        this,
+        function (acc, cur) {
+          if (Array.isArray(cur)) {
+            acc.push.apply(acc, flat.call(cur, depth - 1));
+          } else {
+            acc.push(cur);
+          }
+
+          return acc;
+        },
+        [],
+      );
+    }
+    return Array.prototype.slice.call(this);
+  }
+
+  return flat.call(this, d);
+};
+
+const arr1 = [0, 1, 2, [3, 4]];
+
+console.log(arr1.customFlat());
+// expected output: Array [0, 1, 2, 3, 4]
+
+const arr2 = [0, 1, [2, [3, [4, 5]]]];
+
+console.log(arr2.customFlat());
+// expected output: Array [0, 1, 2, Array [3, Array [4, 5]]]
+
+console.log(arr2.customFlat(2));
+// expected output: Array [0, 1, 2, 3, Array [4, 5]]
+
+console.log(arr2.customFlat(Infinity));
+// expected output: Array [0, 1, 2, 3, 4, 5]
+```
