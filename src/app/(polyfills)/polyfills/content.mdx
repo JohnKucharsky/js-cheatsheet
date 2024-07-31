@@ -44,20 +44,33 @@ Array.prototype.myCopyWithin = function (
     throw new TypeError("this is null or undefined");
   }
 
-  let object = Object(this);
-  let length = parseInt(object.length, 10);
-
   if (start === undefined) {
     throw new TypeError("start is undefined");
   }
 
-  if (end === null || end === undefined) {
-    end = length;
+  let object = Object(this);
+  let length = object.length;
+
+  let to, from, last;
+
+  if (target < 0) {
+    to = Math.max(length + target, 0);
+  } else {
+    to = Math.min(target, length);
   }
 
-  let to = target < 0 ? Math.max(length + target, 0) : Math.min(target, length);
-  let from = start < 0 ? Math.max(length + start, 0) : Math.min(start, length);
-  let last = end < 0 ? Math.max(length + end, 0) : Math.min(end, length);
+  if (start < 0) {
+    from = Math.max(length + start, 0);
+  } else {
+    from = Math.min(start, length);
+  }
+
+  if (end < 0) {
+    last = Math.max(length + end, 0);
+  } else {
+    last = Math.min(end, length);
+  }
+
   let count = Math.min(last - from, length - to);
   let direction = 1;
 
@@ -82,7 +95,7 @@ Array.prototype.myCopyWithin = function (
   return object;
 };
 
-const arr = ['a', 'b', 'c', 'd', 'e'];
+const arr = ["a", "b", "c", "d", "e"];
 
 // Copy to index 0 the element at index 3
 console.log(arr.copyWithin(0, 3, 4));
@@ -118,16 +131,6 @@ Array.prototype.customEntries = function () {
 
   return iterator();
 };
-
-const array1 = ['a', 'b', 'c', 'd', 'e'];
-
-// Copy to index 0 the element at index 3
-console.log(array1.copyWithin(0, 3, 4));
-// Expected output: Array ["d", "b", "c", "d", "e"]
-
-// Copy to index 1 all elements from index 3 to the end
-console.log(array1.copyWithin(1, 3));
-// Expected output: Array ["d", "d", "e", "d", "e"]
 
 const arr = ["a", "b", "c"];
 const iterator = arr.customEntries();
@@ -200,7 +203,7 @@ Array.prototype.customFill = function (value, start = 0, end = this.length) {
     end = this.length + end;
   }
 
-  for (let i = start; i < end; i++) {
+  for (let i = start; i < Math.min(end, this.length); i++) {
     this[i] = value;
   }
 
@@ -225,6 +228,8 @@ console.log([1, 2, 3].customFill(4, 1)); // [1, 4, 4]
 console.log([1, 2, 3].customFill(4, 1, 2)); // [1, 4, 3]
 console.log([1, 2, 3].customFill(4, 1, 1)); // [1, 2, 3]
 console.log([1, 2, 3].customFill(4, 3, 3)); // [1, 2, 3]
+console.log([1, 2, 3].customFill(4, -3, -2)); // [4, 2, 3]
+console.log([1, 2, 3].customFill(4, 3, 5)); // [1, 2, 3]
 ```
 
 ### filter
@@ -402,16 +407,14 @@ Array.prototype.customFlat = function (d = 1) {
 const arr1 = [0, 1, 2, [3, 4]];
 
 console.log(arr1.customFlat());
-// expected output: Array [0, 1, 2, 3, 4]
+// [0, 1, 2, 3, 4]
 
 const arr2 = [0, 1, [2, [3, [4, 5]]]];
 
 console.log(arr2.customFlat());
-// expected output: Array [0, 1, 2, Array [3, Array [4, 5]]]
-
+// [0, 1, 2, [3, [4, 5]]]
 console.log(arr2.customFlat(2));
-// expected output: Array [0, 1, 2, 3, Array [4, 5]]
-
+// [0, 1, 2, 3, [4, 5]]
 console.log(arr2.customFlat(Infinity));
-// expected output: Array [0, 1, 2, 3, 4, 5]
+// [0, 1, 2, 3, 4, 5]
 ```
