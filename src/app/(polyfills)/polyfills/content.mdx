@@ -99,11 +99,11 @@ const arr = ["a", "b", "c", "d", "e"];
 
 // Copy to index 0 the element at index 3
 console.log(arr.copyWithin(0, 3, 4));
-// Expected output: Array ["d", "b", "c", "d", "e"]
+// Array ["d", "b", "c", "d", "e"]
 
 // Copy to index 1 all elements from index 3 to the end
 console.log(arr.copyWithin(1, 3));
-// Expected output: Array ["d", "d", "e", "d", "e"]
+// ["d", "d", "e", "d", "e"]
 
 console.log([1, 2, 3, 4, 5].myCopyWithin(0, 3));
 // [4, 5, 3, 4, 5]
@@ -182,10 +182,8 @@ console.log(arr.customEvery((currentValue) => currentValue < 40));
 const isSubset = (array1, array2) =>
   array2.customEvery((element) => array1.includes(element));
 
-console.log(isSubset([1, 2, 3, 4, 5, 6, 7], [5, 7, 6]));
-// true
-console.log(isSubset([1, 2, 3, 4, 5, 6, 7], [5, 8, 7]));
-// false
+console.log(isSubset([1, 2, 3, 4, 5, 6, 7], [5, 7, 6])); // true
+console.log(isSubset([1, 2, 3, 4, 5, 6, 7], [5, 8, 7])); // false
 ```
 
 ### fill
@@ -214,14 +212,14 @@ const array1 = [1, 2, 3, 4];
 
 // Fill with 0 from position 2 until position 4
 console.log(array1.customFill(0, 2, 4));
-// Expected output: Array [1, 2, 0, 0]
+// [1, 2, 0, 0]
 
 // Fill with 5 from position 1
 console.log(array1.customFill(5, 1));
-// Expected output: Array [1, 5, 5, 5]
+// [1, 5, 5, 5]
 
 console.log(array1.customFill(6));
-// Expected output: Array [6, 6, 6, 6]
+// [6, 6, 6, 6]
 
 console.log([1, 2, 3].customFill(4)); // [4, 4, 4]
 console.log([1, 2, 3].customFill(4, 1)); // [1, 4, 4]
@@ -255,7 +253,7 @@ const words = ["spray", "elite", "exuberant", "destruction", "present"];
 const result = words.myFilter((word) => word.length > 6);
 
 console.log(result);
-// Array ["exuberant", "destruction", "present"]
+// ["exuberant", "destruction", "present"]
 
 const array = [-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
 
@@ -295,7 +293,7 @@ Array.prototype.customFind = function (callback) {
 const array1 = [5, 12, 8, 130, 44];
 const found = array1.customFind((element) => element > 10);
 console.log(found);
-// Expected output: 12
+// 12
 
 const inventory = [
   { name: "apples", quantity: 2 },
@@ -371,8 +369,7 @@ Array.prototype.customFindLast = function (callback) {
 
 const array1 = [5, 12, 8, 130, 44];
 const found = array1.customFindLast((element) => element > 10);
-console.log(found);
-// Expected output: 44
+console.log(found); // 44
 ```
 
 ### flat
@@ -417,4 +414,122 @@ console.log(arr2.customFlat(2));
 // [0, 1, 2, 3, [4, 5]]
 console.log(arr2.customFlat(Infinity));
 // [0, 1, 2, 3, 4, 5]
+```
+
+### includes
+
+Determines whether an array includes a certain value among its entries,
+returning true or false as appropriate.
+
+```js title="Array.prototype.includes()"
+Array.prototype.customIncludes = function (searchElement, fromIndex = 0) {
+  if (fromIndex < 0) {
+    fromIndex = this.length + fromIndex;
+  }
+
+  for (let i = fromIndex; i < this.length; i++) {
+    if (this[i] === searchElement) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+const array1 = [1, 2, 3];
+console.log(array1.customIncludes(2));
+// true
+
+const pets = ["cat", "dog", "bat"];
+
+console.log(pets.customIncludes("cat"));
+// true
+console.log(pets.customIncludes("at"));
+// false
+
+console.log([1, 2, 3].customIncludes(2, -1)); // true
+```
+
+### indexOf
+
+Returns the first index at which a given element can be found in the array,
+or -1 if it is not present.
+
+```js title="Array.prototype.indexOf()"
+Array.prototype.customIndexOf = function (searchElement, fromIndex = 0) {
+  if (fromIndex < 0) {
+    fromIndex = this.length + fromIndex;
+  }
+
+  for (let i = fromIndex; i < this.length; i++) {
+    if (this[i] === searchElement) {
+      return i;
+    }
+  }
+
+  return -1;
+};
+
+const beasts = ["ant", "bison", "camel", "duck", "bison"];
+
+console.log(beasts.customIndexOf("bison"));
+// 1
+
+// Start from index 2
+console.log(beasts.customIndexOf("bison", 2));
+// 4
+
+console.log(beasts.customIndexOf("giraffe"));
+// -1
+
+const array = [2, 9, 9];
+console.log(array.customIndexOf(2)); // 0
+console.log(array.customIndexOf(7)); // -1
+console.log(array.customIndexOf(9, 2)); // 2
+console.log(array.customIndexOf(2, -1)); // -1
+console.log(array.customIndexOf(2, -3)); // 0
+```
+
+### join
+
+Creates and returns a new string by concatenating all the elements in this array,
+separated by commas or a specified separator string. If the array has only
+one item, then that item will be returned without using the separator.
+
+```js title="Array.prototype.join()"
+Array.prototype.customJoin = function (separator = ",") {
+  if (!Array.isArray(this)) {
+    throw new TypeError("First argument must be an array");
+  }
+  let result = "";
+  for (let i = 0; i < this.length; i++) {
+    if (i > 0) {
+      result += separator;
+    }
+    if (this[i] !== undefined && this[i] !== null) {
+      result += this[i];
+    }
+  }
+  return result;
+};
+
+const elements = ["Fire", "Air", "Water"];
+
+console.log(elements.customJoin());
+// Expected output: "Fire,Air,Water"
+
+console.log(elements.customJoin(""));
+// Expected output: "FireAirWater"
+
+console.log(elements.customJoin("-"));
+// Expected output: "Fire-Air-Water"
+
+const matrix = [
+  [1, 2, 3],
+  [4, 5, 6],
+  [7, 8, 9],
+];
+
+console.log(matrix.join()); // 1,2,3,4,5,6,7,8,9
+console.log(matrix.join(";")); // 1,2,3;4,5,6;7,8,9
 ```
