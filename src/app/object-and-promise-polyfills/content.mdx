@@ -1,0 +1,173 @@
+### Object.assign
+
+The Object.assign() static method copies all enumerable
+own properties from one or more source objects to a target
+object. It returns the modified target object.
+
+```js title="Object.assign()"
+const obj = {
+  foo: 1,
+  get bar() {
+    return 2;
+  },
+};
+
+let copy = Object.assign({}, obj);
+console.log(copy);
+// { foo: 1, bar: 2 }
+// The value of copy.bar is obj.bar's getter's return value.
+
+// This is an assign function that copies full descriptors
+function completeAssign(target, ...sources) {
+  sources.forEach((source) => {
+    const descriptors = Object.keys(source).reduce((descriptors, key) => {
+      descriptors[key] = Object.getOwnPropertyDescriptor(source, key);
+      return descriptors;
+    }, {});
+
+    // By default, Object.assign copies enumerable Symbols, too
+    Object.getOwnPropertySymbols(source).forEach((sym) => {
+      const descriptor = Object.getOwnPropertyDescriptor(source, sym);
+      if (descriptor.enumerable) {
+        descriptors[sym] = descriptor;
+      }
+    });
+    Object.defineProperties(target, descriptors);
+  });
+  return target;
+}
+
+copy = completeAssign({}, obj);
+console.log(copy);
+// { foo:1, get bar() { return 2 } }
+```
+
+### Object.groupBy
+
+Groups the elements of a given iterable according to the
+string values returned by a provided callback function. The
+returned object has separate properties for each group,
+containing arrays with the elements in the group.
+
+```js title="Object.groupBy()"
+const groupBy = (arr, callback) => {
+  return arr.reduce((acc = {}, ...args) => {
+    const key = callback(...args);
+    acc[key] ??= [];
+    acc[key].push(args[0]);
+    return acc;
+  }, {});
+};
+
+const inventory = [
+  { name: "asparagus", type: "vegetables", quantity: 5 },
+  { name: "bananas", type: "fruit", quantity: 0 },
+  { name: "goat", type: "meat", quantity: 23 },
+  { name: "cherries", type: "fruit", quantity: 5 },
+  { name: "fish", type: "meat", quantity: 22 },
+];
+const result = groupBy(inventory, ({ type }) => type);
+console.log(result);
+
+// {
+//   vegetables: [{ name: "asparagus", type: "vegetables", quantity: 5 }],
+//   fruit: [
+//     { name: "bananas", type: "fruit", quantity: 0 },
+//     { name: "cherries", type: "fruit", quantity: 5 },
+//   ],
+//   meat: [
+//     { name: "goat", type: "meat", quantity: 23 },
+//     { name: "fish", type: "meat", quantity: 22 },
+//   ],
+// };
+```
+
+### Promise.all
+
+The Promise.all() static method takes an iterable of promises as
+input and returns a single Promise. This returned promise fulfills
+when all the input's promises fulfill (including when an empty
+iterable is passed), with an array of the fulfillment values. It
+rejects when any of the input's promises rejects, with this first
+rejection reason.
+
+```js title="Promise.all()"
+function myPromiseAll(values) {
+  return new Promise(function (resolve, reject) {
+    let result = [];
+    let total = 0;
+    values.forEach((item, index) => {
+      Promise.resolve(item)
+        .then((res) => {
+          result[index] = res;
+          total++;
+          if (total === values.length) resolve(result);
+        })
+        .catch((err) => {
+          reject(err);
+        });
+    });
+  });
+}
+
+const promise1 = Promise.resolve(3);
+const promise2 = 42;
+const promise3 = new Promise((resolve, reject) => {
+  setTimeout(resolve, 100, "foo");
+});
+
+Promise.all([promise1, promise2, promise3]).then((values) => {
+  console.log(values);
+});
+
+// All values are non-promises, so the returned promise gets fulfilled
+const p = Promise.all([1, 2, 3]);
+// The only input promise is already fulfilled,
+// so the returned promise gets fulfilled
+const p2 = Promise.all([1, 2, 3, Promise.resolve(444)]);
+
+// Using setTimeout, we can execute code after the queue is empty
+setTimeout(() => {
+  console.log(p);
+  console.log(p2);
+});
+
+const p3 = Promise.all([]); // Will be immediately resolved
+const p4 = Promise.all([1337, "hi"]);
+// Non-promise values are ignored, but the evaluation is done asynchronously
+console.log({ p3 });
+console.log({ p4 });
+setTimeout(() => {
+  console.log("the queue is now empty");
+  console.log({ p4 });
+});
+
+const p5 = new Promise((resolve, reject) => {
+  setTimeout(() => resolve("p5_delayed_resolution"), 1000);
+});
+
+const p6 = new Promise((resolve, reject) => {
+  reject(new Error("p6_immediate_rejection"));
+});
+
+// if not handle errors script fails
+Promise.all([
+  p5.catch((error) => error.message),
+  p6.catch((error) => error.message),
+]).then((values) => {
+  console.log(values[0]);
+  // "p5_delayed_resolution"
+  console.error(values[1]);
+  // "Error: p6_immediate_rejection"
+});
+
+// { p3: Promise { [] } }
+// { p4: Promise { <pending> } }
+// Promise { [ 1, 2, 3 ] }
+// Promise { [ 1, 2, 3, 444 ] }
+// the queue is now empty
+// { p4: Promise { [ 1337, 'hi' ] } }
+// [ 3, 42, 'foo' ]
+// p5_delayed_resolution
+// p6_immediate_rejection
+```
