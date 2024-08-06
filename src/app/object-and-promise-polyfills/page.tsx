@@ -13,7 +13,7 @@ export default function Page() {
       <Content />
       <div className={"flex justify-between"}>
         <Link href={"/"}>menu</Link>
-        <Link href={"/problems-one"}>problems 1</Link>
+        <Link href={"/learn-js"}>learn js</Link>
       </div>
     </>
   );

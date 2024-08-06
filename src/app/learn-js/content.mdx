@@ -1,0 +1,632 @@
+## fibonacci
+
+The sequence of [Fibonacci numbers](https://en.wikipedia.org/wiki/Fibonacci_number) has
+the formula <code>F<sub>n</sub> = F<sub>n-1</sub> + F<sub>n-2</sub></code>. In other words,
+the next number is a sum of the two preceding ones.
+First two numbers are `1`, then `2(1+1)`, then `3(1+2)`, `5(2+3)` and so on: `1, 1, 2, 3, 5, 8, 13, 21...`
+
+```js title="fibonacci loop"
+function fib(n) {
+  let a = 1;
+  let b = 1;
+  for (let i = 3; i <= n; i++) {
+    let c = a + b;
+    a = b;
+    b = c;
+  }
+  return b;
+}
+
+console.log(fib(3)); // 2
+console.log(fib(7)); // 13
+console.log(fib(77)); // 5527939700884757
+```
+
+```js title="fibonacci recursion"
+function fib(n) {
+  return n <= 1 ? n : fib(n - 1) + fib(n - 2);
+}
+
+console.log(fib(3)); // 2
+console.log(fib(7)); // 13
+console.log(fib(77)); // -
+```
+
+## shooters
+
+Every function is meant to output its number.
+
+```js title="shooters"
+function makeArmy() {
+  let shooters = [];
+
+  let i = 0;
+  while (i < 10) {
+    let j = i; // save local variable
+    let shooter = function () {
+      // create a shooter function,
+      return j; // that should show its number
+    };
+    shooters.push(shooter); // and add it to the array
+    i++;
+  }
+
+  // ...and return the array of shooters
+  return shooters;
+}
+
+let army = makeArmy();
+
+console.log(army[0]()); // 0
+console.log(army[1]()); // 1
+console.log(army[5]()); // 5
+```
+
+## currying
+
+Sum with an arbitrary amount of brackets.
+
+```js title="currying"
+function sum(a) {
+  let currentSum = a;
+
+  function f(b) {
+    currentSum += b;
+     return f;
+  }
+
+  f.toString = function () {
+    return currentSum;
+  };
+
+  return f;
+}
+
+console.log(sum(1)(2)); // 3
+console.log(sum(5)(-1)(2)); // 6
+console.log(sum(6)(-1)(-2)(-3)); // 0
+console.log(sum(0)(1)(2)(3)(4)(5)); // 15
+```
+
+## timout vs interval
+
+Sum with an arbitrary amount of brackets.
+
+```js title="timout vs interval"
+function printNumbersInterval(from, to) {
+  let current = from;
+
+  let timerId = setInterval(function () {
+    console.log(`interval-${current}`);
+    if (current === to) {
+      clearInterval(timerId);
+    }
+    current++;
+  }, 1000);
+}
+
+printNumbersInterval(2, 4);
+
+function printNumbersTimout(from, to) {
+  let current = from;
+
+  setTimeout(function go() {
+    console.log(`timout-${current}`);
+    if (current < to) {
+      setTimeout(go, 1000);
+    }
+    current++;
+  }, 1000);
+}
+
+printNumbersTimout(5, 7);
+
+function printNumbersFromFirstSecond(from, to) {
+  let current = from;
+
+  function go() {
+    console.log(current);
+    if (current === to) {
+      clearInterval(timerId);
+    }
+    current++;
+  }
+
+  go();
+  let timerId = setInterval(go, 1000);
+}
+
+printNumbersFromFirstSecond(9, 11);
+
+// 9
+// interval-2
+// timout-5
+// 10
+// interval-3
+// timout-6
+// 11
+// interval-4
+// timout-7
+```
+
+## func.call func.apply
+
+There's a special built-in function method [func.call(context, ...args)](mdn:js/Function/call)
+that allows to call a function explicitly setting `this`. Instead of `func.call(this, ...arguments)`
+we can use `func.apply(this, arguments)`. The only syntax difference between `call` and `apply` is
+that `call` expects a list of arguments, while `apply` takes an array-like object with them.
+The syntax is:
+
+```js
+func.call(context, arg1, arg2, ...)
+func.call(context, ...args);
+func.apply(context, args);
+```
+
+It runs `func` providing the first argument as `this`, and the next as the arguments.
+To put it simply, these two calls do almost the same:
+
+```js
+func(1, 2, 3);
+func.call(obj, 1, 2, 3)
+func.apply(obj, [1, 2, 3])
+```
+
+They both call `func` with arguments `1`, `2` and `3`. The only difference
+is that `func.call` also sets `this` to `obj`.
+And here we use `call` to call `say` with the given context and phrase:
+
+
+```js run
+function say(phrase) {
+  console.log(this.name + ": " + phrase);
+}
+
+let user = { name: "John" };
+let user2 = { name: "Ann" };
+
+// user becomes this, and "Hello" becomes the first argument
+say.call(user, "Hello"); // John: Hello
+say.call(user2, "Hello"); // Ann: Hello
+
+user.say = say;
+user.say("Hello"); // John: Hello
+user2.say = say;
+user2.say("Hello"); // Ann: Hello
+
+// multi arguments
+function sayAgain(...phrases) {
+  console.log(...phrases);
+}
+
+let diffUser = { name: "John" };
+
+const arrayOfArgs = ["one", "two", "three"];
+
+sayAgain.call(diffUser, ...arrayOfArgs); // one two three
+sayAgain.apply(diffUser, arrayOfArgs); // one two three
+```
+
+## spy decorator
+
+Decorator spy(func) return a wrapper that saves all calls to function in
+its calls property. Every call is saved as an array of arguments.
+
+```js title="spy decorator"
+function spy(func) {
+  function wrapper(...args) {
+    // using ...args instead of arguments to store "real" array in wrapper.calls
+    wrapper.calls.push(args);
+    return func.apply(this, args);
+  }
+
+  wrapper.calls = [];
+
+  return wrapper;
+}
+
+function work(a, b) {
+  return `${a + b} ${this.value}`; // work is an arbitrary function or method
+}
+
+const spyObj = {
+  value: "this value",
+  work: spy(work),
+};
+
+console.log(spyObj.work(1, 2)); // 3 this value
+console.log(spyObj.work.calls); // [ [ 1, 2 ] ]
+
+work = spy(work);
+console.log(work(1, 2)); // 3 undefined
+console.log(work(4, 5)); // 9 undefined
+console.log(work.calls); // [ [ 1, 2 ], [ 4, 5 ] ]
+```
+
+## delay decorator
+
+Decorator delay(f, ms) delays each call of f by ms milliseconds.
+
+```js title="delay decorator"
+function delay(f, ms) {
+  return function () {
+    setTimeout(() => f.apply(this, arguments), ms);
+  };
+}
+
+function f(x) {
+  console.log(this.value, x);
+}
+
+// create wrappers
+const f1000 = {
+  value: "this value",
+  funcCall: delay(f, 1000),
+};
+
+let f1500 = delay(f, 1500);
+
+f1000.funcCall("test1000"); // this value test1000 after 1000ms
+f1500("test1500"); // undefined test1500 1500ms
+```
+
+## debounce decorator
+
+Decorator is a wrapper that suspends calls to f until there’s ms
+milliseconds of inactivity (no calls, “cooldown period”), then invokes
+f once with the latest arguments.
+
+```js title="debounce decorator"
+function debounce(func, ms) {
+  let timeout;
+  return function () {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, arguments), ms);
+  };
+}
+
+// runs only the last one
+const f = debounce(console.log, 1000);
+f("a"); // skip
+setTimeout(() => f("b"), 200); // skip
+setTimeout(() => f("c"), 500); // run after 1000ms
+
+const f2 = debounce(console.log, 100);
+f2("a"); // runs after 100
+setTimeout(() => f2("b"), 200); // runs after 200
+setTimeout(() => f2("c"), 500); // run after 500ms
+
+// if called together
+// a
+// b
+// c
+// c
+```
+
+## throttling decorator
+
+When it's called multiple times, it passes the call to `f` at maximum once
+per `ms` milliseconds.
+Compared to the debounce decorator, the behavior is completely different:
+- `debounce` runs the function once after the "cooldown" period. Good for
+processing the final result.
+- `throttle` runs it not more often than given `ms` time. Good for regular
+updates that shouldn't be very often.
+
+In other words, `throttle` is like a secretary that accepts phone calls, but
+bothers the boss (calls the actual `f`) not more often than once per `ms` milliseconds.
+
+
+```js title="throttling decorator"
+function throttle(func, ms) {
+  let isThrottled = false,
+    savedArgs,
+    savedThis;
+
+  function wrapper() {
+    if (isThrottled) {
+      // In this state all calls are memorized in savedArgs/savedThis.
+      // Please note that both the context and the arguments are
+      // equally important and should be memorized. We need them
+      // simultaneously to reproduce the call.
+      savedArgs = arguments;
+      savedThis = this;
+      return;
+    }
+    isThrottled = true;
+    // first call runs func and sets
+    // is Throttled to true
+    func.apply(this, arguments);
+
+    setTimeout(function () {
+      isThrottled = false;
+      // After ms milliseconds pass, setTimeout triggers. The cooldown
+      // state is removed (isThrottled = false) and, if we had ignored calls,
+      // wrapper is executed with the last memorized arguments and context.
+      if (savedArgs) {
+        // call wrapper to repeat all again
+        wrapper.apply(savedThis, savedArgs);
+        savedArgs = savedThis = null;
+      }
+    }, ms);
+  }
+
+  return wrapper;
+}
+
+function f(a) {
+  console.log(a);
+}
+
+// f1000 passes calls to f at maximum once per 1000 ms
+let f1000 = throttle(f, 1000);
+
+f1000(1); // shows 1
+f1000(2); // (throttling, 1000ms not out yet)
+f1000(3); // (throttling, 1000ms not out yet)
+
+// when 1000 ms time out...
+// ...outputs 3, intermediate value 2 was ignored
+```
+
+## func.bind
+
+We've already seen examples of losing `this`. Once a method is
+passed somewhere separately from the object - `this` is lost.
+
+Here's how it may happen with `setTimeout`:
+
+```js run
+let user = {
+  firstName: "John",
+  sayHi() {
+    console.log(`Hello, ${this.firstName}!`);
+  },
+};
+
+setTimeout(user.sayHi, 1000); // Hello, undefined!
+```
+
+As we can see, the output shows not "John" as `this.firstName`, but `undefined`!
+
+That's because `setTimeout` got the function `user.sayHi`,
+separately from the object. The last line can be rewritten as:
+
+```js
+let f = user.sayHi;
+setTimeout(f, 1000); // lost user context
+```
+
+The method `setTimeout` in-browser is a little special: it sets `this=window`
+for the function call (for Node.js, `this` becomes the timer object, but
+doesn't really matter here). So for `this.firstName` it tries to get `window.firstName`,
+which does not exist. In other similar cases, usually `this` just becomes `undefined`.
+
+The task is quite typical - we want to pass an object method somewhere else
+(here - to the scheduler) where it will be called. How to make sure that it
+will be called in the right context?
+
+### Solution 1: a wrapper
+
+The simplest solution is to use a wrapping function:
+
+```js
+let user = {
+  firstName: "John",
+  sayHi() {
+    console.log(`Hello, ${this.firstName}!`);
+  }
+};
+
+setTimeout(function() {
+  user.sayHi(); // Hello, John!
+}, 1000);
+```
+
+Now it works, because it receives `user` from the outer lexical environment,
+and then calls the method normally.
+
+The same, but shorter:
+
+```js
+setTimeout(() => user.sayHi(), 1000); // Hello, John!
+```
+
+Looks fine, but a slight vulnerability appears in our code structure.
+
+What if before `setTimeout` triggers (there's one second delay!) `user`
+changes value? Then, suddenly, it will call the wrong object!
+
+
+```js
+let user = {
+  firstName: "John",
+  sayHi() {
+    console.log(`Hello, ${this.firstName}!`);
+  },
+};
+
+setTimeout(() => user.sayHi(), 1000);
+
+// ...the value of user changes within 1 second
+user = {
+  sayHi() {
+    console.log("Another user in setTimeout!");
+  },
+};
+```
+
+The next solution guarantees that such thing won't happen.
+
+### Solution 2: bind
+
+Functions provide a built-in method [bind](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind) that allows to fix `this`.
+
+The basic syntax is:
+
+```js
+let boundFunc = bind(context, arg1, arg2, /* …, */ argN)
+```
+
+The result of `func.bind(context)` is a special function-like "exotic object",
+that is callable as function and transparently passes the call to `func` setting
+`this=context`.
+
+In other words, calling `boundFunc` is like `func` with fixed `this`.
+
+```js
+let user = {
+  firstName: "John"
+};
+
+function func() {
+  console.log(this.firstName);
+}
+
+let funcUser = func.bind(user);
+funcUser(); // John
+```
+
+Here `func.bind(user)` as a "bound variant" of `func`, with fixed `this=user`.
+
+All arguments are passed to the original `func` "as is":
+
+```js
+let user = {
+  firstName: "John"
+};
+
+function func(phrase) {
+  console.log(phrase + ', ' + this.firstName);
+}
+
+// bind this to user
+let funcUser = func.bind(user);
+
+funcUser("Hello"); // Hello, John (argument "Hello" is passed, and this=user)
+```
+
+Now let's try with an object method:
+
+```js
+let user = {
+  firstName: "John",
+  sayHi() {
+    console.log(`Hello, ${this.firstName}!`);
+  }
+};
+
+let sayHi = user.sayHi.bind(user); // (*)
+
+// can run it without an object
+sayHi(); // Hello, John!
+
+setTimeout(sayHi, 1000); // Hello, John!
+
+// even if the value of user changes within 1 second
+// sayHi uses the pre-bound value which is reference to the old user object
+user = {
+  sayHi() { console.log("Another user in setTimeout!"); }
+};
+```
+
+Here we can see that arguments are passed "as is", only `this` is fixed by `bind`:
+
+```js
+let user = {
+  firstName: "John",
+  say(phrase) {
+    console.log(`${phrase}, ${this.firstName}!`);
+  }
+};
+
+let say = user.say.bind(user);
+
+say("Hello"); // Hello, John! ("Hello" argument is passed to say)
+say("Bye"); // Bye, John! ("Bye" is passed to say)
+```
+
+With arguments:
+
+```js
+function log(...args) {
+  console.log(this, ...args);
+}
+const boundLog = log.bind("this value", 1, 2);
+// this can be bound only once
+const boundLog2 = boundLog.bind("new this value", 3, 4);
+boundLog2(5, 6); // "this value", 1, 2, 3, 4, 5, 6
+```
+
+The context of a bound function is hard-fixed. There’s just no way to further change it.
+So even while we run `user.g()`, the original function is called with `this=null`.
+
+```js
+function f() {
+  console.log(this);
+}
+
+let user = {
+  g: f.bind(null),
+};
+
+user.g(); // null
+```
+
+When it calls them, they naturally assume `this=undefined`.
+
+```js
+function askPassword(ok, fail) {
+  ok("ok param");
+  fail("fail param");
+}
+
+let user = {
+  name: "John",
+
+  loginOk(input) {
+    console.log(`${this.name} logged in ${input}`);
+  },
+
+  loginFail(input) {
+    console.log(`${this.name} failed to log in ${input}`);
+  },
+};
+
+askPassword(user.loginOk.bind(user), user.loginFail.bind(user));
+```
+
+### func.call and func.apply vs func.bind
+
+Call/apply call the function immediately, whereas bind returns a function
+that, when later executed, will have the correct context set for calling
+the original function. This way you can maintain context in async callbacks
+and events.
+
+```js
+Function.prototype.bind = function (ctx) {
+  let fn = this;
+  return function () {
+    fn.apply(ctx, arguments);
+  };
+};
+```
+
+### Arrow functions have no `“this”`
+
+```js
+let group = {
+  title: "Our Group",
+  students: ["John", "Pete", "Alice"],
+
+  // showList() same as
+  // showList: function ()
+  showList: function () {
+    this.students.forEach((student) =>
+      console.log(this.title + ": " + student),
+    );
+  },
+};
+
+group.showList();
+```
