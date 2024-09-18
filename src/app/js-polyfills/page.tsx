@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Array Polyfills",
+  title: "JS Polyfills",
 };
 
 export default function Page() {
