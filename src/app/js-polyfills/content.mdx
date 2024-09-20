@@ -61,74 +61,43 @@ Shallow copies part of this array to another location in the same array
 and returns this array without modifying its length.
 
 ```js title="Array.prototype.copyWithin()"
-Array.prototype.myCopyWithin = function (
-  target = 0,
-  start = 0,
-  end = this.length,
-) {
-  if (this === null || this === undefined) {
-    throw new TypeError("this is null or undefined");
-  }
+Array.prototype.myCopyWithin = function (target, start = 0, end = this.length) {
+  // Convert negative indices to positive
+  target = target < 0 ? this.length + target : target;
+  start = start < 0 ? this.length + start : start;
+  end = end < 0 ? this.length + end : end;
 
-  if (start === undefined) {
-    throw new TypeError("start is undefined");
-  }
+  // Ensure target is within bounds
+  target = Math.min(target, this.length);
 
-  let object = Object(this);
-  let length = object.length;
+  // Calculate the number of elements to copy
+  const count = Math.min(end - start, this.length - target);
 
-  let to, from, last;
-
-  if (target < 0) {
-    to = Math.max(length + target, 0);
-  } else {
-    to = Math.min(target, length);
-  }
-
-  if (start < 0) {
-    from = Math.max(length + start, 0);
-  } else {
-    from = Math.min(start, length);
-  }
-
-  if (end < 0) {
-    last = Math.max(length + end, 0);
-  } else {
-    last = Math.min(end, length);
-  }
-
-  let count = Math.min(last - from, length - to);
-  let direction = 1;
-
-  if (from < to && to < from + count) {
-    direction = -1;
-    from += count - 1;
-    to += count - 1;
-  }
-
-  while (count > 0) {
-    if (from in object) {
-      object[to] = object[from];
-    } else {
-      delete object[to];
+  // Copy elements
+  if (count > 0) {
+    // Create a temporary array to hold the elements to be copied
+    const temp = [];
+    for (let i = start; i < start + count; i++) {
+      temp.push(this[i]);
     }
 
-    from += direction;
-    to += direction;
-    count--;
+    // Copy elements from temp array to the target position
+    for (let i = 0; i < count; i++) {
+      this[target + i] = temp[i];
+    }
   }
 
-  return object;
+  return this;
 };
 
 const arr = ["a", "b", "c", "d", "e"];
 
 // Copy to index 0 the element at index 3
-console.log(arr.copyWithin(0, 3, 4));
+console.log(arr.myCopyWithin(0, 3, 4));
 // Array ["d", "b", "c", "d", "e"]
 
 // Copy to index 1 all elements from index 3 to the end
-console.log(arr.copyWithin(1, 3));
+console.log(arr.myCopyWithin(1, 3));
 // ["d", "d", "e", "d", "e"]
 
 console.log([1, 2, 3, 4, 5].myCopyWithin(0, 3));
@@ -185,12 +154,8 @@ It returns a Boolean value.
 
 ```js title="Array.prototype.every()"
 Array.prototype.customEvery = function (callback) {
-  if (!callback) {
-    throw new TypeError("callback must be a function");
-  }
-
   for (let i = 0; i < this.length; i++) {
-    if (!callback.call(this, this[i])) {
+    if (!callback(this[i], i)) {
       return false;
     }
   }
@@ -338,14 +303,10 @@ console.log(result1); // undefined
 
 Returns the index of the first element in an array that satisfies
 the provided testing function. If no elements satisfy the testing function,
--1 is returned.
+-1 is returned
 
 ```js title="Array.prototype.findIndex()"
 Array.prototype.customFindIndex = function (callback) {
-  if (!callback) {
-    throw new TypeError("callback must be a function");
-  }
-
   for (let i = 0; i < this.length; i++) {
     if (callback.call(this, this[i])) {
       return i;
@@ -380,10 +341,6 @@ undefined is returned.
 
 ```js title="Array.prototype.findLast()"
 Array.prototype.customFindLast = function (callback) {
-  if (!callback) {
-    throw new TypeError("callback must be a function");
-  }
-
   for (let i = this.length; i >= 0; i--) {
     if (callback.call(this, this[i])) {
       return this[i];
@@ -404,27 +361,22 @@ Creates a new array with all sub-array elements concatenated
 into it recursively up to the specified depth.
 
 ```js title="Array.prototype.flat()"
-Array.prototype.customFlat = function (d = 1) {
-  function flat(depth) {
-    if (depth) {
-      return Array.prototype.reduce.call(
-        this,
-        function (acc, cur) {
-          if (Array.isArray(cur)) {
-            acc.push.apply(acc, flat.call(cur, depth - 1));
-          } else {
-            acc.push(cur);
-          }
+Array.prototype.customFlat = function (depth = 1) {
+  const result = [];
 
-          return acc;
-        },
-        [],
-      );
+  const flatten = (arr, depth) => {
+    for (let i = 0; i < arr.length; i++) {
+      if (Array.isArray(arr[i]) && depth > 0) {
+        flatten(arr[i], depth - 1);
+      } else {
+        result.push(arr[i]);
+      }
     }
-    return Array.prototype.slice.call(this);
-  }
+  };
 
-  return flat.call(this, d);
+  flatten(this, depth);
+
+  return result;
 };
 
 const arr1 = [0, 1, 2, [3, 4]];
@@ -524,18 +476,16 @@ one item, then that item will be returned without using the separator.
 
 ```js title="Array.prototype.join()"
 Array.prototype.customJoin = function (separator = ",") {
-  if (!Array.isArray(this)) {
-    throw new TypeError("First argument must be an array");
-  }
   let result = "";
+
   for (let i = 0; i < this.length; i++) {
     if (i > 0) {
       result += separator;
     }
-    if (this[i] !== undefined && this[i] !== null) {
-      result += this[i];
-    }
+
+    result += this[i];
   }
+
   return result;
 };
 
@@ -668,7 +618,7 @@ all elements of the array is a single value.
 
 The first time that the callback is run there is no "return value of the
 previous calculation". If supplied, an initial value may be used in its
-place. Otherwise the array element at index 0 is used as the initial value
+place. Otherwise, the array element at index 0 is used as the initial value
 and iteration starts from the next element (index 1 instead of index 0).
 
 ```js title="Array.prototype.reduce()"
