@@ -8,7 +8,6 @@ Object.assign(process.env, { NEXT_TELEMETRY_DISABLED: "1" });
 import nextMDX from "@next/mdx";
 import rehypeSlug from "rehype-slug";
 import rehypePrettyCode from "rehype-pretty-code";
-import githubDark from "./assets/github-dark.json" with { type: "json" };
 
 /** @type {NextConfigPlugins} */
 const plugins = [];
@@ -28,7 +27,7 @@ const nextConfig = {
 /** @type {import('rehype-pretty-code').Options} */
 const options = {
   keepBackground: false,
-  theme: githubDark,
+  theme: "github-dark",
 };
 
 plugins.push(

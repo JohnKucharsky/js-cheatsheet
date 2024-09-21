@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Learn JS tasks",
+  title: "Leetcode",
 };
 
 export default function Page() {
@@ -13,7 +13,7 @@ export default function Page() {
       <Content />
       <div className={"flex justify-between my-4"}>
         <Link href={"/"}>menu</Link>
-        <Link href={"/leetcode"}>leetcode</Link>
+        <Link href={"/big-front-end"}>big front end</Link>
       </div>
     </>
   );
