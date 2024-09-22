@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Big Front End",
+  title: "BFE.dev",
 };
 
 export default function Page() {

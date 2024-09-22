@@ -1,4 +1,6 @@
-## fibonacci
+## Learn JS tasks
+
+### fibonacci
 
 The sequence of [Fibonacci numbers](https://en.wikipedia.org/wiki/Fibonacci_number) has
 the formula <code>F<sub>n</sub> = F<sub>n-1</sub> + F<sub>n-2</sub></code>. In other words,
@@ -32,7 +34,7 @@ console.log(fib(7)); // 13
 console.log(fib(77)); // -
 ```
 
-## shooters
+### shooters
 
 Every function is meant to output its number.
 
@@ -62,7 +64,7 @@ console.log(army[1]()); // 1
 console.log(army[5]()); // 5
 ```
 
-## currying
+### currying
 
 Sum with an arbitrary amount of brackets.
 
@@ -88,7 +90,7 @@ console.log(sum(6)(-1)(-2)(-3)); // 0
 console.log(sum(0)(1)(2)(3)(4)(5)); // 15
 ```
 
-## timout vs interval
+### timout vs interval
 
 Sum with an arbitrary amount of brackets.
 
@@ -149,7 +151,7 @@ printNumbersFromFirstSecond(9, 11);
 // timout-7
 ```
 
-## spy decorator
+### spy decorator
 
 Decorator spy(func) return a wrapper that saves all calls to function in
 its "calls" property. Every call is saved as an array of arguments.
@@ -185,7 +187,7 @@ console.log(work(4, 5)); // 9 undefined
 console.log(work.calls); // [ [ 1, 2 ], [ 4, 5 ] ]
 ```
 
-## delay decorator
+### delay decorator
 
 Decorator delay(f, ms) delays each call of f by ms milliseconds.
 
@@ -212,7 +214,7 @@ f1000.funcCall("test1000"); // this value test1000 after 1000ms
 f1500("test1500"); // undefined test1500 1500ms
 ```
 
-## debounce decorator
+### debounce decorator
 
 Decorator is a wrapper that suspends calls to f until there’s ms
 milliseconds of inactivity (no calls, “cooldown period”), then invokes
@@ -245,7 +247,7 @@ setTimeout(() => f2("c"), 500); // run after 500ms
 // c
 ```
 
-## throttling decorator
+### throttling decorator
 
 When it's called multiple times, it passes the call to `f` at maximum once
 per `ms` milliseconds.

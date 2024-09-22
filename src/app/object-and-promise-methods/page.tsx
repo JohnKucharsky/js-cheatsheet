@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Object and promise polyfills",
+  title: "Object and promise methods",
 };
 
 export default function Page() {
