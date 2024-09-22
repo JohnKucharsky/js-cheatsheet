@@ -1,4 +1,6 @@
-## Array methods
+[back](/)
+
+# Array methods
 
 ### at
 
@@ -403,6 +405,10 @@ returning true or false as appropriate.
 
 ```js title="Array.prototype.includes()"
 Array.prototype.customIncludes = function (searchElement, fromIndex = 0) {
+    if (this.length === 0) {
+    return false;
+  }
+
   if (fromIndex < 0) {
     fromIndex = this.length + fromIndex;
   }
@@ -582,6 +588,25 @@ const averaged = numbers2
 
 console.log(averaged);
 // [2, 2.67, 2, 3.33, 5, 5.33, 5.67, 4]
+```
+
+### pop
+
+```js title="Array.prototype.pop()"
+Array.prototype.customPop = function () {
+  if (this.length === 0) {
+    return undefined;
+  }
+  const lastElement = this[this.length - 1];
+  this.length = this.length - 1;
+
+  return lastElement;
+};
+
+const fruits = ["Apple", "Banana", "Cherry"];
+const lastFruit = fruits.customPop();
+console.log(lastFruit); // Cherry
+console.log(fruits); // ["Apple", "Banana"]
 ```
 
 ### push

@@ -13,7 +13,7 @@ export default function Page() {
       <Content />
       <div className={"flex justify-between my-4"}>
         <Link href={"/"}>menu</Link>
-        <Link href={"/leetcode"}>leetcode</Link>
+        <Link href={"/big-front-end"}>big front end</Link>
       </div>
     </>
   );
