@@ -1,6 +1,77 @@
 [back](/)
 
-# Learn JS tasks
+# Learn JS
+
+### type conversions
+
+```js title="type conversions"
+const l = (value) => console.log(value);
+
+l(null + 1); // 1
+l(undefined + 1); // NaN
+l(false + 1); // 1
+l(true + 1); // 2
+l("" + 1); // "1"
+l("s" + 1); // "s1"
+l("1" + 1); // "11"
+
+l(1 + null); // 1
+l(1 + undefined); // NaN
+l(1 + false); // 1
+l(1 + true); // 2
+l(1 + ""); // "1"
+l(1 + "s"); // "1s"
+l(1 + "1"); // "11"
+
+l(null - 1); // -1
+l(undefined - 1); // NaN
+l(false - 1); // -1
+l(true - 1); // 0
+l("" - 1); // -1
+l("s" - 1); // NaN
+l("1" - 1); // 0
+
+l(1 - null); // 1
+l(1 - undefined); // NaN
+l(1 - false); // 1
+l(1 - true); // 0
+l(1 - ""); // 1
+l(1 - "s"); // NaN
+l(1 - "1"); // 0
+
+l(null < 1); // true
+l(undefined < 1); // false
+l(false < 1); // true
+l(true > 0); // true
+l("" > 0); // false
+l("s" > 1); // false
+l("1" > 0); // true
+l("12" > "111"); // true
+l("12" > 111); // false
+
+l(undefined == null); // true
+l(null == undefined); // true
+l(0 == false); // true
+l(1 == true); // true
+l(0 == ""); // true
+l(1 == "s"); // false
+l(1 == "1"); // true
+
+l("" + 1 + 0); // "10"
+l("" - 1 + 0); // -1
+l(true + false); // 1
+l(6 / "3"); // 2
+l("2" * "3"); // 6
+l(4 + 5 + "px"); // "9px"
+l("$" + 4 + 5); // "$45"
+l("4" - 2); // 2
+l("4px" - 2); // NaN
+l("  -9  " + 5); // "  -9  5"
+l("  -9  " - 5); // -14
+l(null + 1); // 1
+l(undefined + 1); // NaN
+l(" \t \n" - 2); // -2
+```
 
 ### fibonacci
 
