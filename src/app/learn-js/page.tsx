@@ -4,7 +4,7 @@ import * as React from "react";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Learn JS tasks",
+  title: "Learn JS",
 };
 
 export default function Page() {
