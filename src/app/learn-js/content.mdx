@@ -5,72 +5,74 @@
 ### type conversions
 
 ```js title="type conversions"
-const l = (value) => console.log(value);
+const log = (value) => console.log(value);
 
-l(null + 1); // 1
-l(undefined + 1); // NaN
-l(false + 1); // 1
-l(true + 1); // 2
-l("" + 1); // "1"
-l("s" + 1); // "s1"
-l("1" + 1); // "11"
+log(null + 1); // 1
+log(undefined + 1); // NaN
+log(false + 1); // 1
+log(true + 1); // 2
+log("" + 1); // "1"
+log("s" + 1); // "s1"
+log("1" + 1); // "11"
 
-l(1 + null); // 1
-l(1 + undefined); // NaN
-l(1 + false); // 1
-l(1 + true); // 2
-l(1 + ""); // "1"
-l(1 + "s"); // "1s"
-l(1 + "1"); // "11"
+log(1 + null); // 1
+log(1 + undefined); // NaN
+log(1 + false); // 1
+log(1 + true); // 2
+log(1 + ""); // "1"
+log(1 + "s"); // "1s"
+log(1 + "1"); // "11"
 
-l(null - 1); // -1
-l(undefined - 1); // NaN
-l(false - 1); // -1
-l(true - 1); // 0
-l("" - 1); // -1
-l("s" - 1); // NaN
-l("1" - 1); // 0
+log(null - 1); // -1
+log(undefined - 1); // NaN
+log(false - 1); // -1
+log(true - 1); // 0
+log("" - 1); // -1
+log("s" - 1); // NaN
+log("1" - 1); // 0
 
-l(1 - null); // 1
-l(1 - undefined); // NaN
-l(1 - false); // 1
-l(1 - true); // 0
-l(1 - ""); // 1
-l(1 - "s"); // NaN
-l(1 - "1"); // 0
+log(1 - null); // 1
+log(1 - undefined); // NaN
+log(1 - false); // 1
+log(1 - true); // 0
+log(1 - ""); // 1
+log(1 - "s"); // NaN
+log(1 - "1"); // 0
 
-l(null < 1); // true
-l(undefined < 1); // false
-l(false < 1); // true
-l(true > 0); // true
-l("" > 0); // false
-l("s" > 1); // false
-l("1" > 0); // true
-l("12" > "111"); // true
-l("12" > 111); // false
+log(null < 1); // true
+log(undefined < 1); // false
+log(false < 1); // true
+log(true > 0); // true
+log("" > 0); // false
+log("s" > 1); // false
+log("1" > 0); // true
+log("12" > "111"); // true
+log("12" > 111); // false
 
-l(undefined == null); // true
-l(null == undefined); // true
-l(0 == false); // true
-l(1 == true); // true
-l(0 == ""); // true
-l(1 == "s"); // false
-l(1 == "1"); // true
+log(undefined == null); // true
+log(null == undefined); // true
+log(0 == false); // true
+log(1 == true); // true
+log(0 == ""); // true
+log(1 == "s"); // false
+log(1 == "1"); // true
+// [] converted to ''
+log(0 == []); // true
 
-l("" + 1 + 0); // "10"
-l("" - 1 + 0); // -1
-l(true + false); // 1
-l(6 / "3"); // 2
-l("2" * "3"); // 6
-l(4 + 5 + "px"); // "9px"
-l("$" + 4 + 5); // "$45"
-l("4" - 2); // 2
-l("4px" - 2); // NaN
-l("  -9  " + 5); // "  -9  5"
-l("  -9  " - 5); // -14
-l(null + 1); // 1
-l(undefined + 1); // NaN
-l(" \t \n" - 2); // -2
+log("" + 1 + 0); // "10"
+log("" - 1 + 0); // -1
+log(true + false); // 1
+log(6 / "3"); // 2
+log("2" * "3"); // 6
+log(4 + 5 + "px"); // "9px"
+log("$" + 4 + 5); // "$45"
+log("4" - 2); // 2
+log("4px" - 2); // NaN
+log("  -9  " + 5); // "  -9  5"
+log("  -9  " - 5); // -14
+log(null + 1); // 1
+log(undefined + 1); // NaN
+log(" \t \n" - 2); // -2
 ```
 
 ### fibonacci
