@@ -2,5 +2,338 @@
 
 # Big Front End
 
+### composition
 
+Composition vs Inheritance
+People sometimes say “composition” when contrasting it with inheritance.
+This has less to do with functions (which we’ve been discussing all along)
+and more to do with objects and classes — that is, with traditional
+object-oriented programming.
+
+In particular, if you express your code as classes, it is tempting to reuse
+behavior from another class by extending it (inheritance). However, this
+makes it somewhat difficult to adjust the behavior later. For example, you
+may want to similarly reuse behavior from another class, but you can’t
+extend more than one base class.
+
+Sometimes, people say that inheritance “locks you into” your first design
+because the cost of changing the class hierarchy later is too high. When
+people suggest composition is an alternative to inheritance, they mean that
+instead of extending a class, you can keep an instance of that class as a field.
+Then you can “delegate” to that instance when necessary, but you are also free
+to do something different.
+
+Function composition is a powerful concept, but it raises the level of abstraction
+and makes your code less direct. If you write your code in a style that composes
+functions in some way before calling them, and there are other humans on your team,
+make sure that you’re getting concrete benefits from this approach. It is not “cleaner”
+or “better”, and there is a price to pay for “beautiful” but indirect code.
+
+[composition article](https://whatthefuck.is/composition)
+
+```js title="composition"
+const dateFunc = () => new Date();
+const textFunc = (date) => date.toDateString();
+const labelFunc = (text) => `Today ${text}`;
+const showLabelFunc = (label) => console.log(label);
+
+const date = dateFunc();
+const text = textFunc(date);
+const label = labelFunc(text);
+showLabelFunc(label); // Today Sat Sep 28 2024
+
+function pipe(...steps) {
+  return function runSteps() {
+    let result;
+    for (let i = 0; i < steps.length; i++) {
+      let step = steps[i];
+      result = step(result);
+    }
+    return result;
+  };
+}
+
+const showDateLabel = pipe(dateFunc, textFunc, labelFunc, showLabelFunc);
+showDateLabel(); // Today Sat Sep 28 2024
+```
+
+### stack and queue
+
+Queue is first in, first out (FIFO)
+Stack is last in, first out (LIFO)
+
+```js title="stack and queue"
+// stack
+const arr = [1, 2, 3, 4];
+arr.push(5); // [1, 2, 3, 4, 5]
+arr.pop(); // [1, 2, 3, 4]
+
+// queue
+const arr2 = [1, 2, 3, 4]
+arr2.push(5) // [1, 2, 3, 4, 5]
+arr2.shift() // [2, 3, 4, 5]
+```
+
+### react is first render
+
+```js title="useIsFirstRender"
+function useIsFirstRender() {
+  const isFirstRender = useRef(true);
+  if (isFirstRender.current) {
+    isFirstRender.current = false;
+    return true;
+  }
+  return false;
+}
+```
+
+### useSWR
+
+```tsx title="useSWR"
+import { useState, useEffect } from "react";
+
+function useSWR<T>(key: string, fetcher: (url: string) => Promise<T>) {
+  const [data, setData] = useState<T | null>(null);
+  const [error, setError] = useState<Error | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchData = async () => {
+      try {
+        const result = await fetcher(key);
+        if (isMounted) {
+          setData(result);
+        }
+      } catch (err) {
+        if (isMounted) {
+          setError(err as Error);
+        }
+      }
+    };
+
+    fetchData();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [key, fetcher]);
+
+  return { data, error };
+}
+
+const fetcher = (
+  url: string,
+): Promise<{
+  userId: number;
+  id: number;
+  title: string;
+  body: string;
+}> => fetch(url).then((res) => res.json());
+
+function App() {
+  const { data, error } = useSWR(
+    "https://jsonplaceholder.typicode.com/posts",
+    fetcher,
+  );
+
+  if (error) return <div>Failed to load</div>;
+  if (!data) return <div>Loading...</div>;
+  //  type of data on hover
+  // {
+  //    userId: number;
+  //    id: number;
+  //    title: string;
+  //    body: string;
+  //  } | null;
+  return (
+    <div>
+      <h1>Data:</h1>
+      <pre>{JSON.stringify(data, null, 2)}</pre>
+    </div>
+  );
+}
+
+export default App;
+```
+
+### usePrevious
+
+useEffect runs after component is added to the DOM, this is
+why usePrevious returns before useEffect fired. Value of ref is changing
+when hook already returned, and this is the reason why values lags behind
+
+```tsx title="usePrevious"
+import { useState, useEffect, useRef } from "react";
+
+function usePrevious(value: string | number) {
+  const ref = useRef<string | number>();
+
+  useEffect(() => {
+    console.log("useEffect", value);
+    ref.current = value;
+  }, [value]);
+  console.log({ ref: ref.current });
+
+  return ref.current;
+}
+
+function App() {
+  const [count, setCount] = useState(0);
+  const previousCount = usePrevious(count);
+  console.log({ count });
+
+  return (
+    <div>
+      <p>Count: {count}</p>
+      <p>Previous count: {previousCount}</p>
+      <button onClick={() => setCount(count + 1)}>Increment</button>
+    </div>
+  );
+}
+
+export default App;
+// initial render logs
+
+// {ref: undefined}
+// {count: 0}
+// useEffect 0
+// useEffect 0
+
+// consequent renders log
+
+// {ref: 0}
+// {count: 1}
+// useEffect 1
+```
+
+### useHover
+
+```tsx title="useHover"
+import { useState, useEffect, useRef, MutableRefObject } from "react";
+
+function useHover(): [MutableRefObject<HTMLDivElement | null>, boolean] {
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const ref = useRef<HTMLDivElement | null>(null);
+  const handleMouseOver = () => setIsHovered(true);
+  const handleMouseOut = () => setIsHovered(false);
+
+  useEffect(() => {
+    const node = ref.current;
+    if (node) {
+      node.addEventListener("mouseover", handleMouseOver);
+      node.addEventListener("mouseout", handleMouseOut);
+      return () => {
+        node.removeEventListener("mouseover", handleMouseOver);
+        node.removeEventListener("mouseout", handleMouseOut);
+      };
+    }
+  }, []);
+
+  return [ref, isHovered];
+}
+
+function App() {
+  const [ref, isHovered] = useHover();
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        width: "6rem",
+        height: "6rem",
+        backgroundColor: isHovered ? "red" : "yellow",
+      }}
+    />
+  );
+}
+
+export default App;
+```
+
+### useDebounce
+
+```tsx title="useDebounce"
+import { useState, useEffect, ChangeEvent } from "react";
+
+function useDebounce<T>(value: T, delay: number): T {
+  const [debouncedValue, setDebouncedValue] = useState<T>(value);
+
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setDebouncedValue(value);
+    }, delay);
+    // Cancel the timeout if value or delay changes
+    return () => {
+      clearTimeout(timeoutId);
+    };
+  }, [value, delay]);
+
+  return debouncedValue;
+}
+
+function App() {
+  const [value, setValue] = useState("");
+  const debouncedValue = useDebounce(value, 1000);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
+    setValue(e.target.value);
+  };
+
+  return (
+    <div>
+      <input type="text" value={value} onChange={handleChange} />
+      <p>Debounced value: {debouncedValue}</p>
+    </div>
+  );
+}
+
+export default App;
+```
+
+### useClickOutside
+
+```tsx title="useClickOutside"
+import { useEffect, useRef } from "react";
+
+function useClickOutside<T extends HTMLElement>(
+  handler: (event: MouseEvent | TouchEvent) => void,
+) {
+  const ref = useRef<T>(null);
+
+  useEffect(() => {
+    const handleClickOutside = (e: MouseEvent | TouchEvent) => {
+      if (ref.current && !ref.current.contains(event.target as Node)) {
+        handler(e);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    document.addEventListener("touchstart", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("touchstart", handleClickOutside);
+    };
+  }, [handler]);
+
+  return ref;
+}
+
+function App() {
+  const handleClickOutside = () => {
+    console.log("Clicked outside");
+  };
+
+  const ref = useClickOutside<HTMLDivElement>(handleClickOutside);
+
+  return (
+    <div ref={ref} style={{ padding: "20px", backgroundColor: "lightblue" }}>
+      Click outside this box
+    </div>
+  );
+}
+
+export default App;
+```
 

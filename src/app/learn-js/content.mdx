@@ -2,7 +2,7 @@
 
 # Learn JS
 
-### type conversions
+## type conversions
 
 ```js title="type conversions"
 const log = (value) => console.log(value);
@@ -75,7 +75,7 @@ log(undefined + 1); // NaN
 log(" \t \n" - 2); // -2
 ```
 
-### this
+## this
 
 Below `users.customFilterNoThis(army.canJoin)`, throws, `army.canJoin` was called
 as a standalone function, with `this=undefined`, thus leading to an instant error.
@@ -83,7 +83,7 @@ A call to `users.customFilter(army.canJoin, army)` can be replaced with
 `users.customFilterNoThis(user => army.canJoin(user))`, that does the same.
 This is an object before dot
 
-```js title="this"
+```js title="losing this"
 Array.prototype.customFilter = function (callback, thisArg) {
   let result = [];
 
@@ -128,7 +128,7 @@ console.log(soldiers2); // [ { age: 20 }, { age: 23 } ]
 console.log(soldiers3); // [ { age: 20 }, { age: 23 } ]
 ```
 
-### object and map conversion
+## object and map conversion
 
 ```js title="object and map conversion"
 const prices = Object.fromEntries([
@@ -165,7 +165,40 @@ const mapFromObject = new Map(Object.entries(objectFromMap));
 console.log(mapFromObject.get("meat")); // 4
 ```
 
-### fibonacci
+## bind
+
+In the line `(*)` we take the method `user.sayHi` and bind it to `user`. The `sayHi` is a "bound" function,
+that can be called alone or passed to `setTimeout` - doesn't matter, the context will be right.
+Here we can see that arguments are passed "as is", only `this` is fixed by `bind`
+
+```js title="bind"
+const user = {
+  firstName: "John",
+  sayHi() {
+    console.log(`Hello, ${this.firstName}!`);
+  },
+};
+
+user.sayHi(); // Hello, John!
+setTimeout(user.sayHi, 1000); // Hello, undefined!
+
+// solution 1
+setTimeout(function () {
+  user.sayHi(); // Hello, John!
+}, 1000);
+// or shorter
+setTimeout(() => {
+  user.sayHi(); // Hello, John!
+}, 1000);
+
+// solution 2
+const sayHi = user.sayHi.bind(user);
+// can run it without an object
+sayHi(); // Hello, John!
+setTimeout(sayHi, 1000); // Hello, John!
+```
+
+## fibonacci
 
 The sequence of [Fibonacci numbers](https://en.wikipedia.org/wiki/Fibonacci_number) has
 the formula <code>F<sub>n</sub> = F<sub>n-1</sub> + F<sub>n-2</sub></code>. In other words,
@@ -199,9 +232,13 @@ console.log(fib(7)); // 13
 console.log(fib(77)); // -
 ```
 
-### shooters
+## shooters
 
-Every function is meant to output its number.
+Every function is meant to output its number. All `shooter` functions are created in the lexical
+environment of `makeArmy()` function. But when `army[5]()` is called, `makeArmy` has already
+finished its job, and the final value of `i` is `10` (`while` stops at `i=10`). As the result,
+all `shooter` functions get the same value from the outer lexical environment and that is,
+the last value, `i=10`. Solution is to save variable `let j = i`
 
 ```js title="shooters"
 function makeArmy() {
@@ -229,7 +266,7 @@ console.log(army[1]()); // 1
 console.log(army[5]()); // 5
 ```
 
-### currying
+## currying
 
 Sum with an arbitrary amount of brackets.
 
@@ -255,142 +292,33 @@ console.log(sum(6)(-1)(-2)(-3)); // 0
 console.log(sum(0)(1)(2)(3)(4)(5)); // 15
 ```
 
-### timout vs interval
-
-Sum with an arbitrary amount of brackets.
-
-```js title="timout vs interval"
-function printNumbersInterval(from, to) {
-  let current = from;
-
-  let timerId = setInterval(function () {
-    console.log(`interval-${current}`);
-    if (current === to) {
-      clearInterval(timerId);
-    }
-    current++;
-  }, 1000);
-}
-
-printNumbersInterval(2, 4);
-
-function printNumbersTimout(from, to) {
-  let current = from;
-
-  setTimeout(function go() {
-    console.log(`timout-${current}`);
-    if (current < to) {
-      setTimeout(go, 1000);
-    }
-    current++;
-  }, 1000);
-}
-
-printNumbersTimout(5, 7);
-
-function printNumbersFromFirstSecond(from, to) {
-  let current = from;
-
-  function go() {
-    console.log(current);
-    if (current === to) {
-      clearInterval(timerId);
-    }
-    current++;
-  }
-
-  go();
-  let timerId = setInterval(go, 1000);
-}
-
-printNumbersFromFirstSecond(9, 11);
-
-// 9
-// interval-2
-// timout-5
-// 10
-// interval-3
-// timout-6
-// 11
-// interval-4
-// timout-7
-```
-
-### spy decorator
-
-Decorator spy(func) return a wrapper that saves all calls to function in
-its "calls" property. Every call is saved as an array of arguments.
-
-```js title="spy decorator"
-function spy(func) {
-  function wrapper(...args) {
-    // using ...args instead of arguments to store "real" array in wrapper.calls
-    wrapper.calls.push(args);
-    return func.apply(this, args);
-  }
-
-  wrapper.calls = [];
-
-  return wrapper;
-}
-
-function work(a, b) {
-  return `${a + b} ${this.value}`; // work is an arbitrary function or method
-}
-
-const spyObj = {
-  value: "this value",
-  work: spy(work),
-};
-
-console.log(spyObj.work(1, 2)); // 3 this value
-console.log(spyObj.work.calls); // [ [ 1, 2 ] ]
-
-work = spy(work);
-console.log(work(1, 2)); // 3 undefined
-console.log(work(4, 5)); // 9 undefined
-console.log(work.calls); // [ [ 1, 2 ], [ 4, 5 ] ]
-```
-
-### delay decorator
+## delay decorator
 
 Decorator delay(f, ms) delays each call of f by ms milliseconds.
 
 ```js title="delay decorator"
 function delay(f, ms) {
-  return function () {
-    setTimeout(() => f.apply(this, arguments), ms);
+  return function (args) {
+    setTimeout(() => f.call(this, args), ms);
   };
 }
 
-function f(x) {
-  console.log(this.value, x);
-}
+const f1000 = delay(console.log, 1000);
 
-// create wrappers
-const f1000 = {
-  value: "this value",
-  funcCall: delay(f, 1000),
-};
-
-let f1500 = delay(f, 1500);
-
-f1000.funcCall("test1000"); // this value test1000 after 1000ms
-f1500("test1500"); // undefined test1500 1500ms
+f1000("test");
 ```
 
-### debounce decorator
+## debounce decorator
 
-Decorator is a wrapper that suspends calls to f until there’s ms
-milliseconds of inactivity (no calls, “cooldown period”), then invokes
-f once with the latest arguments.
+Every call cancels timout `clearTimeout(timeout)`
 
 ```js title="debounce decorator"
 function debounce(func, ms) {
   let timeout;
-  return function () {
+
+  return function (...args) {
     clearTimeout(timeout);
-    timeout = setTimeout(() => func.apply(this, arguments), ms);
+    timeout = setTimeout(() => func.apply(this, args), ms);
   };
 }
 
@@ -412,48 +340,49 @@ setTimeout(() => f2("c"), 500); // run after 500ms
 // c
 ```
 
-### throttling decorator
+## throttling decorator
 
 When it's called multiple times, it passes the call to `f` at maximum once
 per `ms` milliseconds.
 Compared to the debounce decorator, the behavior is completely different:
-- `debounce` runs the function once after the "cooldown" period. Good for
-processing the final result.
-- `throttle` runs it not more often than given `ms` time. Good for regular
-updates that shouldn't be very often.
+- `debounce` runs the function once after the "cooldown" period.
+- `throttle` runs it not more often than given `ms` time
 
-In other words, `throttle` is like a secretary that accepts phone calls, but
-bothers the boss (calls the actual `f`) not more often than once per `ms` milliseconds.
+A call to `throttle(func, ms)` returns `wrapper`.
 
+1. During the first call, the `wrapper` just runs `func` and sets the
+cooldown state (`isThrottled = true`).
+2. In this state all calls are memorized in `savedArgs/savedThis`. Please note
+that both the context and the arguments are equally important and should be memorized.
+We need them simultaneously to reproduce the call.
+3. After `ms` milliseconds pass, `setTimeout` triggers. The cooldown state is removed
+(`isThrottled = false`) and, if we had ignored calls, `wrapper` is executed with the
+last memorized arguments and context.
+
+The 3rd step runs not `func`, but `wrapper`, because we not only need to execute `func`,
+but once again enter the cooldown state and setup the timeout to reset it.
 
 ```js title="throttling decorator"
 function throttle(func, ms) {
+
   let isThrottled = false,
     savedArgs,
     savedThis;
 
   function wrapper() {
-    if (isThrottled) {
-      // In this state all calls are memorized in savedArgs/savedThis.
-      // Please note that both the context and the arguments are
-      // equally important and should be memorized. We need them
-      // simultaneously to reproduce the call.
+
+    if (isThrottled) { // (2)
       savedArgs = arguments;
       savedThis = this;
       return;
     }
     isThrottled = true;
-    // first call runs func and sets
-    // is Throttled to true
-    func.apply(this, arguments);
 
-    setTimeout(function () {
-      isThrottled = false;
-      // After ms milliseconds pass, setTimeout triggers. The cooldown
-      // state is removed (isThrottled = false) and, if we had ignored calls,
-      // wrapper is executed with the last memorized arguments and context.
+    func.apply(this, arguments); // (1)
+
+    setTimeout(function() {
+      isThrottled = false; // (3)
       if (savedArgs) {
-        // call wrapper to repeat all again
         wrapper.apply(savedThis, savedArgs);
         savedArgs = savedThis = null;
       }
