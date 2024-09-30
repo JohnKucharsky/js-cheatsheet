@@ -407,3 +407,68 @@ f1000(3); // (throttling, 1000ms not out yet)
 // ...outputs 3, intermediate value 2 was ignored
 ```
 
+## async generators
+
+```js title="async generators"
+async function* generateSequence(start, end) {
+  for (let i = start; i <= end; i++) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    yield i;
+  }
+}
+
+(async () => {
+  let generator = generateSequence(1, 5);
+  for await (let value of generator) {
+    console.log(value);
+  }
+})()
+// 1, then 2, then 3, then 4, then 5 (with delay between)
+```
+
+## observable
+
+```js title="observable"
+const handlers = Symbol("handlers");
+
+function makeObservable(target) {
+  // 1. Initialize handlers store
+  target[handlers] = [];
+
+  // Store the handler function in array for future calls
+  target.observe = function (handler) {
+    this[handlers].push(handler);
+  };
+
+  // 2. Create a proxy to handle changes
+  return new Proxy(target, {
+    set(target, property, value, receiver) {
+      const success = Reflect.set(...arguments); // forward the operation to object
+      if (success) {
+        // if there were no error while setting the property
+        // call all handlers
+        target[handlers].forEach((handler) => handler(property, value));
+      }
+      return success;
+    },
+  });
+}
+
+// const gives error
+let user = {};
+
+user = makeObservable(user);
+
+user.observe((key, value) => {
+  console.log(`SET ${key}=${value}`);
+});
+user.observe((key, value) => {
+  console.log(`SET ${key}=${value}`);
+});
+user.name = "John";
+// logged 2 times, because 2 handlers registered
+// SET name=John
+```
+
+
