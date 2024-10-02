@@ -2,7 +2,7 @@
 
 # Array methods
 
-### at
+## at
 
 Takes an integer value and returns the item at that index,
 allowing for positive and negative integers. Negative integers
@@ -28,7 +28,7 @@ console.log(`An index of ${index} returns ${array1.customAt(index)}`);
 // "An index of -2 returns 130"
 ```
 
-### concat
+## concat
 
 Merge two or more arrays. This method does not change the
 existing arrays, but instead returns a new array.
@@ -59,7 +59,7 @@ console.log(concat);
 // Output: [1, 2, 3, 4, 5, 6, [1], 7, 8, 9, 10]
 ```
 
-### copyWithin
+## copyWithin
 
 Shallow copies part of this array to another location in the same array
 and returns this array without modifying its length.
@@ -112,7 +112,7 @@ console.log([1, 2, 3, 4, 5].myCopyWithin(-2, -3, -1));
 // [1, 2, 3, 3, 4]
 ```
 
-### entries
+## entries
 
 Returns a new array iterator object that contains the key/value pairs
 for each index in the array.
@@ -151,7 +151,7 @@ for (const [index, element] of arr.customEntries()) {
 // 2 c
 ```
 
-### every
+## every
 
 Tests whether all elements in the array pass the test implemented by the provided function.
 It returns a Boolean value.
@@ -181,7 +181,7 @@ console.log(isSubset([1, 2, 3, 4, 5, 6, 7], [5, 7, 6])); // true
 console.log(isSubset([1, 2, 3, 4, 5, 6, 7], [5, 8, 7])); // false
 ```
 
-### fill
+## fill
 
 Changes all elements within a range of indices in an array to a static value.
 It returns the modified array.
@@ -225,7 +225,7 @@ console.log([1, 2, 3].customFill(4, -3, -2)); // [4, 2, 3]
 console.log([1, 2, 3].customFill(4, 3, 5)); // [1, 2, 3]
 ```
 
-### filter
+## filter
 
 Creates a shallow copy of a portion of a given array, filtered down to just the elements
 from the given array that pass the test implemented by the provided function.
@@ -264,7 +264,7 @@ function isPrime(num) {
 console.log(array.myFilter(isPrime)); // [2, 3, 5, 7, 11, 13]
 ```
 
-### find
+## find
 
 Returns the first element in the provided array that satisfies the
 provided testing function. If no values satisfy the testing function,
@@ -303,7 +303,7 @@ const result1 = inventory.customFind(({ name }) => name === "nothing");
 console.log(result1); // undefined
 ```
 
-### findIndex
+## findIndex
 
 Returns the index of the first element in an array that satisfies
 the provided testing function. If no elements satisfy the testing function,
@@ -337,7 +337,7 @@ const result1 = inventory.customFindIndex(({ name }) => name === "nothing");
 console.log(result1); // -1
 ```
 
-### findLast
+## findLast
 
 Iterates the array in reverse order and returns the value of the first element that
 satisfies the provided testing function. If no elements satisfy the testing function,
@@ -359,7 +359,7 @@ const found = array1.customFindLast((element) => element > 10);
 console.log(found); // 44
 ```
 
-### flat
+## flat
 
 Creates a new array with all sub-array elements concatenated
 into it recursively up to the specified depth.
@@ -398,7 +398,7 @@ console.log(arr2.customFlat(Infinity));
 // [0, 1, 2, 3, 4, 5]
 ```
 
-### includes
+## includes
 
 Determines whether an array includes a certain value among its entries,
 returning true or false as appropriate.
@@ -436,7 +436,7 @@ console.log(pets.customIncludes("at"));
 console.log([1, 2, 3].customIncludes(2, -1)); // true
 ```
 
-### indexOf
+## indexOf
 
 Returns the first index at which a given element can be found in the array,
 or -1 if it is not present.
@@ -476,7 +476,7 @@ console.log(array.customIndexOf(2, -1)); // -1
 console.log(array.customIndexOf(2, -3)); // 0
 ```
 
-### join
+## join
 
 Creates and returns a new string by concatenating all the elements in this array,
 separated by commas or a specified separator string. If the array has only
@@ -518,7 +518,7 @@ console.log(matrix.join()); // 1,2,3,4,5,6,7,8,9
 console.log(matrix.join(";")); // 1,2,3;4,5,6;7,8,9
 ```
 
-### map
+## map
 
 Creates a new array populated with the results of calling a
 provided function on every element in the calling array.
@@ -590,7 +590,7 @@ console.log(averaged);
 // [2, 2.67, 2, 3.33, 5, 5.33, 5.67, 4]
 ```
 
-### pop
+## pop
 
 ```js title="Array.prototype.pop()"
 Array.prototype.customPop = function () {
@@ -609,7 +609,7 @@ console.log(lastFruit); // Cherry
 console.log(fruits); // ["Apple", "Banana"]
 ```
 
-### push
+## push
 
 Adds the specified elements to the end of an array and returns
 the new length of the array.
@@ -636,7 +636,7 @@ console.log(animals);
 // ["pigs", "goats", "sheep", "cows", "chickens", "cats", "dogs"]
 ```
 
-### reduce
+## reduce
 
 Executes a user-supplied "reducer" callback function on each element
 of the array, in order, passing in the return value from the calculation
@@ -728,7 +728,7 @@ const asyncPipeAsync =
     functions.customReduce(async (acc, fn) => fn(await acc), initialValue);
 ```
 
-### reverse
+## reverse
 
 Reverses an array in place and returns the reference to the same array,
 the first array element now becoming the last, and the last array element
@@ -762,7 +762,7 @@ console.log("array1:", array1);
 // "array1:" ["three", "two", "one"]
 ```
 
-### shift
+## shift
 
 Removes the first element from an array and returns that removed
 element. This method changes the length of the array.
@@ -790,7 +790,7 @@ console.log(array1); // [2, 3]
 console.log(firstElement); // 1
 ```
 
-### slice
+## slice
 
 Returns a shallow copy of a portion of an array into a new array
 object selected from start to end (end not included) where start
@@ -835,7 +835,7 @@ console.log(animals.customSlice());
 // ["ant", "bison", "camel", "duck", "elephant"]
 ```
 
-### some
+## some
 
 Tests whether at least one element in the array passes the test
 implemented by the provided function. It returns true if, in the
@@ -863,7 +863,7 @@ const equal90 = (element) => element === 90;
 console.log(array.customSome(equal90)); // false
 ```
 
-### sort
+## sort
 
 Sorts the elements of an array in place and returns the reference
 to the same array, now sorted. The default sort order is ascending,
@@ -911,7 +911,7 @@ array2.customSort();
 console.log(array1); // [1, 100000, 21, 30, 4]
 ```
 
-### splice
+## splice
 
 Changes the contents of an array by removing or replacing
 existing elements and/or adding new elements in place.
@@ -1045,7 +1045,7 @@ console.log({ myFish9, removed9 });
 // myFish9: [ 'angel', 'clown' ], removed9: [ 'mandarin', 'sturgeon' ]
 ```
 
-### toSorted
+## toSorted
 
 The copying version of the sort() method. It returns a
 new array with the elements sorted in ascending order.

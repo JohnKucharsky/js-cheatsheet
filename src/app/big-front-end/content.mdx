@@ -2,7 +2,7 @@
 
 # Big Front End
 
-### composition
+## composition
 
 Composition vs Inheritance
 People sometimes say “composition” when contrasting it with inheritance.
@@ -57,7 +57,7 @@ const showDateLabel = pipe(dateFunc, textFunc, labelFunc, showLabelFunc);
 showDateLabel(); // Today Sat Sep 28 2024
 ```
 
-### stack and queue
+## stack and queue
 
 Queue is first in, first out (FIFO)
 Stack is last in, first out (LIFO)
@@ -74,7 +74,7 @@ arr2.push(5) // [1, 2, 3, 4, 5]
 arr2.shift() // [2, 3, 4, 5]
 ```
 
-### react is first render
+## react is first render
 
 ```js title="useIsFirstRender"
 function useIsFirstRender() {
@@ -87,7 +87,7 @@ function useIsFirstRender() {
 }
 ```
 
-### useSWR
+## useSWR
 
 ```tsx title="useSWR"
 import { useState, useEffect } from "react";
@@ -157,7 +157,7 @@ function App() {
 export default App;
 ```
 
-### usePrevious
+## usePrevious
 
 useEffect runs after component is added to the DOM, this is
 why usePrevious returns before useEffect fired. Value of ref is changing
@@ -207,7 +207,7 @@ export default App;
 // useEffect 1
 ```
 
-### useHover
+## useHover
 
 ```tsx title="useHover"
 import { useState, useEffect, useRef, MutableRefObject } from "react";
@@ -251,7 +251,7 @@ function App() {
 export default App;
 ```
 
-### useDebounce
+## useDebounce
 
 ```tsx title="useDebounce"
 import { useState, useEffect, ChangeEvent } from "react";
@@ -291,7 +291,7 @@ function App() {
 export default App;
 ```
 
-### useClickOutside
+## useClickOutside
 
 ```tsx title="useClickOutside"
 import { useEffect, useRef } from "react";
