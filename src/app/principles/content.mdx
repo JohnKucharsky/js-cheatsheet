@@ -73,7 +73,7 @@ const EditUser = ({ id }: { id: number }) => {
 
 Problem with first components is that we can't pass another color without changing `FancyIconButton` code.
 In the second case, this problem is fixed, now we don't need to change `FancyIconButton2`. So, it's open to
-be used by others, close to modification
+be used by others, closed to modification
 
 ```tsx title="O"
 // bad
@@ -240,20 +240,13 @@ class ShoppingCartService {
   constructor(private paymentProcessor: PaymentProcessor) {}
 
   checkout(cart: ShoppingCart) {
-    return this.paymentProcessor.processPayment(cart);
-  }
-}
-
-// Low-level module
-class PaymentProcessor {
-  processPayment(cart: ShoppingCart) {
-    // Process the payment for the items in the shopping cart
+    return this.paymentProcessor.processPayment(cart)
   }
 }
 
 // Abstraction
 interface PaymentProcessor {
-  processPayment(cart: ShoppingCart): boolean;
+  processPayment(cart: ShoppingCart): boolean
 }
 
 // Implementation of the abstraction
@@ -264,6 +257,8 @@ class StripePaymentProcessor implements PaymentProcessor {
 }
 
 // Now the ShoppingCartService depends on the abstraction, not the implementation
-const shoppingCartService = new ShoppingCartService(new StripePaymentProcessor());
+const shoppingCartService = new ShoppingCartService(
+  new StripePaymentProcessor(),
+)
 shoppingCartService.checkout({})
 ```
