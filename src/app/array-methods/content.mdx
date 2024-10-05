@@ -6,7 +6,7 @@
 
 Takes an integer value and returns the item at that index,
 allowing for positive and negative integers. Negative integers
-count back from the last item in the array.
+count back from the last item in the array
 
 ```js title="Array.prototype.at()"
 Array.prototype.customAt = function (index) {
@@ -31,7 +31,7 @@ console.log(`An index of ${index} returns ${array1.customAt(index)}`);
 ## concat
 
 Merge two or more arrays. This method does not change the
-existing arrays, but instead returns a new array.
+existing arrays, but instead returns a new array
 
 ```js title="Array.prototype.concat()"
 Array.prototype.myConcat = function (...arrays) {
@@ -62,7 +62,7 @@ console.log(concat);
 ## copyWithin
 
 Shallow copies part of this array to another location in the same array
-and returns this array without modifying its length.
+and returns this array without modifying its length
 
 ```js title="Array.prototype.copyWithin()"
 Array.prototype.myCopyWithin = function (target, start = 0, end = this.length) {
@@ -98,16 +98,12 @@ const arr = ["a", "b", "c", "d", "e"];
 
 // Copy to index 0 the element at index 3
 console.log(arr.myCopyWithin(0, 3, 4));
-// Array ["d", "b", "c", "d", "e"]
+// ["d", "b", "c", "d", "e"]
 
 // Copy to index 1 all elements from index 3 to the end
 console.log(arr.myCopyWithin(1, 3));
 // ["d", "d", "e", "d", "e"]
 
-console.log([1, 2, 3, 4, 5].myCopyWithin(0, 3));
-// [4, 5, 3, 4, 5]
-console.log([1, 2, 3, 4, 5].myCopyWithin(0, 3, 4));
-// [4, 2, 3, 4, 5]
 console.log([1, 2, 3, 4, 5].myCopyWithin(-2, -3, -1));
 // [1, 2, 3, 3, 4]
 ```
@@ -115,7 +111,7 @@ console.log([1, 2, 3, 4, 5].myCopyWithin(-2, -3, -1));
 ## entries
 
 Returns a new array iterator object that contains the key/value pairs
-for each index in the array.
+for each index in the array
 
 ```js title="Array.prototype.entries()"
 Array.prototype.customEntries = function () {
@@ -131,30 +127,30 @@ Array.prototype.customEntries = function () {
   return iterator();
 };
 
-const arr = ["a", "b", "c"];
+const arr = [{ x: "a" }, "b", ["c"]];
 const iterator = arr.customEntries();
 
 console.log(iterator.next());
-// { value: [ 0, 'a' ], done: false }
+// { value: [ 0, { x: 'a' } ], done: false }
 console.log(iterator.next());
 // { value: [ 1, 'b' ], done: false }
 console.log(iterator.next());
-// { value: [ 2, 'c' ], done: false }
+// { value: [ 2, [ 'c' ] ], done: false }
 console.log(iterator.next());
 // { value: undefined, done: true }
 
 for (const [index, element] of arr.customEntries()) {
   console.log(index, element);
 }
-// 0 a
+// 0 { x: 'a' }
 // 1 b
-// 2 c
+// 2 [ 'c' ]
 ```
 
 ## every
 
 Tests whether all elements in the array pass the test implemented by the provided function.
-It returns a Boolean value.
+It returns a Boolean value
 
 ```js title="Array.prototype.every()"
 Array.prototype.customEvery = function (callback) {
@@ -184,7 +180,7 @@ console.log(isSubset([1, 2, 3, 4, 5, 6, 7], [5, 8, 7])); // false
 ## fill
 
 Changes all elements within a range of indices in an array to a static value.
-It returns the modified array.
+It returns the modified array
 
 ```js title="Array.prototype.fill()"
 Array.prototype.customFill = function (value, start = 0, end = this.length) {
@@ -222,13 +218,12 @@ console.log([1, 2, 3].customFill(4, 1, 2)); // [1, 4, 3]
 console.log([1, 2, 3].customFill(4, 1, 1)); // [1, 2, 3]
 console.log([1, 2, 3].customFill(4, 3, 3)); // [1, 2, 3]
 console.log([1, 2, 3].customFill(4, -3, -2)); // [4, 2, 3]
-console.log([1, 2, 3].customFill(4, 3, 5)); // [1, 2, 3]
 ```
 
 ## filter
 
 Creates a shallow copy of a portion of a given array, filtered down to just the elements
-from the given array that pass the test implemented by the provided function.
+from the given array that pass the test implemented by the provided function
 
 ```js title="Array.prototype.filter()"
 Array.prototype.myFilter = function (callback) {
@@ -250,7 +245,7 @@ const result = words.myFilter((word) => word.length > 6);
 console.log(result);
 // ["exuberant", "destruction", "present"]
 
-const array = [-3, -2, -1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13];
+const array = [-1, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9];
 
 function isPrime(num) {
   for (let i = 2; num > i; i++) {
@@ -261,34 +256,27 @@ function isPrime(num) {
   return num > 1;
 }
 
-console.log(array.myFilter(isPrime)); // [2, 3, 5, 7, 11, 13]
+console.log(array.myFilter(isPrime)); // [ 2, 3, 5, 7 ]
 ```
 
 ## find
 
 Returns the first element in the provided array that satisfies the
 provided testing function. If no values satisfy the testing function,
-undefined is returned.
+undefined is returned
 
 ```js title="Array.prototype.find()"
 Array.prototype.customFind = function (callback) {
-  if (!callback) {
-    throw new TypeError("callback must be a function");
-  }
-
   for (let i = 0; i < this.length; i++) {
     if (callback.call(this, this[i])) {
       return this[i];
     }
   }
-
-  return undefined;
 };
 
 const array1 = [5, 12, 8, 130, 44];
 const found = array1.customFind((element) => element > 10);
-console.log(found);
-// 12
+console.log(found); // 12
 
 const inventory = [
   { name: "apples", quantity: 2 },
@@ -341,7 +329,7 @@ console.log(result1); // -1
 
 Iterates the array in reverse order and returns the value of the first element that
 satisfies the provided testing function. If no elements satisfy the testing function,
-undefined is returned.
+undefined is returned
 
 ```js title="Array.prototype.findLast()"
 Array.prototype.customFindLast = function (callback) {
@@ -350,8 +338,6 @@ Array.prototype.customFindLast = function (callback) {
       return this[i];
     }
   }
-
-  return undefined;
 };
 
 const array1 = [5, 12, 8, 130, 44];
@@ -362,7 +348,7 @@ console.log(found); // 44
 ## flat
 
 Creates a new array with all sub-array elements concatenated
-into it recursively up to the specified depth.
+into it recursively up to the specified depth
 
 ```js title="Array.prototype.flat()"
 Array.prototype.customFlat = function (depth = 1) {
@@ -401,19 +387,31 @@ console.log(arr2.customFlat(Infinity));
 ## includes
 
 Determines whether an array includes a certain value among its entries,
-returning true or false as appropriate.
+returning true or false as appropriate
 
 ```js title="Array.prototype.includes()"
+function sameValueZero(x, y) {
+  if (typeof x === "number" && typeof y === "number") {
+    // x and y are equal (can be -0 and 0) or they are both NaN
+    return x === y || (x !== x && y !== y);
+  }
+  return x === y;
+}
+
 Array.prototype.customIncludes = function (searchElement, fromIndex = 0) {
-    if (this.length === 0) {
+  if (this.length === 0) {
     return false;
   }
 
-  if (fromIndex < 0) {
+  if (fromIndex < 0 && Math.abs(fromIndex) <= this.length) {
     fromIndex = this.length + fromIndex;
   }
 
   for (let i = fromIndex; i < this.length; i++) {
+    if (sameValueZero(this[i], searchElement)) {
+      return true;
+    }
+
     if (this[i] === searchElement) {
       return true;
     }
@@ -422,24 +420,26 @@ Array.prototype.customIncludes = function (searchElement, fromIndex = 0) {
   return false;
 };
 
-const array1 = [1, 2, 3];
-console.log(array1.customIncludes(2));
-// true
+console.log([1, 2, 3].customIncludes(2)); // true
+console.log([1, 2, 3].customIncludes(4)); // false
+console.log([1, 2, 3].customIncludes(3, 3)); // false
+console.log([1, 2, 3].customIncludes(3, -1)); // true
+console.log([1, 2, NaN].customIncludes(NaN)); // true
+console.log(["1", "2", "3"].customIncludes(3)); // false
 
-const pets = ["cat", "dog", "bat"];
+const arr = ["a", "b", "c"];
 
-console.log(pets.customIncludes("cat"));
-// true
-console.log(pets.customIncludes("at"));
-// false
-
-console.log([1, 2, 3].customIncludes(2, -1)); // true
+console.log(arr.includes("a", -100)); // true
+console.log(arr.includes("b", -100)); // true
+console.log(arr.includes("c", -100)); // true
+console.log(arr.includes("a", -2)); // false
+console.log(arr.includes("a", -3)); // true
 ```
 
 ## indexOf
 
 Returns the first index at which a given element can be found in the array,
-or -1 if it is not present.
+or -1 if it is not present
 
 ```js title="Array.prototype.indexOf()"
 Array.prototype.customIndexOf = function (searchElement, fromIndex = 0) {
@@ -457,16 +457,10 @@ Array.prototype.customIndexOf = function (searchElement, fromIndex = 0) {
 };
 
 const beasts = ["ant", "bison", "camel", "duck", "bison"];
-
-console.log(beasts.customIndexOf("bison"));
-// 1
-
+console.log(beasts.customIndexOf("bison")); // 1
 // Start from index 2
-console.log(beasts.customIndexOf("bison", 2));
-// 4
-
-console.log(beasts.customIndexOf("giraffe"));
-// -1
+console.log(beasts.customIndexOf("bison", 2)); // 4
+console.log(beasts.customIndexOf("giraffe")); // -1
 
 const array = [2, 9, 9];
 console.log(array.customIndexOf(2)); // 0
@@ -480,7 +474,7 @@ console.log(array.customIndexOf(2, -3)); // 0
 
 Creates and returns a new string by concatenating all the elements in this array,
 separated by commas or a specified separator string. If the array has only
-one item, then that item will be returned without using the separator.
+one item, then that item will be returned without using the separator
 
 ```js title="Array.prototype.join()"
 Array.prototype.customJoin = function (separator = ",") {
@@ -498,30 +492,23 @@ Array.prototype.customJoin = function (separator = ",") {
 };
 
 const elements = ["Fire", "Air", "Water"];
-
-console.log(elements.customJoin());
-// Expected output: "Fire,Air,Water"
-
-console.log(elements.customJoin(""));
-// Expected output: "FireAirWater"
-
-console.log(elements.customJoin("-"));
-// Expected output: "Fire-Air-Water"
+console.log(elements.customJoin()); // "Fire,Air,Water"
+console.log(elements.customJoin("")); // "FireAirWater"
+console.log(elements.customJoin("-")); // "Fire-Air-Water"
 
 const matrix = [
   [1, 2, 3],
   [4, 5, 6],
   [7, 8, 9],
 ];
-
-console.log(matrix.join()); // 1,2,3,4,5,6,7,8,9
-console.log(matrix.join(";")); // 1,2,3;4,5,6;7,8,9
+console.log(matrix.customJoin()); // 1,2,3,4,5,6,7,8,9
+console.log(matrix.customJoin(";")); // 1,2,3;4,5,6;7,8,9
 ```
 
 ## map
 
 Creates a new array populated with the results of calling a
-provided function on every element in the calling array.
+provided function on every element in the calling array
 
 ```js title="Array.prototype.map()"
 Array.prototype.customMap = function (callbackFn) {
@@ -529,7 +516,7 @@ Array.prototype.customMap = function (callbackFn) {
     throw new TypeError("Callback must be a function");
   }
 
-  let arr = [];
+  const arr = [];
   for (let i = 0; i < this.length; i++) {
     arr.push(callbackFn(this[i], i, this));
   }
@@ -539,55 +526,48 @@ Array.prototype.customMap = function (callbackFn) {
 
 const array1 = [1, 4, 9, 16];
 
-// Pass a function to map
 const map1 = array1.customMap((x) => x * 2);
-console.log(map1); // [2, 8, 18, 32]
+console.log(map1); // [ 2, 8, 18, 32 ]
 
 const numbers = [1, 4, 9];
 const roots = numbers.customMap((num) => Math.sqrt(num));
-console.log(numbers); // [1, 4, 9]
-console.log(roots); // [1, 2, 3]
+console.log(numbers); // [ 1, 4, 9 ]
+console.log(roots); // [ 1, 2, 3 ]
 
 const kvArray = [
   { key: 1, value: 10 },
   { key: 2, value: 20 },
   { key: 3, value: 30 },
 ];
-const reformattedArray = kvArray.customMap(({ key, value }) => ({
+const formattedArray = kvArray.customMap(({ key, value }) => ({
   [key]: value,
 }));
+console.log(formattedArray); // [ { 1: 10 }, { 2: 20 }, { 3: 30 } ]
 
-console.log(reformattedArray);
-// [{ 1: 10 }, { 2: 20 }, { 3: 30 }]
+console.log(["1", "2", "3"].customMap(Number)); // [ 1, 2, 3 ]
 
-console.log(["1", "2", "3"].customMap(Number)); // [1, 2, 3]
+const numbers2 = [3, 1, 4, 1, 5];
+const averaged = numbers2.customMap((num, idx, arr) => {
+  const prev = arr[idx - 1];
+  const next = arr[idx + 1];
 
-const numbers2 = [3, -1, 1, 4, 1, 5, 9, 2, 6];
-const averaged = numbers2
-  .filter((num) => num > 0)
-  .customMap((num, idx, arr) => {
-    const prev = arr[idx - 1];
-    const next = arr[idx + 1];
+  let count = 1;
+  let total = num;
 
-    let count = 1;
-    let total = num;
+  if (prev !== undefined) {
+    count++;
+    total += prev;
+  }
+  if (next !== undefined) {
+    count++;
+    total += next;
+  }
 
-    if (prev !== undefined) {
-      count++;
-      total += prev;
-    }
-    if (next !== undefined) {
-      count++;
-      total += next;
-    }
+  const average = total / count;
 
-    const average = total / count;
-
-    return Math.round(average * 100) / 100;
-  });
-
-console.log(averaged);
-// [2, 2.67, 2, 3.33, 5, 5.33, 5.67, 4]
+  return Math.round(average * 100) / 100;
+});
+console.log(averaged); // [ 2, 2.67, 2, 3.33, 3 ]
 ```
 
 ## pop

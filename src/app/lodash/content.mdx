@@ -357,3 +357,24 @@ console.log(values(object)); // [1, 2]
 values.cache.set(object, ["a", "b"]);
 console.log(values(object)); // ['a', 'b']
 ```
+
+## hasAllItems
+
+```js title="hasAllItems"
+const hasAllElements = ({ arrayToCheck, baseArray }) => {
+  const set = new Set(baseArray);
+
+  for (let i = 0; i < arrayToCheck.length; i++) {
+    if (!set.has(arrayToCheck[i])) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+const arr1 = [1, 2, 3];
+const arr2 = [3, 5, 4, 2, 7, 0, 1, 10];
+
+console.log(hasAllElements({ arrayToCheck: arr1, baseArray: arr2 })); // true
+```
