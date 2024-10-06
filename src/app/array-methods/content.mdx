@@ -572,11 +572,16 @@ console.log(averaged); // [ 2, 2.67, 2, 3.33, 3 ]
 
 ## pop
 
+The pop() method of Array instances removes the last element
+from an array and returns that element. This method changes the
+length of the array
+
 ```js title="Array.prototype.pop()"
 Array.prototype.customPop = function () {
   if (this.length === 0) {
     return undefined;
   }
+
   const lastElement = this[this.length - 1];
   this.length = this.length - 1;
 
@@ -586,7 +591,7 @@ Array.prototype.customPop = function () {
 const fruits = ["Apple", "Banana", "Cherry"];
 const lastFruit = fruits.customPop();
 console.log(lastFruit); // Cherry
-console.log(fruits); // ["Apple", "Banana"]
+console.log(fruits); // [ "Apple", "Banana" ]
 ```
 
 ## push
@@ -603,17 +608,16 @@ Array.prototype.customPush = function () {
   return this.length;
 };
 
-const animals = ["pigs", "goats", "sheep"];
+const animals = ["pigs", "goats"];
 
 const count = animals.customPush("cows");
-console.log(count); // 4
+console.log(count); // 3
 
-console.log(animals);
-// ["pigs", "goats", "sheep", "cows"]
+console.log(animals); // [ 'pigs', 'goats', 'cows' ]
 
-animals.customPush("chickens", "cats", "dogs");
+animals.customPush("chickens", "cats");
 console.log(animals);
-// ["pigs", "goats", "sheep", "cows", "chickens", "cats", "dogs"]
+// [ 'pigs', 'goats', 'cows', 'chickens', 'cats' ]
 ```
 
 ## reduce
@@ -630,18 +634,10 @@ and iteration starts from the next element (index 1 instead of index 0).
 
 ```js title="Array.prototype.reduce()"
 Array.prototype.customReduce = function (callback, initialValue) {
-  if (typeof callback !== "function") {
-    throw new TypeError("Callback must be a function");
-  }
+  let accumulator = initialValue !== undefined ? initialValue : this[0];
 
-  const array = this;
-  const length = array.length;
-  let accumulator = initialValue !== undefined ? initialValue : array[0];
-
-  for (let i = initialValue !== undefined ? 0 : 1; i < length; i++) {
-    if (i in array) {
-      accumulator = callback.call(undefined, accumulator, array[i], i, array);
-    }
+  for (let i = initialValue !== undefined ? 0 : 1; i < this.length; i++) {
+    accumulator = callback(accumulator, this[i], i, this);
   }
 
   return accumulator;
@@ -672,24 +668,24 @@ const pipe =
 // Building blocks to use for composition
 const double = (x) => 2 * x;
 const triple = (x) => 3 * x;
-const quadruple = (x) => 4 * x;
 
 // Composed functions for multiplication of specific values
 const multiply6 = pipe(double, triple);
 const multiply9 = pipe(triple, triple);
-const multiply16 = pipe(quadruple, quadruple);
 
 // Usage
 console.log(multiply6(6)); // 36
 console.log(multiply9(9)); // 81
-console.log(multiply16(16)); // 256
 
 // Compare this with pipe: fn(acc) is changed to acc.then(fn),
 // and initialValue is ensured to be a promise
 const asyncPipe =
   (...functions) =>
   (initialValue) =>
-    functions.customReduce((acc, fn) => acc.then(fn), Promise.resolve(initialValue));
+    functions.customReduce(
+      (acc, fn) => acc.then(fn),
+      Promise.resolve(initialValue),
+    );
 
 // Building blocks to use for composition
 const p1 = async (a) => a * 5;
@@ -713,39 +709,33 @@ const asyncPipeAsync =
 Reverses an array in place and returns the reference to the same array,
 the first array element now becoming the last, and the last array element
 becoming the first. In other words, elements order in the array will be
-turned towards the direction opposite to that previously stated.
+turned towards the direction opposite to that previously stated
 
 ```js title="Array.prototype.reverse()"
 Array.prototype.customReverse = function () {
-  const length = this.length;
-  const middle = Math.floor(length / 2);
+  const middle = Math.floor(this.length / 2);
 
   for (let i = 0; i < middle; i++) {
     const temp = this[i];
-    this[i] = this[length - 1 - i];
-    this[length - 1 - i] = temp;
+    this[i] = this[this.length - 1 - i];
+    this[this.length - 1 - i] = temp;
   }
 
   return this;
 };
 
 const array1 = ["one", "two", "three", "four"];
-console.log("array1:", array1);
-// "array1:" ["one", "two", "three"]
 
 const reversed = array1.customReverse();
-console.log("reversed:", reversed);
-// "reversed:" ["three", "two", "one"]
-
-// Careful: reverse is destructive -- it changes the original array.
-console.log("array1:", array1);
-// "array1:" ["three", "two", "one"]
+console.log(reversed); // [ 'four', 'three', 'two', 'one' ]
+// reverse changes the original array
+console.log(array1); // [ 'four', 'three', 'two', 'one' ]
 ```
 
 ## shift
 
 Removes the first element from an array and returns that removed
-element. This method changes the length of the array.
+element. This method changes the length of the array
 
 ```js title="Array.prototype.shift()"
 Array.prototype.customShift = function () {
@@ -775,24 +765,22 @@ console.log(firstElement); // 1
 Returns a shallow copy of a portion of an array into a new array
 object selected from start to end (end not included) where start
 and end represent the index of items in that array. The original
-array will not be modified.
+array will not be modified
 
 ```js title="Array.prototype.slice()"
-Array.prototype.customSlice = function (start, end) {
-  const length = this.length;
-  let startIndex = start || 0;
-  let endIndex = end || length;
+Array.prototype.customSlice = function (start = 0, end) {
+  let endIndex = end || this.length;
 
-  // Handle negative indices
-  if (startIndex < 0) {
-    startIndex = Math.max(length + startIndex, 0);
+  if (start < 0) {
+    start = Math.max(this.length + start, 0);
   }
   if (endIndex < 0) {
-    endIndex = Math.max(length + endIndex, 0);
+    endIndex = Math.max(this.length + endIndex, 0);
   }
 
   const result = [];
-  for (let i = startIndex; i < endIndex && i < length; i++) {
+
+  for (let i = start; i < endIndex && i < this.length; i++) {
     result.push(this[i]);
   }
 
@@ -803,14 +791,11 @@ const animals = ["ant", "bison", "camel", "duck", "elephant"];
 
 console.log(animals.customSlice(2));
 // ["camel", "duck", "elephant"]
-console.log(animals.customSlice(2, 4));
-// ["camel", "duck"]
+console.log(animals.customSlice(2, 4)); // ["camel", "duck"]
 console.log(animals.customSlice(1, 5));
 // ["bison", "camel", "duck", "elephant"]
-console.log(animals.customSlice(-2));
-// ["duck", "elephant"]
-console.log(animals.customSlice(2, -1));
-// ["camel", "duck"]
+console.log(animals.customSlice(-2)); // ["duck", "elephant"]
+console.log(animals.customSlice(2, -1)); // ["camel", "duck"]
 console.log(animals.customSlice());
 // ["ant", "bison", "camel", "duck", "elephant"]
 ```
@@ -820,7 +805,7 @@ console.log(animals.customSlice());
 Tests whether at least one element in the array passes the test
 implemented by the provided function. It returns true if, in the
 array, it finds an element for which the provided function returns
-true; otherwise it returns false. It doesn't modify the array.
+true; otherwise it returns false. It doesn't modify the array
 
 ```js title="Array.prototype.some()"
 Array.prototype.customSome = function (callback) {
@@ -835,7 +820,6 @@ Array.prototype.customSome = function (callback) {
 
 const array = [1, 2, 3, 4, 5];
 
-// Checks whether an element is even
 const even = (element) => element % 2 === 0;
 console.log(array.customSome(even)); // true
 
@@ -849,25 +833,24 @@ Sorts the elements of an array in place and returns the reference
 to the same array, now sorted. The default sort order is ascending,
 built upon converting the elements into strings, then comparing their
 sequences of UTF-16 code units values. The time and space complexity
-of the sort cannot be guaranteed as it depends on the implementation.
+of the sort cannot be guaranteed as it depends on the implementation
 
 ```js title="Array.prototype.sort()"
 Array.prototype.customSort = function (compareFn) {
   if (!compareFn) {
-    compareFn = function (a, b) {
+    compareFn = function compareFn(a, b) {
       if (a < b) {
         return -1;
       } else if (a > b) {
         return 1;
-      } else {
-        return 0;
       }
+      return 0;
     };
   }
 
   for (let i = 0; i < this.length; i++) {
     for (let j = i + 1; j < this.length; j++) {
-      if (compareFn(this[i], this[j]) > 0) {
+      if (compareFn(String(this[i]), String(this[j])) > 0) {
         let temp = this[i];
         this[i] = this[j];
         this[j] = temp;
@@ -888,13 +871,17 @@ console.log(array1); // [1, 100000, 21, 30, 4]
 
 const array2 = [1, 30, 4, 21, 100000];
 array2.customSort();
-console.log(array1); // [1, 100000, 21, 30, 4]
+console.log(array2); // [1, 100000, 21, 30, 4]
+
+const array3 = [5, 8, 100, 0];
+array3.customSort((a, b) => a - b);
+console.log(array3); // [ 0, 5, 8, 100 ]
 ```
 
 ## splice
 
 Changes the contents of an array by removing or replacing
-existing elements and/or adding new elements in place.
+existing elements and/or adding new elements in place
 
 ```js title="Array.prototype.splice()"
 Array.prototype.customSplice = function (startIndex, deleteCount) {
