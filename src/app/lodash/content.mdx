@@ -163,9 +163,7 @@ const array = [
   { dir: "right", code: 100 },
 ];
 
-const res1 = keyBy(array, function (o) {
-  return String.fromCharCode(o.code);
-});
+const res1 = keyBy(array, ({ code }) => String.fromCharCode(code));
 console.log(res1);
 // { 'a': { 'dir': 'left', 'code': 97 }, 'd': { 'dir': 'right', 'code': 100 } }
 
@@ -376,5 +374,5 @@ const hasAllElements = ({ arrayToCheck, baseArray }) => {
 const arr1 = [1, 2, 3];
 const arr2 = [3, 5, 4, 2, 7, 0, 1, 10];
 
-console.log(hasAllElements({ arrayToCheck: arr1, baseArray: arr2 })); // true
+console.log(hasAllElements({ arrayToCheck: arr2, baseArray: arr1 })); // false
 ```
