@@ -13,9 +13,7 @@ export default function Page() {
       <Content />
       <div className={"flex justify-between my-4"}>
         <Link href={"/"}>menu</Link>
-        <Link href={"/object-and-promise-methods"}>
-          object and promise polyfills
-        </Link>
+        <Link href={"/object-and-promise"}>object and promise polyfills</Link>
       </div>
     </>
   );
