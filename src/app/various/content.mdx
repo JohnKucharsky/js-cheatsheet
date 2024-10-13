@@ -22,3 +22,460 @@ const arr2 = [3, 5, 4, 2, 7, 0, 1, 10];
 
 console.log(hasAllElements({ arrayToCheck: arr1, baseArray: arr2 })); // true
 ```
+
+## call stack
+
+```js title="call stack"
+function first() {
+  second();
+  console.log("first");
+}
+function second() {
+  third();
+  console.log("second");
+}
+function third() {
+  console.log("third");
+}
+first();
+// third
+// second
+// first
+
+function first2() {
+  console.log("first");
+  second2();
+}
+function second2() {
+  console.log("second");
+  third2();
+}
+function third2() {
+  console.log("third");
+}
+first2();
+// first
+// second
+// third
+
+function recursive(n) {
+  console.log(n);
+  if (n === 0) {
+    return n;
+  }
+  return recursive(n - 1);
+}
+recursive(2); // 2 1 0
+```
+
+## stack palindrome
+
+```js title="palindrome"
+function isPalindrome(word) {
+  const letters = []; // this is our stack
+  let reversedWord = "";
+
+  // put letters of word into stack
+  for (let i = 0; i < word.length; i++) {
+    letters.push(word[i]);
+  }
+
+  // pop off the stack in reverse order
+  for (let i = 0; i < word.length; i++) {
+    reversedWord += letters.pop();
+  }
+
+  return reversedWord === word;
+}
+
+console.log(isPalindrome("racecar")); // true
+```
+
+## Stack
+
+```js title="Stack"
+class Stack {
+  constructor() {
+    this.count = 0;
+    this.storage = {};
+  }
+
+  push(value) {
+    this.storage[this.count] = value;
+    this.count++;
+    return this;
+  }
+  pop() {
+    if (this.count === 0) {
+      return undefined;
+    }
+
+    this.count--;
+    delete this.storage[this.count];
+    return this;
+  }
+  size() {
+    return this.count;
+  }
+  peek() {
+    return this.storage[this.count - 1];
+  }
+
+  [require("util").inspect.custom]() {
+    return Object.values(this.storage);
+  }
+}
+
+const myStack = new Stack();
+
+console.log(myStack.push(1).push(2).push(3));
+// [ 1, 2, 3 ]
+console.log(myStack.peek()); // 3
+console.log(myStack.pop()); // [ 1, 2 ]
+console.log(myStack.peek()); // 2
+console.log(myStack.push("freeCodeCamp"));
+// [ 1, 2, 'freeCodeCamp' ]
+console.log(myStack.size()); // 3
+console.log(myStack.pop()); // [ 1, 2 ]
+console.log(myStack.peek()); // 2
+```
+
+## Set js implementation
+
+JS Set with additional methods
+
+```js title="Set"
+class MySet {
+  constructor() {
+    this.collection = [];
+  }
+
+  has(element) {
+    return this.collection.includes(element);
+  }
+  values() {
+    return this.collection;
+  }
+  add(element) {
+    if (!this.has(element)) {
+      this.collection.push(element);
+      return true;
+    }
+
+    return false;
+  }
+  remove(element) {
+    if (this.has(element)) {
+      const index = this.collection.indexOf(element);
+      this.collection.splice(index, 1);
+      return true;
+    }
+
+    return false;
+  }
+  get size() {
+    return this.collection.length;
+  }
+  clear() {
+    this.collection = [];
+    return this;
+  }
+  union(otherSet) {
+    const unionSet = new MySet();
+    const firstSet = this.values();
+    const secondSet = otherSet.values();
+
+    firstSet.forEach(function (e) {
+      unionSet.add(e);
+    });
+    secondSet.forEach(function (e) {
+      unionSet.add(e);
+    });
+
+    return unionSet;
+  }
+  intersection(otherSet) {
+    const intersectionSet = new MySet();
+    const firstSet = this.values();
+
+    firstSet.forEach(function (e) {
+      if (otherSet.has(e)) {
+        intersectionSet.add(e);
+      }
+    });
+
+    return intersectionSet;
+  }
+  difference(otherSet) {
+    const differenceSet = new MySet();
+    const firstSet = this.values();
+
+    firstSet.forEach(function (e) {
+      if (!otherSet.has(e)) {
+        differenceSet.add(e);
+      }
+    });
+
+    return differenceSet;
+  }
+  subset(otherSet) {
+    const firstSet = this.values();
+
+    return firstSet.every(function (value) {
+      return otherSet.has(value);
+    });
+  }
+
+  [require("util").inspect.custom]() {
+    return this.collection;
+  }
+}
+
+const setA = new MySet();
+const setB = new MySet();
+setA.add("a");
+setB.add("b");
+setB.add("c");
+setB.add("a");
+setB.add("d");
+console.log(setA); // [ 'a' ]
+console.log(setB); // [ 'b', 'c', 'a', 'd' ]
+console.log(setB.has("b")); // true
+console.log(setA.subset(setB)); // true
+console.log(setA.intersection(setB)); // [ 'a' ]
+console.log(setB.difference(setA)); // [ 'b', 'c', 'd' ]
+const unionSet = setB.union(setA);
+console.log(unionSet); // [ 'b', 'c', 'a', 'd' ]
+console.log(unionSet.remove("c")); // true
+console.log(unionSet.size); // 3
+console.log(unionSet.clear()); // []
+```
+
+## Set V2
+
+```js title="Set"
+class MySet {
+  constructor() {
+    this.collection = {};
+  }
+
+  has(element) {
+    return Boolean(this.collection[element]);
+  }
+  values() {
+    return Object.values(this.collection);
+  }
+  add(element) {
+    if (!this.collection[element]) {
+      this.collection[element] = element;
+      return true;
+    }
+
+    return false;
+  }
+  remove(element) {
+    if (this.has(element)) {
+      delete this.collection[element];
+      return true;
+    }
+
+    return false;
+  }
+  get size() {
+    return Object.values(this.collection).length;
+  }
+  clear() {
+    this.collection = {};
+    return this;
+  }
+
+  [require("util").inspect.custom]() {
+    return Object.values(this.collection);
+  }
+}
+
+const setA = new MySet();
+const setB = new MySet();
+setA.add("a");
+setB.add("b");
+setB.add("c");
+setB.add("a");
+console.log(setA); // [ 'a' ]
+console.log(setB); // [ 'b', 'c', 'a' ]
+console.log(setB.remove("b")); // true
+console.log(setB.has("b")); // false
+```
+
+## Queue
+
+```js title="Queue"
+class Queue {
+  constructor() {
+    this.collection = [];
+  }
+
+  enqueue(element) {
+    this.collection.push(element);
+    return this;
+  }
+  dequeue() {
+    this.collection.shift();
+    return this;
+  }
+  front() {
+    return this.collection[0];
+  }
+  get size() {
+    return this.collection.length;
+  }
+  isEmpty() {
+    return this.collection.length === 0;
+  }
+
+  [require("util").inspect.custom]() {
+    return this.collection;
+  }
+}
+
+const queue = new Queue();
+console.log(queue.enqueue("one").enqueue("two"));
+// [ 'one', 'two' ]
+console.log(queue.dequeue()); // [ 'two' ]
+console.log(queue.enqueue("three").enqueue("four"));
+// [ 'two', 'three', 'four' ]
+console.log(queue.front()); // two
+console.log(queue.size); // 3
+console.log(queue.isEmpty()); // false
+```
+
+## priority queue
+
+```js title="PriorityQueue"
+function PriorityQueue() {
+  const collection = [];
+
+  this.printCollection = function () {
+    console.log(collection);
+  };
+  this.enqueue = function (element) {
+    if (this.isEmpty()) {
+      collection.push(element);
+    } else {
+      let added = false;
+      for (let i = 0; i < collection.length; i++) {
+        if (element[1] < collection[i][1]) {
+          //checking priorities
+          collection.splice(i, 0, element);
+          added = true;
+          break;
+        }
+      }
+      if (!added) {
+        collection.push(element);
+      }
+    }
+  };
+  this.dequeue = function () {
+    let value = collection.shift();
+    return value[0];
+  };
+  this.front = function () {
+    return collection[0];
+  };
+  this.size = function () {
+    return collection.length;
+  };
+  this.isEmpty = function () {
+    return collection.length === 0;
+  };
+}
+
+const priorityQueue = new PriorityQueue();
+priorityQueue.enqueue(["Audi", 2]);
+priorityQueue.enqueue(["Subaru", 3]);
+priorityQueue.enqueue(["BMW", 1]);
+priorityQueue.enqueue(["Mercedes", 2]);
+priorityQueue.printCollection();
+// [
+//   [ 'BMW', 1 ],
+//   [ 'Audi', 2 ],
+//   [ 'Mercedes', 2 ],
+//   [ 'Subaru', 3 ]
+// ]
+priorityQueue.dequeue();
+console.log(priorityQueue.front()); // [ 'Audi', 2 ]
+priorityQueue.printCollection();
+// [ [ 'Audi', 2 ], [ 'Mercedes', 2 ], [ 'Subaru', 3 ] ]
+```
+
+## Map
+
+```js title="Map"
+class MyMap {
+  constructor() {
+    this.collection = {};
+    this.count = 0;
+  }
+
+  size() {
+    return this.count;
+  }
+  set(key, value) {
+    this.collection[key] = value;
+    this.count++;
+  }
+  has(key) {
+    return key in this.collection;
+  }
+  get(key) {
+    return key in this.collection ? this.collection[key] : null;
+  }
+  remove(key) {
+    if (key in this.collection) {
+      delete this.collection[key];
+      this.count--;
+    }
+  }
+  values() {
+    const collectionValues = Object.values(this.collection);
+    return collectionValues.length > 0 ? collectionValues : null;
+  }
+  clear() {
+    this.collection = {};
+    this.count = 0;
+  }
+}
+
+const map = new MyMap();
+map.set("arms", 2);
+map.set("fingers", 10);
+map.set("eyes", 2);
+map.set("belley button", 1);
+
+console.log(map.get("fingers")); // 10
+console.log(map.size()); // 4
+console.log(map.values());
+// [ 2, 10, 2, 1 ]
+
+const map2 = new Map();
+const keyObj = {};
+const keyFunc = function () {};
+
+map2.set("hello", "string value");
+map2.set(keyObj, "obj value");
+map2.set(keyFunc, "func value");
+map2.set(NaN, "NaN value");
+
+console.log(map2);
+// Map(4) {
+//   'hello' => 'string value',
+//   {} => 'obj value',
+//   [Function: keyFunc] => 'func value',
+//   NaN => 'NaN value'
+// }
+
+console.log(map2.get("hello")); // string value
+console.log(map2.get(keyObj)); // obj value
+console.log(map2.get(keyFunc)); // func value
+console.log(map2.get(NaN)); // NaN value
+```

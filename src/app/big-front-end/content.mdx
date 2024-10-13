@@ -74,7 +74,7 @@ arr2.push(5) // [1, 2, 3, 4, 5]
 arr2.shift() // [2, 3, 4, 5]
 ```
 
-## react is first render
+## is first render
 
 ```js title="useIsFirstRender"
 function useIsFirstRender() {
@@ -172,7 +172,11 @@ function usePrevious(value: string | number) {
   useEffect(() => {
     console.log("useEffect", value);
     ref.current = value;
+    return () => {
+      console.log("useEffect return");
+    };
   }, [value]);
+
   console.log({ ref: ref.current });
 
   return ref.current;
@@ -180,8 +184,8 @@ function usePrevious(value: string | number) {
 
 function App() {
   const [count, setCount] = useState(0);
-  const previousCount = usePrevious(count);
   console.log({ count });
+  const previousCount = usePrevious(count);
 
   return (
     <div>
@@ -195,15 +199,17 @@ function App() {
 export default App;
 // initial render logs
 
-// {ref: undefined}
 // {count: 0}
+// {ref: undefined}
 // useEffect 0
+// useEffect return
 // useEffect 0
 
 // consequent renders log
 
-// {ref: 0}
 // {count: 1}
+// {ref: 0}
+// useEffect return
 // useEffect 1
 ```
 
@@ -215,14 +221,17 @@ import { useState, useEffect, useRef, MutableRefObject } from "react";
 function useHover(): [MutableRefObject<HTMLDivElement | null>, boolean] {
   const [isHovered, setIsHovered] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement | null>(null);
+
   const handleMouseOver = () => setIsHovered(true);
   const handleMouseOut = () => setIsHovered(false);
 
   useEffect(() => {
     const node = ref.current;
+
     if (node) {
       node.addEventListener("mouseover", handleMouseOver);
       node.addEventListener("mouseout", handleMouseOut);
+
       return () => {
         node.removeEventListener("mouseover", handleMouseOver);
         node.removeEventListener("mouseout", handleMouseOut);
@@ -240,9 +249,10 @@ function App() {
     <div
       ref={ref}
       style={{
+        margin: "3rem auto",
         width: "6rem",
         height: "6rem",
-        backgroundColor: isHovered ? "red" : "yellow",
+        backgroundColor: isHovered ? "red" : "green",
       }}
     />
   );
@@ -303,7 +313,7 @@ function useClickOutside<T extends HTMLElement>(
 
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent | TouchEvent) => {
-      if (ref.current && !ref.current.contains(event.target as Node)) {
+      if (ref.current && !ref.current.contains(e.target as Node)) {
         handler(e);
       }
     };
@@ -376,7 +386,6 @@ function classNames(...args) {
 
 console.log(classNames("foo", "bar")); // 'foo bar'
 console.log(classNames("foo", { bar: true })); // 'foo bar'
-console.log(classNames({ "foo-bar": true })); // 'foo-bar'
 console.log(classNames({ "foo-bar": false })); // ''
 console.log(classNames({ foo: true }, { bar: true })); // 'foo bar'
 console.log(classNames({ foo: true, bar: true })); // 'foo bar'
