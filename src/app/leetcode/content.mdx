@@ -2,20 +2,20 @@
 
 # Leetcode
 
-## length of last word
+## length of the last word
 
 Given a string s consisting of words and spaces, return the length
 of the last word in the string. A word is a maximal substring consisting
 of non-space characters only.
 
-**Example 1:**
-**Input:** s = "Hello World"
-**Output:** 5
+**Example 1:** \
+**Input:** s = "Hello World" \
+**Output:** 5 \
 **Explanation:** The last word is "World" with length 5.
 
-**Example 2:**
-**Input:** s = "   fly me   to   the moon  "
-**Output:** 4
+**Example 2:** \
+**Input:** s = "   fly me   to   the moon  " \
+**Output:** 4 \
 **Explanation:** The last word is "moon" with length 4.
 
 ```js title="factorial"
@@ -47,15 +47,15 @@ day in the future to sell that stock. Return the maximum profit
 you can achieve from this transaction. If you cannot achieve any
 profit, return 0.
 
-**Example 1:**
-**Input:** prices = [7,1,5,3,6,4]
-**Output:** 5
+**Example 1:** \
+**Input:** prices = [7,1,5,3,6,4] \
+**Output:** 5 \
 **Explanation:** Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6-1 = 5.
 Note that buying on day 2 and selling on day 1 is not allowed because you must buy before you sell.
 
-**Example 2:**
-**Input:** prices = [7,6,4,3,1]
-**Output:** 0
+**Example 2:** \
+**Input:** prices = [7,6,4,3,1] \
+**Output:** 0 \
 **Explanation:** In this case, no transactions are done and the max profit = 0.
 
 ```js title="maxProfit"
@@ -81,148 +81,228 @@ console.log(maxProfit(arr1)); // 5
 console.log(maxProfit(arr2)); // 0
 ```
 
-## prime number
+## summary ranges
 
-A whole number greater than 1 that cannot be exactly divided by
-any whole number other than itself and 1 (e.g. 2, 3, 5, 7, 11).
+Given a sorted unique integer array, we need to find contiguous ranges of numbers
+and represent them ina specific format. If a range consists of consecutive numbers,
+we represent it as "a->b". If it's a single number, it's represented as just "a"
 
-```js title="isPrime"
-function isPrime(n) {
-  if (n < 2) {
-    return false;
-  }
+**Example 1:** \
+**Input:** nums = [0,1,2,4,5,7] \
+**Output:** ["0->2","4->5","7"] \
+**Explanation:** The ranges are: \
+[0,2] --> "0->2" \
+[4,5] --> "4->5" \
+[7,7] --> "7"
 
-  for (let i = 2; i <= Math.sqrt(n); i++) {
-    // if n is divisible by any number then it is not prime
-    if (n % i === 0) {
-      return false;
-    }
-  }
+**Example 2:** \
+**Input:** nums = [0,2,3,4,6,8,9] \
+**Output:** ["0","2->4","6","8->9"] \
+**Explanation:** The ranges are: \
+[0,0] --> "0" \
+[2,4] --> "2->4" \
+[6,6] --> "6" \
+[8,9] --> "8->9"
 
-  return true;
-}
-
-console.log(isPrime(1)); // false
-console.log(isPrime(5)); // true
-console.log(isPrime(4)); // false
-```
-
-## binary search
-
-```js title="binarySearch"
-function binarySearch(arr, target) {
-  let leftIndex = 0;
-  let rightIndex = arr.length - 1;
-
-  while (leftIndex <= rightIndex) {
-    const middleIndex = Math.floor((leftIndex + rightIndex) / 2);
-    if (target === arr[middleIndex]) {
-      return middleIndex;
-    }
-    if (target < arr[middleIndex]) {
-      rightIndex = middleIndex - 1;
+```typescript title="summaryRanges"
+function summaryRanges(nums: number[]) {
+  let result = [];
+  let start = nums[0];
+  for (let i = 1; i <= nums.length; i++) {
+    if (nums[i] - nums[i - 1] === 1) continue;
+    if (start === nums[i - 1]) {
+      result.push(`${start}`);
     } else {
-      leftIndex = middleIndex + 1;
+      result.push(`${start}->${nums[i - 1]}`);
+    }
+    start = nums[i];
+  }
+  return result;
+}
+
+console.log(summaryRanges([1, 2, 2, 3, 1, 4]));
+// [ '1->2', '2->3', '1', '4' ]
+console.log(summaryRanges([0, 1, 2, 4, 5, 7]));
+// [ '0->2', '4->5', '7' ]
+console.log(summaryRanges([0, 2, 3, 4, 6, 8, 9]));
+// [ '0', '2->4', '6', '8->9' ]
+```
+
+## power of two
+
+Check if number is power of 2. `2^30` is the largest power of two within
+the range of a 32-bit signed integer
+
+```typescript title="isPowerOfTwo"
+function isPowerOfTwo(n: number) {
+  for (let i = 0; i < 31; i++) {
+    if (Math.pow(2, i) === n) {
+      return true;
+    }
+  }
+  return false;
+}
+
+console.log(isPowerOfTwo(16)); // true
+console.log(isPowerOfTwo(1)); // true
+console.log(isPowerOfTwo(3)); // false
+```
+
+## find the peaks
+
+You are given a 0-indexed array mountain. Your task is to find all the peaks in the mountain array.
+Return an array that consists of indices of peaks in the given array in any order.
+
+Example 1: \
+Input: `mountain = [2,4,4]` \
+Output: `[]` \
+Explanation: `mountain[0]` and `mountain[2]` can not be a peak because they are first and last elements of the array.
+`mountain[1]` also can not be a peak because it is not strictly greater than `mountain[2]`.
+So the answer is `[]` \
+
+Example 2: \
+Input: `mountain = [1,4,3,8,5]` \
+Output: [1,3] \
+Explanation: `mountain[0]` and `mountain[4]` can not be a peak because they are first and last elements of the array.
+`mountain[2]` also can not be a peak because it is not strictly greater than `mountain[3]` and `mountain[1]`.
+But `mountain[1]` and `mountain[3]` are strictly greater than their neighboring elements.
+So the answer is `[1,3]`
+
+```typescript title="findPeaks"
+function findPeaks(mountain: number[]) {
+  const peaks = [];
+  const n = mountain.length;
+
+  for (let i = 1; i < n - 1; i++) {
+    if (
+      mountain[i] > mountain[i - 1] &&
+      mountain[i] > mountain[i + 1]
+    ) {
+      peaks.push(i);
     }
   }
 
-  return -1;
+  return peaks;
 }
 
-console.log(binarySearch([-5, 2, 4, 6, 10], 10)); // 4
-console.log(binarySearch([-5, 2, 4, 6, 10], 6)); // 3
-console.log(binarySearch([-5, 2, 4, 6, 10], 20)); // -1
+console.log(findPeaks([2, 4, 4])); // []
+console.log(findPeaks([1, 4, 3, 8, 5])); // [ 1, 3 ]
 ```
 
-## bubble sort
+## count the number of incremovable subarrays I
 
-Bubble Sort is the simplest sorting algorithm that works by
-repeatedly swapping the adjacent elements if they are in the wrong order
+A subarray of nums is called incremovable if nums becomes strictly increasing on
+removing the subarray. For example, the subarray `[3, 4]` is an incremovable subarray
+of `[5, 3, 4, 6, 7]` because removing this subarray changes the array `[5, 3, 4, 6, 7]`
+to `[5, 6, 7]` which is strictly increasing. Return the total number of incremovable
+subarrays of nums. Note that an empty array is considered strictly increasing.
+A subarray is a contiguous non-empty sequence of elements within an array.
 
-```js title="bubbleSort"
-function bubbleSort(arr) {
-  let swapped;
-  do {
-    swapped = false;
-    for (let i = 0; i < arr.length - 1; i++) {
-      if (arr[i] > arr[i + 1]) {
-        let temp = arr[i];
-        arr[i] = arr[i + 1];
-        arr[i + 1] = temp;
-        swapped = true;
+**Example 1:** \
+**Input:** nums = [1,2,3,4] \
+**Output:** 10 \
+**Explanation:** The 10 incremovable subarrays are: `[1]`, `[2]`, `[3]`, `[4]`, `[1,2]`, `[2,3]`,
+`[3,4]`, `[1,2,3]`, `[2,3,4]`, and `[1,2,3,4]`, because on removing any one of these subarrays
+nums becomes strictly increasing. Note that you cannot select an empty subarray. \
+
+**Example 2:** \
+**Input:** nums = `[6,5,7,8]` \
+**Output:** 7 \
+**Explanation:** The 7 incremovable subarrays are: `[5]`, `[6]`, `[5,7]`, `[6,5]`, `[5,7,8]`, `[6,5,7]` and `[6,5,7,8]`.
+It can be shown that there are only 7 incremovable subarrays in nums.
+
+
+```typescript title="incremovableSubarrayCount"
+function incremovableSubarrayCount(nums: number[]) {
+  let count = 1;
+  let right = 1;
+  const n = nums.length;
+
+  while (right < n && nums[right] > nums[right - 1]) {
+    right++;
+  }
+
+  if (right === n) {
+    return (n * (n + 1)) / 2;
+  }
+
+  let last = Number.MAX_SAFE_INTEGER;
+  count += right;
+
+  for (let i = n - 1; i >= 0; i--) {
+    if (nums[i] >= last) {
+      break;
+    }
+    let low = 0,
+      high = right - 1;
+    let left = -1;
+
+    while (low <= high) {
+      let mid = Math.floor((low + high) / 2);
+      if (nums[mid] < nums[i]) {
+        left = mid;
+        low = mid + 1;
+      } else {
+        high = mid - 1;
       }
     }
-  } while (swapped);
+
+    count += left + 2;
+    last = nums[i];
+  }
+
+  return count;
 }
 
-const arr = [8, 20, -2, 4, -6];
-bubbleSort(arr);
-console.log(arr); // [-6, -2, 4, 8, 20]
+console.log(incremovableSubarrayCount([1, 2, 3, 4])); // 10
+console.log(incremovableSubarrayCount([6, 5, 7, 8])); // 7
 ```
 
-## insertion sort
+## count elements with maximum frequency
 
-Insertion sort is a simple sorting algorithm that works by
-iteratively inserting each element of an unsorted list into
-its correct position in a sorted portion of the list
+Return the total frequencies of elements in nums such that those elements all
+have the maximum frequency. The frequency of an element is the number of occurrences
+of that element in the array.
 
-```js title="insertionSort"
-function insertionSort(arr) {
-  for (let i = 1; i < arr.length; i++) {
-    let numberToInsert = arr[i];
-    let j = i - 1;
-    // Move elements of arr[0..i-1], that are
-    // greater than key, to one position ahead
-    // of their current position
-    while (j >= 0 && arr[j] > numberToInsert) {
-      arr[j + 1] = arr[j];
-      j = j - 1;
-    }
-    arr[j + 1] = numberToInsert;
+**Example 1:**
+**Input:** nums = `[1,2,2,3,1,4]`
+**Output:** 4
+**Explanation:** Elements 1 and 2 have a frequency of 2 which is the maximum frequency in the array.
+So the number of elements in the array with maximum frequency is 4
+
+**Example 2:**
+**Input:** nums = `[1,2,3,4,5]`
+**Output:** 5
+**Explanation:** All elements of the array have a frequency of 1 which is the maximum.
+So the number of elements in the array with maximum frequency is 5
+
+```typescript title="maxFrequencyElements"
+function maxFrequencyElements(nums: number[]) {
+  const freqCounter = new Map();
+
+  let maxFrequency = 1;
+
+  // Iterate through the array and update the frequency of each number
+  for (const num of nums) {
+    freqCounter.set(num, (freqCounter.get(num) || 0) + 1);
+    maxFrequency = Math.max(
+      maxFrequency,
+      freqCounter.get(num),
+    );
   }
-}
 
-const arr = [8, 20, -2, 4, -6];
-insertionSort(arr);
-console.log(arr); // [-6, -2, 4, 8, 20]
-```
+  let total = 0;
 
-## quick sort
-
-QuickSort is a sorting algorithm based on the **Divide and Conquer**
-that picks an element as a pivot and partitions the given array around
-the picked pivot by placing the pivot in its correct position in the sorted array
-
-```js title="quickSort"
-function quickSort(arr, left = 0, right = arr.length - 1) {
-  if (left < right) {
-    const pivot = partition(arr, left, right);
-    quickSort(arr, left, pivot - 1);
-    quickSort(arr, pivot + 1, right);
-  }
-  return arr;
-}
-
-function partition(arr, left, right) {
-  const pivot = arr[right];
-  let i = left;
-  for (let j = left; j < right; j++) {
-    if (arr[j] < pivot) {
-      swap(arr, i, j);
-      i++;
+  for (const freq of freqCounter.values()) {
+    if (freq === maxFrequency) {
+      total = total + freq;
     }
   }
-  swap(arr, i, right);
-  return i;
+
+  return total;
 }
 
-function swap(arr, i, j) {
-  const temp = arr[i];
-  arr[i] = arr[j];
-  arr[j] = temp;
-}
-
-const arr = [8, 20, -2, 4, -6];
-quickSort(arr);
-console.log(arr); // [-6, -2, 4, 8, 20]
+console.log(maxFrequencyElements([1, 2, 2, 3, 1, 4])); // 4
+console.log(maxFrequencyElements([1, 2, 2, 2, 1, 4])); // 3
+console.log(maxFrequencyElements([1, 2, 3, 4, 5])); // 5
 ```

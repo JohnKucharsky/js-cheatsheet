@@ -35,7 +35,7 @@ console.log(recursiveFactorial(5)); // 120
 
 ## is power of two
 
-Given an integer n, return true if it is a power of two
+Given an integer n, returns true if it is a power of two
 
 ```js title="isPowerOfTwo"
 function isPowerOfTwo(n) {
@@ -62,7 +62,7 @@ console.log(isPowerOfTwo(16)); // true
 ## prime number
 
 A whole number greater than 1 that cannot be exactly divided by
-any whole number other than itself and 1 (e.g. 2, 3, 5, 7, 11).
+any whole number other than itself and 1 (e.g., 2, 3, 5, 7, 11).
 
 ```js title="isPrime"
 function isPrime(n) {
@@ -71,7 +71,7 @@ function isPrime(n) {
   }
 
   for (let i = 2; i <= Math.sqrt(n); i++) {
-    // if n is divisible by any number then it is not prime
+    // if n is divisible by any number, then it is not prime
     if (n % i === 0) {
       return false;
     }
