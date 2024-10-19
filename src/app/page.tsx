@@ -15,6 +15,7 @@ export default function Page() {
           await signIn("google");
         }}
       >
+        {/*  */}
         <button type="submit">Signin with Google</button>
       </form>
       <Menu />
