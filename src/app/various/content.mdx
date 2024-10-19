@@ -120,24 +120,20 @@ class Stack {
   peek() {
     return this.storage[this.count - 1];
   }
-
-  [require("util").inspect.custom]() {
-    return Object.values(this.storage);
-  }
 }
 
 const myStack = new Stack();
 
-console.log(myStack.push(1).push(2).push(3));
+myStack.push(1).push(2).push(3);
 // [ 1, 2, 3 ]
-console.log(myStack.peek()); // 3
-console.log(myStack.pop()); // [ 1, 2 ]
-console.log(myStack.peek()); // 2
-console.log(myStack.push("freeCodeCamp"));
+myStack.peek(); // 3
+myStack.pop(); // [ 1, 2 ]
+myStack.peek(); // 2
+myStack.push("freeCodeCamp");
 // [ 1, 2, 'freeCodeCamp' ]
-console.log(myStack.size()); // 3
-console.log(myStack.pop()); // [ 1, 2 ]
-console.log(myStack.peek()); // 2
+myStack.size(); // 3
+myStack.pop(); // [ 1, 2 ]
+myStack.peek(); // 2
 ```
 
 ## Set js implementation
@@ -147,18 +143,18 @@ JS Set with additional methods
 ```js title="Set"
 class MySet {
   constructor() {
-    this.collection = [];
+    this.collection = {};
   }
 
   has(element) {
-    return this.collection.includes(element);
+    return Boolean(this.collection[element]);
   }
   values() {
-    return this.collection;
+    return Object.values(this.collection);
   }
   add(element) {
-    if (!this.has(element)) {
-      this.collection.push(element);
+    if (!this.collection[element]) {
+      this.collection[element] = element;
       return true;
     }
 
@@ -166,18 +162,17 @@ class MySet {
   }
   remove(element) {
     if (this.has(element)) {
-      const index = this.collection.indexOf(element);
-      this.collection.splice(index, 1);
+      delete this.collection[element];
       return true;
     }
 
     return false;
   }
   get size() {
-    return this.collection.length;
+    return Object.values(this.collection).length;
   }
   clear() {
-    this.collection = [];
+    this.collection = {};
     return this;
   }
   union(otherSet) {
@@ -225,10 +220,6 @@ class MySet {
       return otherSet.has(value);
     });
   }
-
-  [require("util").inspect.custom]() {
-    return this.collection;
-  }
 }
 
 const setA = new MySet();
@@ -238,72 +229,16 @@ setB.add("b");
 setB.add("c");
 setB.add("a");
 setB.add("d");
-console.log(setA); // [ 'a' ]
-console.log(setB); // [ 'b', 'c', 'a', 'd' ]
-console.log(setB.has("b")); // true
-console.log(setA.subset(setB)); // true
-console.log(setA.intersection(setB)); // [ 'a' ]
-console.log(setB.difference(setA)); // [ 'b', 'c', 'd' ]
+setB.has("b"); // true
+setA.subset(setB); // true
+setA.intersection(setB).values();
+// [ 'a' ]
+setB.difference(setA).values();
+// [ 'b', 'c', 'd' ]
 const unionSet = setB.union(setA);
-console.log(unionSet); // [ 'b', 'c', 'a', 'd' ]
-console.log(unionSet.remove("c")); // true
-console.log(unionSet.size); // 3
-console.log(unionSet.clear()); // []
-```
-
-## Set V2
-
-```js title="Set"
-class MySet {
-  constructor() {
-    this.collection = {};
-  }
-
-  has(element) {
-    return Boolean(this.collection[element]);
-  }
-  values() {
-    return Object.values(this.collection);
-  }
-  add(element) {
-    if (!this.collection[element]) {
-      this.collection[element] = element;
-      return true;
-    }
-
-    return false;
-  }
-  remove(element) {
-    if (this.has(element)) {
-      delete this.collection[element];
-      return true;
-    }
-
-    return false;
-  }
-  get size() {
-    return Object.values(this.collection).length;
-  }
-  clear() {
-    this.collection = {};
-    return this;
-  }
-
-  [require("util").inspect.custom]() {
-    return Object.values(this.collection);
-  }
-}
-
-const setA = new MySet();
-const setB = new MySet();
-setA.add("a");
-setB.add("b");
-setB.add("c");
-setB.add("a");
-console.log(setA); // [ 'a' ]
-console.log(setB); // [ 'b', 'c', 'a' ]
-console.log(setB.remove("b")); // true
-console.log(setB.has("b")); // false
+unionSet.remove("c"); // true
+unionSet.size; // 3
+unionSet.clear().values(); // []
 ```
 
 ## Queue
@@ -331,63 +266,61 @@ class Queue {
   isEmpty() {
     return this.collection.length === 0;
   }
-
-  [require("util").inspect.custom]() {
-    return this.collection;
-  }
 }
 
 const queue = new Queue();
-console.log(queue.enqueue("one").enqueue("two"));
+queue.enqueue("one").enqueue("two");
 // [ 'one', 'two' ]
-console.log(queue.dequeue()); // [ 'two' ]
-console.log(queue.enqueue("three").enqueue("four"));
+queue.dequeue(); // [ 'two' ]
+queue.enqueue("three").enqueue("four");
 // [ 'two', 'three', 'four' ]
-console.log(queue.front()); // two
-console.log(queue.size); // 3
-console.log(queue.isEmpty()); // false
+queue.front(); // two
+queue.size; // 3
+queue.isEmpty(); // false
 ```
 
 ## priority queue
 
 ```js title="PriorityQueue"
-function PriorityQueue() {
-  const collection = [];
+class PriorityQueue {
+  constructor() {
+    this.collection = [];
+  }
 
-  this.printCollection = function () {
-    console.log(collection);
-  };
-  this.enqueue = function (element) {
+  printCollection() {
+    console.log(this.collection);
+  }
+  enqueue(element) {
     if (this.isEmpty()) {
-      collection.push(element);
+      this.collection.push(element);
     } else {
       let added = false;
-      for (let i = 0; i < collection.length; i++) {
-        if (element[1] < collection[i][1]) {
+      for (let i = 0; i < this.collection.length; i++) {
+        if (element[1] < this.collection[i][1]) {
           //checking priorities
-          collection.splice(i, 0, element);
+          this.collection.splice(i, 0, element);
           added = true;
           break;
         }
       }
       if (!added) {
-        collection.push(element);
+        this.collection.push(element);
       }
     }
-  };
-  this.dequeue = function () {
-    let value = collection.shift();
+  }
+  dequeue() {
+    let value = this.collection.shift();
     return value[0];
-  };
-  this.front = function () {
-    return collection[0];
-  };
-  this.size = function () {
-    return collection.length;
-  };
-  this.isEmpty = function () {
-    return collection.length === 0;
-  };
+  }
+  front() {
+    return this.collection[0];
+  }
+  size() {
+    return this.collection.length;
+  }
+  isEmpty() {
+    return this.collection.length === 0;
+  }
 }
 
 const priorityQueue = new PriorityQueue();

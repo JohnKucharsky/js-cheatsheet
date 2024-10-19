@@ -22,7 +22,7 @@ module.exports = {
         DEFAULT: {
           css: {
             pre: {
-              background: "black",
+              background: "#030712",
               code: {
                 fontSize: "0.85rem",
               },
