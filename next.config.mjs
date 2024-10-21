@@ -21,6 +21,14 @@ const nextConfig = {
   env: {
     NEXT_TELEMETRY_DISABLED: "1",
   },
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "*.googleusercontent.com",
+      },
+    ],
+  },
 };
 
 /** @type {import('rehype-pretty-code').Options} */
