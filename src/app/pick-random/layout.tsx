@@ -1,9 +1,7 @@
 import { ReactElement, Suspense } from "react";
 import { auth, signIn, signOut } from "@/auth";
 import UserInfo from "@/components/user-info";
-import { shuffleArray } from "@/app/api/actions";
-import { variousQty } from "@/content/various2";
-import { redirect } from "next/navigation";
+import ShuffleButton from "@/components/shuffle-button";
 
 export default async function Layout({ children }: { children: ReactElement }) {
   const session = await auth();
@@ -17,15 +15,7 @@ export default async function Layout({ children }: { children: ReactElement }) {
       >
         {Boolean(session) && (
           <div className="flex items-center gap-4">
-            <form
-              action={async () => {
-                "use server";
-                await shuffleArray(variousQty);
-                redirect("/pick-random");
-              }}
-            >
-              <button className={"text-white"}>shuffle</button>
-            </form>
+            <ShuffleButton />
           </div>
         )}
         <div className={"flex gap-4 items-start"}>

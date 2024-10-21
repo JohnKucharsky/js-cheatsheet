@@ -1,6 +1,8 @@
 "use server";
 import { auth } from "@/auth";
 import { Pool } from "pg";
+import { variousQty } from "@/content/various2";
+import { redirect } from "next/navigation";
 
 const client = new Pool();
 
@@ -18,7 +20,7 @@ const shuffleArrayFromQty = (qty: number) => {
   return shuffledArray;
 };
 
-export async function shuffleArray(qty: number) {
+export async function shuffleArray() {
   const session = await auth();
 
   const data = await client.query(
@@ -28,7 +30,7 @@ export async function shuffleArray(qty: number) {
   );
 
   if (data.rows.length === 0) {
-    const shuffledArray = shuffleArrayFromQty(qty);
+    const shuffledArray = shuffleArrayFromQty(variousQty);
 
     await client.query(
       `
@@ -38,7 +40,7 @@ export async function shuffleArray(qty: number) {
       [session?.user?.email, shuffledArray],
     );
   } else {
-    const shuffledArray = shuffleArrayFromQty(qty);
+    const shuffledArray = shuffleArrayFromQty(variousQty);
 
     await client.query(
       `UPDATE js_cheatsheet
@@ -48,15 +50,17 @@ export async function shuffleArray(qty: number) {
       [shuffledArray, session?.user?.email],
     );
   }
+
+  redirect("/pick-random");
 }
 
-export async function getShuffledArray(): Promise<
-  Record<"shuffledarray", number[]>[]
+export async function getFirstItem(): Promise<
+  Record<"shuff_num", number | null>[]
 > {
   const session = await auth();
 
   const res = await client.query(
-    `SELECT shuffledArray FROM js_cheatsheet
+    `SELECT shuffledArray[array_length(shuffledArray, 1)] as shuff_num FROM js_cheatsheet
         WHERE id = $1`,
     [session?.user?.email],
   );
@@ -67,11 +71,17 @@ export async function getShuffledArray(): Promise<
 export async function nextItem() {
   const session = await auth();
 
-  await client.query(
+  const res = await client.query(
     `UPDATE js_cheatsheet
     SET shuffledArray = 
     array_remove(shuffledArray, shuffledArray[array_length(shuffledArray, 1)])
-    WHERE id = $1;`,
+    WHERE id = $1 returning shuffledArray[array_length(shuffledArray, 1)] as shuff_num`,
     [session?.user?.email],
   );
+
+  if (res.rows[0]?.shuff_num !== undefined && res.rows[0].shuff_num !== null) {
+    redirect(`/pick-random/${res.rows[0].shuff_num}`);
+  } else {
+    redirect(`/pick-random`);
+  }
 }

@@ -1,7 +1,6 @@
 import { various2, variousQty } from "@/content/various2";
-import { notFound, redirect } from "next/navigation";
-import { popNum } from "@/app/api/globalShuffledArray";
-import { nextItem } from "@/app/api/actions";
+import { notFound } from "next/navigation";
+import NextButton from "@/components/next-button";
 
 export async function generateStaticParams() {
   return Array(variousQty)
@@ -11,7 +10,7 @@ export async function generateStaticParams() {
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
-  if (Number(params.id) >= variousQty) {
+  if (Number(params.id) >= variousQty || isNaN(Number(params.id))) {
     notFound();
   }
 
@@ -21,22 +20,7 @@ export default async function Page(props: { params: Promise<{ id: string }> }) {
     <>
       <Content />
       <div className={"flex flex-row gap-8 items-center"}>
-        <form
-          action={async () => {
-            "use server";
-            const pageNum = popNum();
-            if (pageNum !== undefined) {
-              await nextItem();
-              redirect(`/pick-random/${pageNum}`);
-            } else {
-              redirect(`/pick-random`);
-            }
-          }}
-        >
-          <button className={"text-white"} type="submit">
-            next
-          </button>
-        </form>
+        <NextButton />
       </div>
     </>
   );
