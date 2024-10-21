@@ -1,6 +1,11 @@
 import { various2, variousQty } from "@/content/various2";
 import { notFound } from "next/navigation";
 import NextButton from "@/components/next-button";
+import { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Pick Random",
+};
 
 export async function generateStaticParams() {
   return Array(variousQty)
