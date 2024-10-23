@@ -1,0 +1,257 @@
+[back](/)
+
+# Leetcode
+
+## length of the last word
+
+Given a string s consisting of words and spaces, return the length
+of the last word in the string. A word is a maximal substring consisting
+of non-space characters only.
+
+**Example 1:** \
+**Input:** s = "Hello World" \
+**Output:** 5 \
+**Explanation:** The last word is "World" with length 5.
+
+**Example 2:** \
+**Input:** s = "   fly me   to   the moon  " \
+**Output:** 4 \
+**Explanation:** The last word is "moon" with length 4.
+
+```js title="factorial"
+function lengthOfLastWord(s) {
+  let res = 0;
+
+  for (let i = s.length - 1; i >= 0; i--) {
+    if (s[i] !== " ") res++;
+    else {
+      if (res > 0) return res;
+    }
+  }
+
+  return res;
+}
+
+const str1 = "Hello World";
+const str2 = "   fly me   to   the moon  ";
+console.log(lengthOfLastWord(str1)); // 5
+console.log(lengthOfLastWord(str2)); // 4
+```
+
+## best time to buy and sell stock
+
+You are given an array prices where prices[i] is the price of a
+given stock on the ith day. You want to maximize your profit by
+choosing a single day to buy one stock and choosing a different
+day in the future to sell that stock. Return the maximum profit
+you can achieve from this transaction. If you cannot achieve any
+profit, return 0.
+
+**Example 1:** \
+**Input:** prices = [7,1,5,3,6,4] \
+**Output:** 5 \
+**Explanation:** Buy on day 2 (price = 1) and sell on day 5 (price = 6), profit = 6-1 = 5.
+Note that buying on day 2 and selling on day 1 is not allowed because you must buy before you sell. \
+
+**Example 2:** \
+**Input:** prices = [7,6,4,3,1] \
+**Output:** 0 \
+**Explanation:** In this case, no transactions are done and the max profit = 0.
+
+```js title="maxProfit"
+function maxProfit(prices) {
+  let buyPrice = prices[0];
+  let profit = 0;
+
+  for (let i = 1; i < prices.length; i++) {
+    if (buyPrice > prices[i]) {
+      buyPrice = prices[i];
+    }
+
+    profit = Math.max(profit, prices[i] - buyPrice);
+  }
+
+  return profit;
+}
+
+const arr1 = [7, 1, 5, 3, 6, 4];
+const arr2 = [7, 6, 4, 3, 1];
+
+console.log(maxProfit(arr1)); // 5
+console.log(maxProfit(arr2)); // 0
+```
+
+## merge intervals
+
+Given an array of intervals where intervals[i] = [starti, endi],
+merge all overlapping intervals, and return an array of the
+non-overlapping intervals that cover all the intervals in the input
+
+**Example 1:** \
+**Input:** intervals = [[1,3],[2,6],[8,10],[15,18]] \
+**Output:** [[1,6],[8,10],[15,18]] \
+**Explanation:** Since intervals [1,3] and [2,6] overlap, merge them into [1,6] \
+
+**Example 2:** \
+**Input:** intervals = [[1,4],[4,5]] \
+**Output:** [[1,5]] \
+**Explanation:** Intervals [1,4] and [4,5] are considered overlapping \
+
+```js title="mergeIntervals"
+function mergeIntervals(intervals) {
+  if (!intervals.length) return [];
+
+  // Sort intervals by the starting number
+  intervals.sort((a, b) => a[0] - b[0]);
+
+  const merged = [intervals[0]];
+
+  for (let i = 1; i < intervals.length; i++) {
+    const [prevStart, prevEnd] = merged[merged.length - 1];
+    const [currStart, currEnd] = intervals[i];
+
+    if (currStart <= prevEnd) {
+      // Merge the intervals
+      merged[merged.length - 1] = [prevStart, Math.max(prevEnd, currEnd)];
+    } else {
+      // Add the new interval
+      merged.push(intervals[i]);
+    }
+  }
+
+  return merged;
+}
+
+const intervals1 = [
+  [1, 3],
+  [2, 6],
+  [8, 10],
+  [15, 18],
+];
+console.log(mergeIntervals(intervals1));
+// Output: [[1, 6], [8, 10], [15, 18]]
+
+const intervals2 = [
+  [1, 4],
+  [4, 5],
+];
+console.log(mergeIntervals(intervals2));
+// Output: [[1, 5]]
+
+const intervals3 = [
+  [1, 3],
+  [5, 7],
+  [4, 6],
+];
+console.log(mergeIntervals(intervals3));
+// Output: [[1, 3], [4, 7]]
+```
+
+## power of two
+
+Check if number is power of 2. `2^30` is the largest power of two within
+the range of a 32-bit signed integer
+
+```typescript title="isPowerOfTwo"
+function isPowerOfTwo(n: number) {
+  for (let i = 0; i < 31; i++) {
+    if (Math.pow(2, i) === n) {
+      return true;
+    }
+  }
+  return false;
+}
+
+console.log(isPowerOfTwo(16)); // true
+console.log(isPowerOfTwo(1)); // true
+console.log(isPowerOfTwo(3)); // false
+```
+
+## find the peaks
+
+You are given a 0-indexed array mountain. Your task is to find all the peaks in the mountain array.
+Return an array that consists of indices of peaks in the given array in any order.
+
+Example 1: \
+Input: `mountain = [2,4,4]` \
+Output: `[]` \
+Explanation: `mountain[0]` and `mountain[2]` can not be a peak because they are first and last elements of the array.
+`mountain[1]` also can not be a peak because it is not strictly greater than `mountain[2]`.
+So the answer is `[]` \
+
+Example 2: \
+Input: `mountain = [1,4,3,8,5]` \
+Output: [1,3] \
+Explanation: `mountain[0]` and `mountain[4]` can not be a peak because they are first and last elements of the array.
+`mountain[2]` also can not be a peak because it is not strictly greater than `mountain[3]` and `mountain[1]`.
+But `mountain[1]` and `mountain[3]` are strictly greater than their neighboring elements. So the answer is `[1,3]`
+
+```js title="findPeaks"
+function findPeaks(mountain) {
+  const peaks = [];
+  const n = mountain.length;
+
+  for (let i = 1; i < n - 1; i++) {
+    if (
+      mountain[i] > mountain[i - 1] &&
+      mountain[i] > mountain[i + 1]
+    ) {
+      peaks.push(i);
+    }
+  }
+
+  return peaks;
+}
+
+console.log(findPeaks([2, 4, 4])); // []
+console.log(findPeaks([1, 4, 3, 8, 5])); // [ 1, 3 ]
+```
+
+## count elements with maximum frequency
+
+Return the total frequencies of elements in nums such that those elements all
+have the maximum frequency. The frequency of an element is the number of occurrences
+of that element in the array.
+
+**Example 1:** \
+**Input:** nums = `[1,2,2,3,1,4]` \
+**Output:** 4 \
+**Explanation:** Elements 1 and 2 have a frequency of 2 which is the maximum frequency in the array. \
+So the number of elements in the array with maximum frequency is 4 \
+
+**Example 2:** \
+**Input:** nums = `[1,2,3,4,5]` \
+**Output:** 5 \
+**Explanation:** All elements of the array have a frequency of 1 which is the maximum. \
+So the number of elements in the array with maximum frequency is 5 \
+
+```js title="maxFrequencyElements"
+function maxFrequencyElements(nums) {
+  const freqCounter = new Map();
+
+  let maxFrequency = 1;
+
+  // Iterate through the array and update the frequency of each number
+  for (const num of nums) {
+    freqCounter.set(num, (freqCounter.get(num) || 0) + 1);
+    maxFrequency = Math.max(
+      maxFrequency,
+      freqCounter.get(num),
+    );
+  }
+
+  let total = 0;
+
+  for (const freq of freqCounter.values()) {
+    if (freq === maxFrequency) {
+      total = total + freq;
+    }
+  }
+
+  return total;
+}
+
+console.log(maxFrequencyElements([1, 2, 2, 3, 1, 4])); // 4
+console.log(maxFrequencyElements([1, 2, 2, 2, 1, 4])); // 3
+console.log(maxFrequencyElements([1, 2, 3, 4, 5])); // 5
+```
