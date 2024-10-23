@@ -1,0 +1,47 @@
+
+## pick
+
+```js title="pick"
+function pick(obj, keys) {
+  return keys.reduce((result, key) => {
+    if (obj.hasOwnProperty(key)) {
+      result[key] = obj[key];
+    }
+    return result;
+  }, {});
+}
+
+const user = {
+  name: "Alice",
+  age: 25,
+  email: "alice@example.com",
+  city: "Wonderland",
+};
+
+const picked = pick(user, ["name", "email"]);
+console.log(picked);
+// { name: 'Alice', email: 'alice@example.com' }
+```
+
+## omit
+
+```js title="omit"
+function omit(obj, keys) {
+  const result = { ...obj };
+  keys.forEach((key) => {
+    delete result[key];
+  });
+  return result;
+}
+
+const user = {
+  name: "Alice",
+  age: 25,
+  email: "alice@example.com",
+  city: "Wonderland",
+};
+
+const omitted = omit(user, ["age", "city"]);
+console.log(omitted);
+// { name: 'Alice', email: 'alice@example.com' }
+```

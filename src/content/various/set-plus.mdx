@@ -1,0 +1,105 @@
+
+## Set js implementation
+
+JS Set with additional methods
+
+```js title="Set"
+class MySet {
+  constructor() {
+    this.collection = {};
+  }
+
+  has(element) {
+    return Boolean(this.collection[element]);
+  }
+  values() {
+    return Object.values(this.collection);
+  }
+  add(element) {
+    if (!this.collection[element]) {
+      this.collection[element] = element;
+      return true;
+    }
+
+    return false;
+  }
+  remove(element) {
+    if (this.has(element)) {
+      delete this.collection[element];
+      return true;
+    }
+
+    return false;
+  }
+  get size() {
+    return Object.values(this.collection).length;
+  }
+  clear() {
+    this.collection = {};
+    return this;
+  }
+  union(otherSet) {
+    const unionSet = new MySet();
+    const firstSet = this.values();
+    const secondSet = otherSet.values();
+
+    firstSet.forEach(function (e) {
+      unionSet.add(e);
+    });
+    secondSet.forEach(function (e) {
+      unionSet.add(e);
+    });
+
+    return unionSet;
+  }
+  intersection(otherSet) {
+    const intersectionSet = new MySet();
+    const firstSet = this.values();
+
+    firstSet.forEach(function (e) {
+      if (otherSet.has(e)) {
+        intersectionSet.add(e);
+      }
+    });
+
+    return intersectionSet;
+  }
+  difference(otherSet) {
+    const differenceSet = new MySet();
+    const firstSet = this.values();
+
+    firstSet.forEach(function (e) {
+      if (!otherSet.has(e)) {
+        differenceSet.add(e);
+      }
+    });
+
+    return differenceSet;
+  }
+  subset(otherSet) {
+    const firstSet = this.values();
+
+    return firstSet.every(function (value) {
+      return otherSet.has(value);
+    });
+  }
+}
+
+const setA = new MySet();
+const setB = new MySet();
+setA.add("a");
+setB.add("b");
+setB.add("c");
+setB.add("a");
+setB.add("d");
+setB.has("b"); // true
+setA.subset(setB); // true
+setA.intersection(setB).values();
+// [ 'a' ]
+setB.difference(setA).values();
+// [ 'b', 'c', 'd' ]
+const unionSet = setB.union(setA);
+unionSet.remove("c"); // true
+unionSet.size; // 3
+unionSet.clear().values(); // []
+```

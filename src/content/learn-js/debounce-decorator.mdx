@@ -1,0 +1,33 @@
+
+## debounce decorator
+
+Every call cancels timout `clearTimeout(timeout)`
+
+```js title="debounce decorator"
+function debounce(func, ms) {
+  let timeout;
+
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), ms);
+  };
+}
+
+// runs only the last one
+const f = debounce(console.log, 1000);
+f("a"); // skip
+setTimeout(() => f("b"), 200); // skip
+setTimeout(() => f("c"), 500); // run after 1000ms
+
+const f2 = debounce(console.log, 100);
+f2("a"); // runs after 100
+setTimeout(() => f2("b"), 200); // runs after 200
+setTimeout(() => f2("c"), 500); // run after 500ms
+
+// if called together
+// a
+// b
+// c
+// c
+```
+

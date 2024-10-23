@@ -1,0 +1,42 @@
+
+## union
+
+Creates an array of unique values, in order, from all given arrays
+
+```js title="union"
+const union = (...arrays) => {
+  return Array.from(new Set([].concat(...arrays)));
+};
+
+console.log(union([1, 2], [1, 7, 7], [3, 1]));
+// [ 1, 2, 7, 3 ]
+```
+
+## keyBy
+
+```js title="keyBy"
+function keyBy(collection, iteratee) {
+  const result = {};
+
+  collection.forEach((item) => {
+    const key =
+      typeof iteratee === "function" ? iteratee(item) : item[iteratee];
+    result[key] = item;
+  });
+
+  return result;
+}
+
+const array = [
+  { dir: "left", code: 97 },
+  { dir: "right", code: 100 },
+];
+
+const res1 = keyBy(array, ({ code }) => String.fromCharCode(code));
+console.log(res1);
+// { 'a': { 'dir': 'left', 'code': 97 }, 'd': { 'dir': 'right', 'code': 100 } }
+
+const res2 = keyBy(array, "dir");
+console.log(res2);
+// { 'left': { 'dir': 'left', 'code': 97 }, 'right': { 'dir': 'right', 'code': 100 } }
+```

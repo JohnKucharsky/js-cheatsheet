@@ -1,0 +1,40 @@
+
+## Promise.any
+
+Similar to `Promise.race`, but waits only for the first fulfilled promise and gets its result.
+If all the given promises are rejected, then the returned promise is rejected with
+[`AggregateError`](mdn:js/AggregateError) - a special error object that stores all promise
+errors in its `errors` property.
+
+```js title="Promise.any()"
+Promise.customAny = function (promises) {
+  return new Promise((resolve, reject) => {
+    const errors = [];
+    let remaining = promises.length;
+
+    if (remaining === 0) {
+      return reject(new AggregateError([], "All promises were rejected"));
+    }
+
+    promises.forEach((promise, index) => {
+      Promise.resolve(promise)
+        .then(resolve)
+        .catch((error) => {
+          errors[index] = error;
+          remaining -= 1;
+          if (remaining === 0) {
+            reject(new AggregateError(errors, "All promises were rejected"));
+          }
+        });
+    });
+  });
+};
+
+const promise1 = Promise.reject(0);
+const promise2 = new Promise((resolve) => setTimeout(resolve, 100, "quick"));
+const promise3 = new Promise((resolve) => setTimeout(resolve, 500, "slow"));
+
+const promises = [promise1, promise2, promise3];
+
+Promise.customAny(promises).then((value) => console.log(value)); // quick
+```

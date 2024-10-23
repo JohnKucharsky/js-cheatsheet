@@ -1,0 +1,62 @@
+
+## priority queue
+
+```js title="PriorityQueue"
+class PriorityQueue {
+  constructor() {
+    this.collection = [];
+  }
+
+  printCollection() {
+    console.log(this.collection);
+  }
+  enqueue(element) {
+    if (this.isEmpty()) {
+      this.collection.push(element);
+    } else {
+      let added = false;
+      for (let i = 0; i < this.collection.length; i++) {
+        if (element[1] < this.collection[i][1]) {
+          //checking priorities
+          this.collection.splice(i, 0, element);
+          added = true;
+          break;
+        }
+      }
+      if (!added) {
+        this.collection.push(element);
+      }
+    }
+  }
+  dequeue() {
+    let value = this.collection.shift();
+    return value[0];
+  }
+  front() {
+    return this.collection[0];
+  }
+  size() {
+    return this.collection.length;
+  }
+  isEmpty() {
+    return this.collection.length === 0;
+  }
+}
+
+const priorityQueue = new PriorityQueue();
+priorityQueue.enqueue(["Audi", 2]);
+priorityQueue.enqueue(["Subaru", 3]);
+priorityQueue.enqueue(["BMW", 1]);
+priorityQueue.enqueue(["Mercedes", 2]);
+priorityQueue.printCollection();
+// [
+//   [ 'BMW', 1 ],
+//   [ 'Audi', 2 ],
+//   [ 'Mercedes', 2 ],
+//   [ 'Subaru', 3 ]
+// ]
+priorityQueue.dequeue();
+console.log(priorityQueue.front()); // [ 'Audi', 2 ]
+priorityQueue.printCollection();
+// [ [ 'Audi', 2 ], [ 'Mercedes', 2 ], [ 'Subaru', 3 ] ]
+```

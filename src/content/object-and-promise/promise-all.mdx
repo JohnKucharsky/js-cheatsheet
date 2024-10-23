@@ -1,0 +1,80 @@
+
+## Promise.all
+
+The Promise.all() static method takes an iterable of promises as
+input and returns a single Promise. This returned promise fulfills
+when all the input's promises fulfill (including when an empty
+iterable is passed), with an array of the fulfillment values. It
+rejects when any of the input's promises rejects, with this first
+rejection reason.
+
+```js title="Promise.all()"
+function myPromiseAll(promises) {
+  if (promises.length === 0) return Promise.resolve([]);
+  return new Promise(function (resolve, reject) {
+    let resolvedCounter = 0;
+
+    const resolvedValues = new Array(promises.length);
+
+    for (let i = 0; i < promises.length; i++) {
+      Promise.resolve(promises[i]).then(
+        (value) => {
+          resolvedCounter++;
+          resolvedValues[i] = value;
+          if (resolvedCounter === promises.length) {
+            resolve(resolvedValues);
+          }
+        },
+        (reason) => {
+          reject(reason);
+        },
+      );
+    }
+  });
+}
+
+const promise1 = Promise.resolve(3);
+const promise2 = new Promise((resolve, reject) => {
+  setTimeout(resolve, 1000, "foo");
+});
+const promise3 = 42;
+
+myPromiseAll([promise1, promise2, promise3]).then((values) => {
+  console.log(values);
+});
+
+// Using setTimeout, we can execute code after the queue is empty
+setTimeout(() => {
+  console.log("the queue is now empty");
+});
+
+const p3 = myPromiseAll([]); // Will be immediately resolved
+const p4 = myPromiseAll([1337, "hi"]);
+
+// Non-promise values are ignored, but the evaluation is done asynchronously
+console.log({ p3 });
+console.log({ p4 });
+
+setTimeout(() => {
+  console.log({ p4 });
+});
+
+myPromiseAll([promise1, promise2, promise3]).then((values) => {
+  console.log({ values2: values });
+});
+
+const promise4 = Promise.resolve(3);
+const promise5 = 42;
+
+myPromiseAll([promise4, promise5]).then((values) => {
+  console.log({ values3: values });
+});
+
+// { p3: Promise { [] } }
+// { p4: Promise { <pending> } }
+// { values3: [ 3, 42 ] }
+// the queue is now empty
+// { p4: Promise { [ 1337, 'hi' ] } }
+// [ 3, 'foo', 42 ]
+// { values2: [ 3, 'foo', 42 ] }
+```

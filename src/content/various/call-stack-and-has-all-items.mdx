@@ -1,0 +1,66 @@
+
+## hasAllItems
+
+```js title="hasAllItems"
+const hasAllElements = ({ arrayToCheck, baseArray }) => {
+  const set = new Set(baseArray);
+
+  for (let i = 0; i < arrayToCheck.length; i++) {
+    if (!set.has(arrayToCheck[i])) {
+      return false;
+    }
+  }
+
+  return true;
+};
+
+const arr1 = [1, 2, 3];
+const arr2 = [3, 5, 4, 2, 7, 0, 1, 10];
+
+console.log(hasAllElements({ arrayToCheck: arr1, baseArray: arr2 })); // true
+```
+
+## call stack
+
+```js title="call stack"
+function first() {
+  second();
+  console.log("first");
+}
+function second() {
+  third();
+  console.log("second");
+}
+function third() {
+  console.log("third");
+}
+first();
+// third
+// second
+// first
+
+function first2() {
+  console.log("first");
+  second2();
+}
+function second2() {
+  console.log("second");
+  third2();
+}
+function third2() {
+  console.log("third");
+}
+first2();
+// first
+// second
+// third
+
+function recursive(n) {
+  console.log(n);
+  if (n === 0) {
+    return n;
+  }
+  return recursive(n - 1);
+}
+recursive(2); // 2 1 0
+```

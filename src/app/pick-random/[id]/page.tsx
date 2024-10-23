@@ -1,4 +1,4 @@
-import { various2, variousQty } from "@/content/various2";
+import { various2, various2Qty } from "@/content/various2";
 import { notFound } from "next/navigation";
 import NextButton from "@/components/next-button";
 import { Metadata } from "next";
@@ -8,14 +8,14 @@ export const metadata: Metadata = {
 };
 
 export async function generateStaticParams() {
-  return Array(variousQty)
+  return Array(various2Qty)
     .fill(0)
     .map((_, idx) => ({ id: String(idx) }));
 }
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
-  if (Number(params.id) >= variousQty || isNaN(Number(params.id))) {
+  if (Number(params.id) >= various2Qty || isNaN(Number(params.id))) {
     notFound();
   }
 

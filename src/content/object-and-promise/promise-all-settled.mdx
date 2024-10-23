@@ -1,0 +1,38 @@
+
+## Promise.allSettled
+
+`Promise.allSettled` just waits for all promises to settle, regardless of the result. The resulting array has:
+
+- `{ status: "fulfilled", value: result }` for successful responses
+- `{ status: "rejected", reason: error }` for errors
+
+```js title="Promise.allSettled()"
+const rejectHandler = (reason) => ({ status: "rejected", reason });
+const resolveHandler = (value) => ({ status: "fulfilled", value });
+
+Promise.customAllSettled = function (promises) {
+  const convertedPromises = promises.map((p) =>
+    Promise.resolve(p).then(resolveHandler, rejectHandler),
+  );
+
+  return Promise.all(convertedPromises);
+};
+
+Promise.customAllSettled([
+  new Promise((resolve, reject) => setTimeout(() => resolve(1), 1000)),
+  new Promise((resolve, reject) =>
+    setTimeout(() => reject(new Error("Whoops!")), 2000),
+  ),
+  new Promise((resolve, reject) => setTimeout(() => resolve(3), 3000)),
+])
+  .then(console.info)
+  .catch(console.error);
+// [
+//   { status: 'fulfilled', value: 1 },
+//   {
+//     status: 'rejected',
+//     reason: Error: Whoops!...
+// },
+// { status: 'fulfilled', value: 3 }
+// ]
+```

@@ -1,0 +1,68 @@
+
+## stack palindrome
+
+```js title="palindrome"
+function isPalindrome(word) {
+  const letters = []; // this is our stack
+  let reversedWord = "";
+
+  // put letters of word into stack
+  for (let i = 0; i < word.length; i++) {
+    letters.push(word[i]);
+  }
+
+  // pop off the stack in reverse order
+  for (let i = 0; i < word.length; i++) {
+    reversedWord += letters.pop();
+  }
+
+  return reversedWord === word;
+}
+
+console.log(isPalindrome("racecar")); // true
+```
+
+## Stack
+
+```js title="Stack"
+class Stack {
+  constructor() {
+    this.count = 0;
+    this.storage = {};
+  }
+
+  push(value) {
+    this.storage[this.count] = value;
+    this.count++;
+    return this;
+  }
+  pop() {
+    if (this.count === 0) {
+      return undefined;
+    }
+
+    this.count--;
+    delete this.storage[this.count];
+    return this;
+  }
+  size() {
+    return this.count;
+  }
+  peek() {
+    return this.storage[this.count - 1];
+  }
+}
+
+const myStack = new Stack();
+
+myStack.push(1).push(2).push(3);
+// [ 1, 2, 3 ]
+myStack.peek(); // 3
+myStack.pop(); // [ 1, 2 ]
+myStack.peek(); // 2
+myStack.push("freeCodeCamp");
+// [ 1, 2, 'freeCodeCamp' ]
+myStack.size(); // 3
+myStack.pop(); // [ 1, 2 ]
+myStack.peek(); // 2
+```

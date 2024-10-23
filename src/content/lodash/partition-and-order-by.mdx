@@ -1,0 +1,71 @@
+
+## partition
+
+Creates an array of elements split into two groups, the first of which contains
+elements predicate returns truthy for, the second of which contains elements
+predicate returns falsey for. The predicate is invoked with one argument: (value)
+
+```js title="partition"
+function partition(array, predicate) {
+  return array.reduce(
+    (result, element) => {
+      result[predicate(element) ? 0 : 1].push(element);
+      return result;
+    },
+    [[], []],
+  );
+}
+
+const users = [
+  { user: "barney", age: 36, active: false },
+  { user: "fred", age: 40, active: true },
+  { user: "pebbles", age: 1, active: false },
+];
+
+const [active, inactive] = partition(users, (user) => user.active);
+console.log(active);
+// [{ 'user': 'fred', 'age': 40, 'active': true }]
+console.log(inactive);
+// [
+//   { user: 'barney', age: 36, active: false },
+//   { user: 'pebbles', age: 1, active: false }
+// ]
+```
+
+## orderBy
+
+```js title="orderBy"
+function orderBy(array, property, order = "asc") {
+  return array.slice().sort((a, b) => {
+    if (a[property] < b[property]) {
+      return order === "asc" ? -1 : 1;
+    }
+    if (a[property] > b[property]) {
+      return order === "asc" ? 1 : -1;
+    }
+    return 0;
+  });
+}
+
+const users = [
+  { user: "barney", age: 36 },
+  { user: "fred", age: 40 },
+  { user: "pebbles", age: 1 },
+];
+
+const sortedByAgeAsc = orderBy(users, "age", "asc");
+console.log(sortedByAgeAsc);
+// [
+//   { user: 'pebbles', age: 1 },
+//   { user: 'barney', age: 36 },
+//   { user: 'fred', age: 40 }
+// ]
+
+const sortedByAgeDesc = orderBy(users, "user", "desc");
+console.log(sortedByAgeDesc);
+// [
+//   { user: 'pebbles', age: 1 },
+//   { user: 'fred', age: 40 },
+//   { user: 'barney', age: 36 }
+// ]
+```

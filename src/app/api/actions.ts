@@ -1,7 +1,7 @@
 "use server";
 import { auth } from "@/auth";
 import { Pool } from "pg";
-import { variousQty } from "@/content/various2";
+import { various2Qty } from "@/content/various2";
 import { redirect } from "next/navigation";
 
 const client = new Pool();
@@ -30,7 +30,7 @@ export async function shuffleArray() {
   );
 
   if (data.rows.length === 0) {
-    const shuffledArray = shuffleArrayFromQty(variousQty);
+    const shuffledArray = shuffleArrayFromQty(various2Qty);
 
     await client.query(
       `
@@ -40,7 +40,7 @@ export async function shuffleArray() {
       [session?.user?.email, shuffledArray],
     );
   } else {
-    const shuffledArray = shuffleArrayFromQty(variousQty);
+    const shuffledArray = shuffleArrayFromQty(various2Qty);
 
     await client.query(
       `UPDATE js_cheatsheet

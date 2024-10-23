@@ -1,7 +1,7 @@
-import Content from "./content.mdx";
 import { Metadata } from "next";
 import * as React from "react";
 import Link from "next/link";
+import Content from "@/content/principles/principles.mdx";
 
 export const metadata: Metadata = {
   title: "Principles",

@@ -18,4 +18,4 @@ export const various2 = [
   quickSort,
 ];
 
-export const variousQty = various2.length;
+export const various2Qty = various2.length;
