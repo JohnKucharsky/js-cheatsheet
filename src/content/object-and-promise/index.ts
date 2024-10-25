@@ -13,5 +13,3 @@ export const objectAndPromise = [
   promiseAny,
   promiseRace,
 ];
-
-export const objectAndPromiseQty = objectAndPromise.length;

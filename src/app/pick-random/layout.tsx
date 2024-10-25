@@ -2,9 +2,12 @@ import { ReactElement, Suspense } from "react";
 import { auth, signIn, signOut } from "@/auth";
 import UserInfo from "@/components/user-info";
 import ShuffleButton from "@/components/shuffle-button";
+import { quantity } from "@/app/api/quantity-and-list";
+import { itemsLeftInList } from "@/app/api/actions";
 
 export default async function Layout({ children }: { children: ReactElement }) {
   const session = await auth();
+  const count = await itemsLeftInList();
 
   return (
     <>
@@ -16,6 +19,7 @@ export default async function Layout({ children }: { children: ReactElement }) {
         {Boolean(session) && (
           <div className="flex items-center gap-4">
             <ShuffleButton />
+            <div>{`${count} of ${quantity}`}</div>
           </div>
         )}
         <div className={"flex gap-4 items-start"}>

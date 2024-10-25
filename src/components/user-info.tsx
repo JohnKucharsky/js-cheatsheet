@@ -12,7 +12,7 @@ export default function UserInfo({
   imgSrc?: string | null;
 }>) {
   return (
-    <div className="text-sm leading-6">
+    <div className="text-sm leading-4">
       <div className="flex items-center space-x-4">
         <Image
           src={imgSrc || ""}
@@ -27,7 +27,7 @@ export default function UserInfo({
           <div className="text-base text-slate-900 font-semibold dark:text-slate-200">
             {userName}
           </div>
-          <div className="mt-0.5 dark:text-slate-300">{email}</div>
+          <div className="mb-0.5 dark:text-slate-300">{email}</div>
           {children}
         </div>
       </div>

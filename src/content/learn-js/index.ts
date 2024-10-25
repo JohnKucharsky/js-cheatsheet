@@ -23,5 +23,3 @@ export const learnJs = [
   throttlingDecorator,
   typeConversions,
 ];
-
-export const learnJsQty = learnJs.length;

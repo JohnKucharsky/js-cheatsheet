@@ -1,0 +1,51 @@
+
+## pop
+
+The pop() method of Array instances removes the last element
+from an array and returns that element. This method changes the
+length of the array
+
+```js title="Array.prototype.pop()"
+Array.prototype.customPop = function () {
+  if (this.length === 0) {
+    return undefined;
+  }
+
+  const lastElement = this[this.length - 1];
+  this.length = this.length - 1;
+
+  return lastElement;
+};
+
+const fruits = ["Apple", "Banana", "Cherry"];
+const lastFruit = fruits.customPop();
+console.log(lastFruit); // Cherry
+console.log(fruits); // [ "Apple", "Banana" ]
+```
+
+## push
+
+Adds the specified elements to the end of an array and returns
+the new length of the array.
+
+```js title="Array.prototype.push()"
+Array.prototype.customPush = function () {
+  for (let i = 0; i < arguments.length; i++) {
+    this[this.length] = arguments[i];
+  }
+
+  return this.length;
+};
+
+const animals = ["pigs", "goats"];
+
+const count = animals.customPush("cows");
+console.log(count); // 3
+
+console.log(animals); // [ 'pigs', 'goats', 'cows' ]
+
+animals.customPush("chickens", "cats");
+console.log(animals);
+// [ 'pigs', 'goats', 'cows', 'chickens', 'cats' ]
+```
+

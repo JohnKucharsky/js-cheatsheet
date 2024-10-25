@@ -13,5 +13,3 @@ export const various = [
   setPlus,
   stackAndPalindrome,
 ];
-
-export const variousQty = various.length;

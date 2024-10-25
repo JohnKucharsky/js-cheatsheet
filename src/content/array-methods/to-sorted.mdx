@@ -1,0 +1,37 @@
+
+## toSorted
+
+The copying version of the sort() method. It returns a
+new array with the elements sorted in ascending order.
+
+```js title="Array.prototype.toSorted()"
+Array.prototype.customToSorted = function (compareFn) {
+  if (!compareFn) {
+    compareFn = (a, b) => (a > b ? 1 : -1);
+  }
+
+  const copy = structuredClone(this);
+
+  for (let i = 0; i < copy.length; i++) {
+    for (let j = i + 1; j < copy.length; j++) {
+      if (compareFn(copy[i], copy[j]) > 0) {
+        let temp = copy[i];
+        copy[i] = copy[j];
+        copy[j] = temp;
+      }
+    }
+  }
+
+  return copy;
+};
+
+const months = ["Mar", "Jan", "Feb", "Dec"];
+const sortedMonths = months.customToSorted();
+console.log(sortedMonths); // ['Dec', 'Feb', 'Jan', 'Mar']
+console.log(months); // ['Mar', 'Jan', 'Feb', 'Dec']
+
+const values = [1, 10, 21, 2];
+const sortedValues = values.customToSorted((a, b) => a - b);
+console.log(sortedValues); // [1, 2, 10, 21]
+console.log(values); // [1, 10, 21, 2]
+```

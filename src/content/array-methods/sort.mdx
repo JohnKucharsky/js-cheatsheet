@@ -1,0 +1,44 @@
+
+## sort
+
+Sorts the elements of an array in place and returns the reference
+to the same array, now sorted. The default sort order is ascending,
+built upon converting the elements into strings, then comparing their
+sequences of UTF-16 code units values. The time and space complexity
+of the sort cannot be guaranteed as it depends on the implementation
+
+```js title="Array.prototype.sort()"
+Array.prototype.customSort = function (compareFn) {
+  if (!compareFn) {
+    compareFn = (a, b) => (a > b ? 1 : -1);
+  }
+
+  for (let i = 0; i < this.length; i++) {
+    for (let j = i + 1; j < this.length; j++) {
+      if (compareFn(String(this[i]), String(this[j])) > 0) {
+        let temp = this[i];
+        this[i] = this[j];
+        this[j] = temp;
+      }
+    }
+  }
+
+  return this;
+};
+
+const months = ["March", "Jan", "Feb", "Dec"];
+months.customSort();
+console.log(months); // ["Dec", "Feb", "Jan", "March"]
+
+const array1 = ["1", "30", "4", "21", "100000"];
+array1.customSort();
+console.log(array1); // [1, 100000, 21, 30, 4]
+
+const array2 = [1, 30, 4, 21, 100000];
+array2.customSort();
+console.log(array2); // [1, 100000, 21, 30, 4]
+
+const array3 = [5, 8, 100, 0];
+array3.customSort((a, b) => a - b);
+console.log(array3); // [0, 5, 8, 100]
+```

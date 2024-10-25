@@ -13,5 +13,3 @@ export const lodash = [
   partitionAndOrderBy,
   pickOmit,
 ];
-
-export const lodashQty = lodash.length;

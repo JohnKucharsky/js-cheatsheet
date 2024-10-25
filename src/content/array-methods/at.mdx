@@ -1,0 +1,27 @@
+
+## at
+
+Takes an integer value and returns the item at that index,
+allowing for positive and negative integers. Negative integers
+count back from the last item in the array
+
+```js title="Array.prototype.at()"
+Array.prototype.customAt = function (index) {
+  if (index < 0) {
+    index = this.length + index;
+  }
+
+  return this[index];
+};
+
+const array1 = [5, 12, 8, 130, 44];
+
+let index = 2;
+console.log(`An index of ${index} returns ${array1.customAt(index)}`);
+// "An index of 2 returns 8"
+
+index = -2;
+console.log(`An index of ${index} returns ${array1.customAt(index)}`);
+// "An index of -2 returns 130"
+```
+

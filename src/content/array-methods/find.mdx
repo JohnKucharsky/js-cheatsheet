@@ -1,0 +1,88 @@
+
+## find
+
+Returns the first element in the provided array that satisfies the
+provided testing function. If no values satisfy the testing function,
+undefined is returned
+
+```js title="Array.prototype.find()"
+Array.prototype.customFind = function (callback) {
+  for (let i = 0; i < this.length; i++) {
+    if (callback.call(this, this[i])) {
+      return this[i];
+    }
+  }
+};
+
+const array1 = [5, 12, 8, 130, 44];
+const found = array1.customFind((element) => element > 10);
+console.log(found); // 12
+
+const inventory = [
+  { name: "apples", quantity: 2 },
+  { name: "bananas", quantity: 0 },
+  { name: "cherries", quantity: 5 },
+];
+
+const result = inventory.customFind(({ name }) => name === "cherries");
+console.log(result); // { name: 'cherries', quantity: 5 }
+
+const result1 = inventory.customFind(({ name }) => name === "nothing");
+console.log(result1); // undefined
+```
+
+## findIndex
+
+Returns the index of the first element in an array that satisfies
+the provided testing function. If no elements satisfy the testing function,
+-1 is returned
+
+```js title="Array.prototype.findIndex()"
+Array.prototype.customFindIndex = function (callback) {
+  for (let i = 0; i < this.length; i++) {
+    if (callback.call(this, this[i])) {
+      return i;
+    }
+  }
+
+  return -1;
+};
+
+const array1 = [5, 12, 8, 130, 44];
+const found = array1.customFindIndex((element) => element > 10);
+console.log(found); // 1
+
+const inventory = [
+  { name: "apples", quantity: 2 },
+  { name: "bananas", quantity: 0 },
+  { name: "cherries", quantity: 5 },
+];
+
+const result = inventory.customFindIndex(({ name }) => name === "cherries");
+console.log(result); // 2
+
+const result1 = inventory.customFindIndex(({ name }) => name === "nothing");
+console.log(result1); // -1
+```
+
+## findLast
+
+Iterates the array in reverse order and returns the value of the first element that
+satisfies the provided testing function. If no elements satisfy the testing function,
+undefined is returned
+
+```js title="Array.prototype.findLast()"
+Array.prototype.customFindLast = function (callback) {
+  for (let i = this.length; i >= 0; i--) {
+    if (callback.call(this, this[i])) {
+      return this[i];
+    }
+  }
+};
+
+const array1 = [5, 12, 8, 130, 44];
+const found = array1.customFindLast((element) => element > 10);
+console.log(found); // 44
+```
+
+

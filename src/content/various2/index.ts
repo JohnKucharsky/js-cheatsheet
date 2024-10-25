@@ -17,5 +17,3 @@ export const various2 = [
   primeNumber,
   quickSort,
 ];
-
-export const various2Qty = various2.length;

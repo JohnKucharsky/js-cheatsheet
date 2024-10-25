@@ -1,8 +1,8 @@
 "use server";
 import { auth } from "@/auth";
 import { Pool } from "pg";
-import { various2Qty } from "@/content/various2";
 import { redirect } from "next/navigation";
+import { quantity } from "@/app/api/quantity-and-list";
 
 const client = new Pool();
 
@@ -30,7 +30,7 @@ export async function shuffleArray() {
   );
 
   if (data.rows.length === 0) {
-    const shuffledArray = shuffleArrayFromQty(various2Qty);
+    const shuffledArray = shuffleArrayFromQty(quantity);
 
     await client.query(
       `
@@ -40,7 +40,7 @@ export async function shuffleArray() {
       [session?.user?.email, shuffledArray],
     );
   } else {
-    const shuffledArray = shuffleArrayFromQty(various2Qty);
+    const shuffledArray = shuffleArrayFromQty(quantity);
 
     await client.query(
       `UPDATE js_cheatsheet
@@ -84,4 +84,15 @@ export async function nextItem() {
   } else {
     redirect(`/pick-random`);
   }
+}
+
+export async function itemsLeftInList(): Promise<number | null | undefined> {
+  const session = await auth();
+
+  const res = await client.query(
+    `SELECT shuffledArray FROM js_cheatsheet WHERE id = $1`,
+    [session?.user?.email],
+  );
+
+  return res.rows[0]?.shuffledarray?.length;
 }

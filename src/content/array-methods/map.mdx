@@ -1,0 +1,66 @@
+
+## map
+
+Creates a new array populated with the results of calling a
+provided function on every element in the calling array
+
+```js title="Array.prototype.map()"
+Array.prototype.customMap = function (callbackFn) {
+  if (typeof callbackFn !== "function") {
+    throw new TypeError("Callback must be a function");
+  }
+
+  const arr = [];
+  for (let i = 0; i < this.length; i++) {
+    arr.push(callbackFn(this[i], i, this));
+  }
+
+  return arr;
+};
+
+const array1 = [1, 4, 9, 16];
+
+const map1 = array1.customMap((x) => x * 2);
+console.log(map1); // [ 2, 8, 18, 32 ]
+
+const numbers = [1, 4, 9];
+const roots = numbers.customMap((num) => Math.sqrt(num));
+console.log(numbers); // [ 1, 4, 9 ]
+console.log(roots); // [ 1, 2, 3 ]
+
+const kvArray = [
+  { key: 1, value: 10 },
+  { key: 2, value: 20 },
+  { key: 3, value: 30 },
+];
+const formattedArray = kvArray.customMap(({ key, value }) => ({
+  [key]: value,
+}));
+console.log(formattedArray); // [ { 1: 10 }, { 2: 20 }, { 3: 30 } ]
+
+console.log(["1", "2", "3"].customMap(Number)); // [ 1, 2, 3 ]
+
+const numbers2 = [3, 1, 4, 1, 5];
+const averaged = numbers2.customMap((num, idx, arr) => {
+  const prev = arr[idx - 1];
+  const next = arr[idx + 1];
+
+  let count = 1;
+  let total = num;
+
+  if (prev !== undefined) {
+    count++;
+    total += prev;
+  }
+  if (next !== undefined) {
+    count++;
+    total += next;
+  }
+
+  const average = total / count;
+
+  return Math.round(average * 100) / 100;
+});
+console.log(averaged); // [ 2, 2.67, 2, 3.33, 3 ]
+```
+

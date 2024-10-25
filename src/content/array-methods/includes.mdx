@@ -1,0 +1,53 @@
+
+## includes
+
+Determines whether an array includes a certain value among its entries,
+returning true or false as appropriate
+
+```js title="Array.prototype.includes()"
+function sameValueZero(x, y) {
+  if (typeof x === "number" && typeof y === "number") {
+    // x and y are equal (can be -0 and 0) or they are both NaN
+    return x === y || (x !== x && y !== y);
+  }
+  return x === y;
+}
+
+Array.prototype.customIncludes = function (searchElement, fromIndex = 0) {
+  if (this.length === 0) {
+    return false;
+  }
+
+  if (fromIndex < 0 && Math.abs(fromIndex) <= this.length) {
+    fromIndex = this.length + fromIndex;
+  }
+
+  for (let i = fromIndex; i < this.length; i++) {
+    if (sameValueZero(this[i], searchElement)) {
+      return true;
+    }
+
+    if (this[i] === searchElement) {
+      return true;
+    }
+  }
+
+  return false;
+};
+
+console.log([1, 2, 3].customIncludes(2)); // true
+console.log([1, 2, 3].customIncludes(4)); // false
+console.log([1, 2, 3].customIncludes(3, 3)); // false
+console.log([1, 2, 3].customIncludes(3, -1)); // true
+console.log([1, 2, NaN].customIncludes(NaN)); // true
+console.log(["1", "2", "3"].customIncludes(3)); // false
+
+const arr = ["a", "b", "c"];
+
+console.log(arr.includes("a", -100)); // true
+console.log(arr.includes("b", -100)); // true
+console.log(arr.includes("c", -100)); // true
+console.log(arr.includes("a", -2)); // false
+console.log(arr.includes("a", -3)); // true
+```
+

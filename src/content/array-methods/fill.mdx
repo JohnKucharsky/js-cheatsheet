@@ -1,0 +1,44 @@
+
+## fill
+
+Changes all elements within a range of indices in an array to a static value.
+It returns the modified array
+
+```js title="Array.prototype.fill()"
+Array.prototype.customFill = function (value, start = 0, end = this.length) {
+  if (start < 0) {
+    start = this.length + start;
+  }
+
+  if (end < 0) {
+    end = this.length + end;
+  }
+
+  for (let i = start; i < Math.min(end, this.length); i++) {
+    this[i] = value;
+  }
+
+  return this;
+};
+
+const array1 = [1, 2, 3, 4];
+
+// Fill with 0 from position 2 until position 4
+console.log(array1.customFill(0, 2, 4));
+// [1, 2, 0, 0]
+
+// Fill with 5 from position 1
+console.log(array1.customFill(5, 1));
+// [1, 5, 5, 5]
+
+console.log(array1.customFill(6));
+// [6, 6, 6, 6]
+
+console.log([1, 2, 3].customFill(4)); // [4, 4, 4]
+console.log([1, 2, 3].customFill(4, 1)); // [1, 4, 4]
+console.log([1, 2, 3].customFill(4, 1, 2)); // [1, 4, 3]
+console.log([1, 2, 3].customFill(4, 1, 1)); // [1, 2, 3]
+console.log([1, 2, 3].customFill(4, 3, 3)); // [1, 2, 3]
+console.log([1, 2, 3].customFill(4, -3, -2)); // [4, 2, 3]
+```
+

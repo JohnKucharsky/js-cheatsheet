@@ -13,5 +13,3 @@ export const leetcode = [
   lengthOfLastWord,
   summaryRanges,
 ];
-
-export const leetcodeQty = leetcode.length;

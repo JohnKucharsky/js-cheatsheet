@@ -1,0 +1,49 @@
+
+## useHover
+
+```tsx title="useHover"
+import { useState, useEffect, useRef, MutableRefObject } from "react";
+
+function useHover(): [MutableRefObject<HTMLDivElement | null>, boolean] {
+  const [isHovered, setIsHovered] = useState<boolean>(false);
+  const ref = useRef<HTMLDivElement | null>(null);
+
+  const handleMouseOver = () => setIsHovered(true);
+  const handleMouseOut = () => setIsHovered(false);
+
+  useEffect(() => {
+    const node = ref.current;
+
+    if (node) {
+      node.addEventListener("mouseover", handleMouseOver);
+      node.addEventListener("mouseout", handleMouseOut);
+
+      return () => {
+        node.removeEventListener("mouseover", handleMouseOver);
+        node.removeEventListener("mouseout", handleMouseOut);
+      };
+    }
+  }, []);
+
+  return [ref, isHovered];
+}
+
+function App() {
+  const [ref, isHovered] = useHover();
+
+  return (
+    <div
+      ref={ref}
+      style={{
+        margin: "3rem auto",
+        width: "6rem",
+        height: "6rem",
+        backgroundColor: isHovered ? "red" : "green",
+      }}
+    />
+  );
+}
+
+export default App;
+```
+
