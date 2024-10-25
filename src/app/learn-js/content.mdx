@@ -1,0 +1,532 @@
+[back](/)
+
+# Learn JS
+
+## type conversions
+
+### plus
+
+Concatenates strings
+
+```js title="plus conversion"
+const log = (value) => console.log(value);
+
+log(null + 1); // 1
+log(undefined + 1); // NaN
+log(false + 1); // 1
+log(true + 1); // 2
+log("" + 1); // "1"
+log("s" + 1); // "s1"
+log("1" + 1); // "11"
+
+log(1 + null); // 1
+log(1 + undefined); // NaN
+log(1 + false); // 1
+log(1 + true); // 2
+log(1 + ""); // "1"
+log(1 + "s"); // "1s"
+log(1 + "1"); // "11"
+```
+
+### minus
+
+Behaves like other operators, converts to numbers
+
+```js title="minus"
+const log = (value) => console.log(value);
+
+log(null - 1); // -1
+log(undefined - 1); // NaN
+log(false - 1); // -1
+log(true - 1); // 0
+log("" - 1); // -1
+log("s" - 1); // NaN
+log("1" - 1); // 0
+
+log(1 - null); // 1
+log(1 - undefined); // NaN
+log(1 - false); // 1
+log(1 - true); // 0
+log(1 - ""); // 1
+log(1 - "s"); // NaN
+log(1 - "1"); // 0
+```
+
+### comparisons
+
+When comparing values of different types,
+they convert to numbers
+
+```js title="comparisons"
+const log = (value) => console.log(value);
+
+log(null < 1); // true
+log(undefined < 1); // false
+log(undefined > 1); // false
+log(false < 1); // true
+log(true > 0); // true
+log("" > 0); // false
+log("s" > 1); // false
+log("1" > 0); // true
+log("12" > "111"); // true
+log("12" > 111); // false
+log("break");
+log(null <= 1); // true
+log(null <= 0); // true
+log(undefined <= 1); // false
+log(undefined >= 1); // false
+log(false <= 1); // true
+log(true >= 0); // true
+log("" >= 0); // true
+log("s" >= 1); // false
+log("1" >= 0); // true
+log("12" >= "111"); // true
+log("12" >= 111); // false
+log("break");
+log("0" >= 0); // true
+```
+
+### equality
+
+Strict equality === doesn't convert values
+
+```js title="== and ==="
+const log = (value) => console.log(value);
+
+log(null == null); // true
+log(undefined == undefined); // true
+log(undefined == null); // true
+log(null == undefined); // true
+log(0 == false); // true
+log(1 == true); // true
+log(0 == ""); // true
+log(1 == "s"); // false
+log(1 == "1"); // true
+// [] converted to ''
+log(0 == []); // true
+log(0 == {}); // false
+log("break");
+log(null === null); // true
+log(undefined === undefined); // true
+log(undefined === null); // false
+log([] === []); // false
+```
+
+### random conversions
+
+```js title="random"
+const log = (value) => console.log(value);
+
+log("" + 1 + 0); // "10"
+log("" - 1 + 0); // -1
+log(true + false); // 1
+log(6 / "3"); // 2
+log("2" * "3"); // 6
+log(4 + 5 + "px"); // "9px"
+log("$" + 4 + 5); // "$45"
+log("4" - 2); // 2
+log("4px" - 2); // NaN
+log("  -9  " + 5); // "  -9  5"
+log("  -9  " - 5); // -14
+log(null + 1); // 1
+log(undefined + 1); // NaN
+log(" \t \n" - 2); // -2
+```
+
+## this
+
+Below `users.customFilterNoThis(army.canJoin)`, throws, `army.canJoin` was called
+as a standalone function, with `this=undefined`, thus leading to an instant error.
+A call to `users.customFilter(army.canJoin, army)` can be replaced with
+`users.customFilterNoThis(user => army.canJoin(user))`, that does the same.
+This is an object before dot
+
+```js title="losing this"
+Array.prototype.customFilter = function (callback, thisArg) {
+  let result = [];
+
+  for (let i = 0; i < this.length; i++) {
+    if (callback.call(thisArg, this[i], i, this)) {
+      result.push(this[i]);
+    }
+  }
+
+  return result;
+};
+
+Array.prototype.customFilterNoThis = function (callback) {
+  let result = [];
+
+  for (let i = 0; i < this.length; i++) {
+    if (callback(this[i], i, this)) {
+      result.push(this[i]);
+    }
+  }
+
+  return result;
+};
+
+const army = {
+  minAge: 18,
+  maxAge: 27,
+  canJoin(user) {
+    return user.age >= this.minAge && user.age < this.maxAge;
+  },
+};
+
+const users = [{ age: 16 }, { age: 20 }, { age: 23 }, { age: 30 }];
+
+const soldiers1 = users.customFilterNoThis(army.canJoin);
+// return user.age >= this.minAge && user.age < this.maxAge;
+// TypeError: Cannot read properties of undefined (reading 'minAge')
+const soldiers2 = users.customFilterNoThis((user) => army.canJoin(user));
+const soldiers3 = users.customFilter(army.canJoin, army);
+
+console.log(soldiers2); // [ { age: 20 }, { age: 23 } ]
+console.log(soldiers3); // [ { age: 20 }, { age: 23 } ]
+```
+
+## object and map conversion
+
+```js title="object and map conversion"
+const prices = Object.fromEntries([
+  ["banana", 1],
+  ["orange", 2],
+  ["meat", 4],
+]);
+
+console.log(prices);
+// { banana: 1, orange: 2, meat: 4 }
+
+const map = new Map();
+map.set("banana", 1);
+map.set("orange", 2);
+map.set("meat", 4);
+
+const arrayLikeMapEntries = map.entries();
+const arrayMapEntries = Array.from(arrayLikeMapEntries);
+
+console.log(arrayMapEntries);
+// [ [ 'banana', 1 ], [ 'orange', 2 ], [ 'meat', 4 ] ]
+console.log(arrayLikeMapEntries); // MapIterator {  }
+// here iterator is already done, create new one
+const arrayLikeMapEntries2 = map.entries();
+console.log(arrayLikeMapEntries2);
+// MapIterator
+// { [ 'banana', 1 ], [ 'orange', 2 ], [ 'meat', 4 ] }
+
+const objectFromMap = Object.fromEntries(arrayLikeMapEntries2);
+console.log(objectFromMap);
+// { banana: 1, orange: 2, meat: 4 }
+
+const mapFromObject = new Map(Object.entries(objectFromMap));
+console.log(mapFromObject.get("meat")); // 4
+```
+
+## bind
+
+In the line `(*)` we take the method `user.sayHi` and bind it to `user`. The `sayHi` is a "bound" function,
+that can be called alone or passed to `setTimeout` - doesn't matter, the context will be right.
+Here we can see that arguments are passed "as is", only `this` is fixed by `bind`
+
+```js title="bind"
+const user = {
+  firstName: "John",
+  sayHi() {
+    console.log(`Hello, ${this.firstName}!`);
+  },
+};
+
+user.sayHi(); // Hello, John!
+setTimeout(user.sayHi, 1000); // Hello, undefined!
+
+// solution 1
+setTimeout(function () {
+  user.sayHi(); // Hello, John!
+}, 1000);
+// or shorter
+setTimeout(() => {
+  user.sayHi(); // Hello, John!
+}, 1000);
+
+// solution 2
+const sayHi = user.sayHi.bind(user);
+// can run it without an object
+sayHi(); // Hello, John!
+setTimeout(sayHi, 1000); // Hello, John!
+```
+
+## fibonacci
+
+The sequence of [Fibonacci numbers](https://en.wikipedia.org/wiki/Fibonacci_number) has
+the formula <code>F<sub>n</sub> = F<sub>n-1</sub> + F<sub>n-2</sub></code>. In other words,
+the next number is a sum of the two preceding ones.
+First two numbers are `1`, then `2(1+1)`, then `3(1+2)`, `5(2+3)` and so on: `1, 1, 2, 3, 5, 8, 13, 21...`
+
+```js title="fibonacci loop"
+function fib(n) {
+  let a = 1;
+  let b = 1;
+  for (let i = 3; i <= n; i++) {
+    let c = a + b;
+    a = b;
+    b = c;
+  }
+  return b;
+}
+
+console.log(fib(3)); // 2
+console.log(fib(7)); // 13
+console.log(fib(77)); // 5527939700884757
+```
+
+```js title="fibonacci recursion"
+function fib(n) {
+  return n <= 1 ? n : fib(n - 1) + fib(n - 2);
+}
+
+console.log(fib(3)); // 2
+console.log(fib(7)); // 13
+console.log(fib(77)); // -
+```
+
+## shooters
+
+Every function is meant to output its number. All `shooter` functions are created in the lexical
+environment of `makeArmy()` function. But when `army[5]()` is called, `makeArmy` has already
+finished its job, and the final value of `i` is `10` (`while` stops at `i=10`). As the result,
+all `shooter` functions get the same value from the outer lexical environment and that is,
+the last value, `i=10`. Solution is to save variable `let j = i`
+
+```js title="shooters"
+function makeArmy() {
+  let shooters = [];
+
+  let i = 0;
+  while (i < 10) {
+    let j = i; // save local variable
+    let shooter = function () {
+      // create a shooter function,
+      return j; // that should show its number
+    };
+    shooters.push(shooter); // and add it to the array
+    i++;
+  }
+
+  // ...and return the array of shooters
+  return shooters;
+}
+
+let army = makeArmy();
+
+console.log(army[0]()); // 0
+console.log(army[1]()); // 1
+console.log(army[5]()); // 5
+```
+
+## currying
+
+Sum with an arbitrary amount of brackets.
+
+```js title="currying"
+function sum(a) {
+  let currentSum = a;
+
+  function f(b) {
+    currentSum += b;
+     return f;
+  }
+
+  f.toString = function () {
+    return currentSum;
+  };
+
+  return f;
+}
+
+console.log(sum(1)(2)); // 3
+console.log(sum(5)(-1)(2)); // 6
+console.log(sum(6)(-1)(-2)(-3)); // 0
+console.log(sum(0)(1)(2)(3)(4)(5)); // 15
+```
+
+## delay decorator
+
+Decorator delay(f, ms) delays each call of f by ms milliseconds.
+
+```js title="delay decorator"
+function delay(f, ms) {
+  return function () {
+    setTimeout(() => f.call(this, arguments), ms);
+  };
+}
+
+const f1000 = delay(console.log, 1000);
+
+f1000("test");
+```
+
+## debounce decorator
+
+Every call cancels timout `clearTimeout(timeout)`
+
+```js title="debounce decorator"
+function debounce(func, ms) {
+  let timeout;
+
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), ms);
+  };
+}
+
+// runs only the last one
+const f = debounce(console.log, 1000);
+f("a"); // skip
+setTimeout(() => f("b"), 200); // skip
+setTimeout(() => f("c"), 500); // run after 1000ms
+
+const f2 = debounce(console.log, 100);
+f2("a"); // runs after 100
+setTimeout(() => f2("b"), 200); // runs after 200
+setTimeout(() => f2("c"), 500); // run after 500ms
+
+// if called together
+// a
+// b
+// c
+// c
+```
+
+## throttling decorator
+
+When it's called multiple times, it passes the call to `f` at maximum once
+per `ms` milliseconds.
+Compared to the debounce decorator, the behavior is completely different:
+- `debounce` runs the function once after the "cooldown" period.
+- `throttle` runs it not more often than given `ms` time
+
+A call to `throttle(func, ms)` returns `wrapper`.
+
+1. During the first call, the `wrapper` just runs `func` and sets the
+cooldown state (`isThrottled = true`).
+2. In this state all calls are memorized in `savedArgs/savedThis`. Please note
+that both the context and the arguments are equally important and should be memorized.
+We need them simultaneously to reproduce the call.
+3. After `ms` milliseconds pass, `setTimeout` triggers. The cooldown state is removed
+(`isThrottled = false`) and, if we had ignored calls, `wrapper` is executed with the
+last memorized arguments and context.
+
+The 3rd step runs not `func`, but `wrapper`, because we not only need to execute `func`,
+but once again enter the cooldown state and setup the timeout to reset it.
+
+```js title="throttling decorator"
+function throttle(func, ms) {
+
+  let isThrottled = false,
+    savedArgs,
+    savedThis;
+
+  function wrapper() {
+
+    if (isThrottled) { // (2)
+      savedArgs = arguments;
+      savedThis = this;
+      return;
+    }
+    isThrottled = true;
+
+    func.apply(this, arguments); // (1)
+
+    setTimeout(function() {
+      isThrottled = false; // (3)
+      if (savedArgs) {
+        wrapper.apply(savedThis, savedArgs);
+        savedArgs = savedThis = null;
+      }
+    }, ms);
+  }
+
+  return wrapper;
+}
+
+function f(a) {
+  console.log(a);
+}
+
+// f1000 passes calls to f at maximum once per 1000 ms
+let f1000 = throttle(f, 1000);
+
+f1000(1); // shows 1
+f1000(2); // (throttling, 1000ms not out yet)
+f1000(3); // (throttling, 1000ms not out yet)
+
+// when 1000 ms time out...
+// ...outputs 3, intermediate value 2 was ignored
+```
+
+## async generators
+
+```js title="async generators"
+async function* generateSequence(start, end) {
+  for (let i = start; i <= end; i++) {
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    yield i;
+  }
+}
+
+(async () => {
+  let generator = generateSequence(1, 5);
+  for await (let value of generator) {
+    console.log(value);
+  }
+})()
+// 1, then 2, then 3, then 4, then 5 (with delay between)
+```
+
+## observable
+
+```js title="observable"
+const handlers = Symbol("handlers");
+
+function makeObservable(target) {
+  // 1. Initialize handlers store
+  target[handlers] = [];
+
+  // Store the handler function in array for future calls
+  target.observe = function (handler) {
+    this[handlers].push(handler);
+  };
+
+  // 2. Create a proxy to handle changes
+  return new Proxy(target, {
+    set(target, property, value, receiver) {
+      const success = Reflect.set(...arguments); // forward the operation to object
+      if (success) {
+        // if there were no error while setting the property
+        // call all handlers
+        target[handlers].forEach((handler) => handler(property, value));
+      }
+      return success;
+    },
+  });
+}
+
+// const gives error
+let user = {};
+
+user = makeObservable(user);
+
+user.observe((key, value) => {
+  console.log(`SET ${key}=${value}`);
+});
+user.observe((key, value) => {
+  console.log(`SET ${key}=${value}`);
+});
+user.name = "John";
+// logged 2 times, because 2 handlers registered
+// SET name=John
+```
+
+
