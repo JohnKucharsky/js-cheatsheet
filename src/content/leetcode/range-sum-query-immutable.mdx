@@ -1,0 +1,31 @@
+
+## range sum query immutable
+
+Prefix sum problem
+
+```js title="RangeSum"
+class RangeSum {
+  constructor(nums) {
+    this.nums = nums;
+    this.sums = new Array(nums.length).fill(0);
+    let sum = 0;
+    for (let i = 0; i < nums.length; i++) {
+      sum += nums[i];
+      this.sums[i] = sum;
+    }
+  }
+
+  sumRange(i, j) {
+    return this.sums[j] - this.sums[i] + this.nums[i];
+  }
+}
+
+// Example usage:
+const numArray = new RangeSum([-2, 0, 3, -5, 2, -1]);
+console.log(numArray.sumRange(0, 2));
+// return (-2) + 0 + 3 = 1
+console.log(numArray.sumRange(2, 5));
+// return 3 + (-5) + 2 + (-1) = -1
+console.log(numArray.sumRange(0, 5));
+// return (-2) + 0 + 3 + (-5) + 2 + (-1) = -3
+```

@@ -1,0 +1,76 @@
+
+## twitter
+
+```js title="twitter"
+class Twitter {
+  constructor() {
+    this.follows = new Map();
+    this.tweets = new Map();
+    this.timestamp = 0;
+  }
+
+  postTweet(userId, tweetId) {
+    if (!this.tweets.has(userId)) {
+      this.tweets.set(userId, []);
+    }
+    this.tweets
+      .get(userId)
+      .unshift({ tweetId, timestamp: this.timestamp++, userId });
+
+    if (!this.follows.has(userId)) {
+      this.follows.set(userId, new Set());
+      this.follows.get(userId).add(userId);
+    }
+  }
+
+  getNewsFeed(userId) {
+    const feed = [];
+    if (!this.follows.has(userId)) {
+      return feed;
+    }
+
+    const followed = this.follows.get(userId);
+    const allTweets = [];
+
+    for (const followeeId of followed) {
+      if (this.tweets.has(followeeId)) {
+        allTweets.push(...this.tweets.get(followeeId));
+      }
+    }
+
+    allTweets.sort((a, b) => b.timestamp - a.timestamp);
+
+    for (let i = 0; i < Math.min(10, allTweets.length); i++) {
+      feed.push(allTweets[i].tweetId);
+    }
+
+    return feed;
+  }
+
+  follow(followerId, followeeId) {
+    if (!this.follows.has(followerId)) {
+      this.follows.set(followerId, new Set());
+      this.follows.get(followerId).add(followerId);
+    }
+    this.follows.get(followerId).add(followeeId);
+  }
+
+  unfollow(followerId, followeeId) {
+    if (followerId === followeeId) {
+      return;
+    }
+    if (this.follows.has(followerId)) {
+      this.follows.get(followerId).delete(followeeId);
+    }
+  }
+}
+
+const twitter = new Twitter();
+twitter.postTweet(1, 5);
+console.log(twitter.getNewsFeed(1)); // Output: [5]
+twitter.follow(1, 2);
+twitter.postTweet(2, 6);
+console.log(twitter.getNewsFeed(1)); // Output: [6, 5]
+twitter.unfollow(1, 2);
+console.log(twitter.getNewsFeed(1)); // Output: [5]
+```

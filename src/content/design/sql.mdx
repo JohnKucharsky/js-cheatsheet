@@ -1,0 +1,44 @@
+
+## sql
+
+```js title="sql"
+class SQL {
+  constructor() {
+    this.tables = new Map();
+  }
+
+  createTable(tableName, columns) {
+    if (!this.tables.has(tableName)) {
+      this.tables.set(tableName, { columns, rows: [] });
+    }
+  }
+
+  insertRow(tableName, row) {
+    if (this.tables.has(tableName)) {
+      this.tables.get(tableName).rows.push(row);
+    }
+  }
+
+  select(tableName, columns) {
+    if (this.tables.has(tableName)) {
+      const table = this.tables.get(tableName);
+      return table.rows.map((row) => {
+        let selectedRow = {};
+        columns.forEach((col) => {
+          if (table.columns.includes(col)) {
+            selectedRow[col] = row[col];
+          }
+        });
+        return selectedRow;
+      });
+    }
+    return [];
+  }
+}
+
+const sql = new SQL();
+sql.createTable("users", ["id", "name", "age"]);
+sql.insertRow("users", { id: 1, name: "Alice", age: 30 });
+sql.insertRow("users", { id: 2, name: "Bob", age: 25 });
+console.log(sql.select("users", ["name", "age"]));
+```

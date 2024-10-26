@@ -7,6 +7,7 @@ import { objectAndPromise } from "@/content/object-and-promise";
 import { various } from "@/content/various";
 import { various2 } from "@/content/various2";
 import { principles } from "@/content/principles";
+import { design } from "@/content/design";
 
 export const listOfAllItems = [
   ...arrayMethods,
@@ -18,6 +19,7 @@ export const listOfAllItems = [
   principles,
   ...various,
   ...various2,
+  ...design,
 ];
 
 export const quantity = listOfAllItems.length;
