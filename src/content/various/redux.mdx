@@ -1,0 +1,62 @@
+
+## redux
+
+Redux pattern
+
+```js title="redux"
+class Store {
+  constructor(reducer, initialState) {
+    this.reducer = reducer;
+    this.state = initialState;
+    this.listeners = [];
+  }
+
+  getState() {
+    return this.state;
+  }
+
+  dispatch(action) {
+    this.state = this.reducer(this.state, action);
+    this.listeners.forEach((listener) => listener());
+  }
+
+  subscribe(listener) {
+    this.listeners.push(listener);
+    return () => {
+      this.listeners = this.listeners.filter((l) => l !== listener);
+    };
+  }
+}
+
+// Example reducer function
+const reducer = (state, action) => {
+  switch (action.type) {
+    case "INCREMENT":
+      return { ...state, count: state.count + 1 };
+    case "DECREMENT":
+      return { ...state, count: state.count - 1 };
+    default:
+      return state;
+  }
+};
+
+// Initial state
+const initialState = { count: 0 };
+
+// Create store
+const store = new Store(reducer, initialState);
+
+// Subscribe to state changes
+const unsubscribe = store.subscribe(() => {
+  console.log(store.getState());
+});
+
+// Dispatch actions
+console.log(store.getState());
+store.dispatch({ type: "INCREMENT" });
+store.dispatch({ type: "INCREMENT" });
+store.dispatch({ type: "DECREMENT" });
+
+// Unsubscribe from state changes
+unsubscribe();
+```

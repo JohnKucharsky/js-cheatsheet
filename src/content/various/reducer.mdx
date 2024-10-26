@@ -1,0 +1,55 @@
+
+## reducer
+
+The function you pass to `reduce` is known as a “reducer”. It takes the result
+so far and the current item, then it returns the next result. React reducers are
+an example of the same idea: they take the state so far and the action, and return
+the next state. In this way, they accumulate actions over time into state
+
+```js title="Array.prototype.reduce()"
+function tasksReducer(tasks, action) {
+  switch (action.type) {
+    case "added": {
+      return [
+        ...tasks,
+        {
+          id: action.id,
+          text: action.text,
+          done: false,
+        },
+      ];
+    }
+    case "changed": {
+      return tasks.map((t) => {
+        if (t.id === action.id) {
+          const { type, ...actionNoType } = action;
+          return actionNoType;
+        } else {
+          return t;
+        }
+      });
+    }
+    case "deleted": {
+      return tasks.filter((t) => t.id !== action.id);
+    }
+    default: {
+      throw Error("Unknown action: " + action.type);
+    }
+  }
+}
+
+const initialState = [];
+const actions = [
+  { type: "added", id: 1, text: "Visit Kafka Museum" },
+  { type: "added", id: 2, text: "Watch a puppet show" },
+  { type: "deleted", id: 1 },
+  { type: "added", id: 3, text: "Lennon Wall pic" },
+  { type: "changed", id: 3, text: "Lennon Wall", done: true },
+];
+const finalState = actions.reduce(tasksReducer, initialState);
+console.log(finalState);
+// [
+//     { id: 2, text: 'Watch a puppet show', done: false },
+//     { id: 3, text: 'Lennon Wall', done: true }
+// ]
+```
