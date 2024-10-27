@@ -11,6 +11,7 @@ import maxConsecutiveOnes from "./max-consecutive-ones.mdx";
 import moveZeroes from "./move-zeroes.mdx";
 import rangeSumQueryImmutable from "./range-sum-query-immutable.mdx";
 import summaryRanges from "./summary-ranges.mdx";
+import validPalindrome from "./valid-palindrome.mdx";
 
 export const leetcode = [
   bestTimeToBuyAndSellStock,
@@ -26,4 +27,5 @@ export const leetcode = [
   moveZeroes,
   rangeSumQueryImmutable,
   summaryRanges,
+  validPalindrome,
 ];
