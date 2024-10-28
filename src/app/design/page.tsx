@@ -1,22 +1,22 @@
 import { Metadata } from "next";
 import * as React from "react";
 import Link from "next/link";
-import { bigFrontEnd } from "@/content/big-front-end";
+import { design } from "@/content/design";
 
 export const metadata: Metadata = {
-  title: "BFE.dev",
+  title: "Design",
 };
 
 export default function Page() {
   return (
     <>
       <Link href={"/"}>back</Link>
-      {bigFrontEnd.map((Content) => (
+      {design.map((Content) => (
         <Content />
       ))}
       <div className={"flex justify-between my-4"}>
         <Link href={"/"}>menu</Link>
-        <Link href={"/design"}>design</Link>
+        <Link href={"/learn-js"}>learn js</Link>
       </div>
     </>
   );

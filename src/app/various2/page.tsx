@@ -3,7 +3,7 @@ import Link from "next/link";
 import { various2 } from "@/content/various2";
 
 export const metadata: Metadata = {
-  title: "Various2",
+  title: "Various 2",
 };
 
 export default function Page() {
@@ -15,7 +15,7 @@ export default function Page() {
       ))}
       <div className={"flex justify-between my-4"}>
         <Link href={"/"}>menu</Link>
-        <Link href={"/leetcode"}>leetcode</Link>
+        <Link href={"/array-methods"}>array methods</Link>
       </div>
     </>
   );
