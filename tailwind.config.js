@@ -65,7 +65,7 @@ module.exports = {
               },
             },
             code: {
-              color: colors.stone[950],
+              color: colors.sky[500],
               "&::before": { content: `unset !important` },
               "&::after": { content: `unset !important` },
               fontWeight: "normal",

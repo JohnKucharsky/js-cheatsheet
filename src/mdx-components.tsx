@@ -7,7 +7,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ...components,
     pre: (props) => (
       <CopyToClipboard>
-        <pre>{props.children}</pre>
+        <pre {...props} />
       </CopyToClipboard>
     ),
   };
