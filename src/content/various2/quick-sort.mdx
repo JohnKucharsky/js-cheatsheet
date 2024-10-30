@@ -4,7 +4,7 @@ QuickSort is a sorting algorithm based on the **Divide and Conquer**
 that picks an element as a pivot and partitions the given array around
 the picked pivot by placing the pivot in its correct position in the sorted array
 
-```js title="quickSort"
+```js
 function quickSort(arr, left = 0, right = arr.length - 1) {
   if (left < right) {
     const pivot = partition(arr, left, right);

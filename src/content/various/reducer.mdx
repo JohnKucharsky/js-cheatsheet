@@ -6,7 +6,7 @@ so far and the current item, then it returns the next result. React reducers are
 an example of the same idea: they take the state so far and the action, and return
 the next state. In this way, they accumulate actions over time into state
 
-```js title="Array.prototype.reduce()"
+```js
 function tasksReducer(tasks, action) {
   switch (action.type) {
     case "added": {

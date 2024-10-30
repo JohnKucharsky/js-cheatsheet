@@ -1,7 +1,7 @@
 
 ## pick
 
-```js title="pick"
+```js
 function pick(obj, keys) {
   return keys.reduce((result, key) => {
     if (obj.hasOwnProperty(key)) {
@@ -25,7 +25,7 @@ console.log(picked);
 
 ## omit
 
-```js title="omit"
+```js
 function omit(obj, keys) {
   const result = { ...obj };
   keys.forEach((key) => {

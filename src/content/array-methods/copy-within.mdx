@@ -4,7 +4,7 @@
 Shallow copies part of this array to another location in the same array
 and returns this array without modifying its length
 
-```js title="Array.prototype.copyWithin()"
+```js
 Array.prototype.myCopyWithin = function (target, start = 0, end = this.length) {
   // Convert negative indices to positive
   target = target < 0 ? this.length + target : target;

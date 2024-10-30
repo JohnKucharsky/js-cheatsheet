@@ -5,7 +5,7 @@
 
 Concatenates strings
 
-```js title="plus conversion"
+```js
 const log = (value) => console.log(value);
 
 log(null + 1); // 1
@@ -29,7 +29,7 @@ log(1 + "1"); // "11"
 
 Behaves like other operators, converts to numbers
 
-```js title="minus"
+```js
 const log = (value) => console.log(value);
 
 log(null - 1); // -1
@@ -54,7 +54,7 @@ log(1 - "1"); // 0
 When comparing values of different types,
 they convert to numbers
 
-```js title="comparisons"
+```js
 const log = (value) => console.log(value);
 
 log(null < 1); // true
@@ -87,7 +87,7 @@ log("0" >= 0); // true
 
 Strict equality === doesn't convert values
 
-```js title="== and ==="
+```js
 const log = (value) => console.log(value);
 
 log(null == null); // true
@@ -111,7 +111,7 @@ log([] === []); // false
 
 ### random conversions
 
-```js title="random"
+```js
 const log = (value) => console.log(value);
 
 log("" + 1 + 0); // "10"

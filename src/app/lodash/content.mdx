@@ -6,7 +6,7 @@
 
 Returns the new array of chunks
 
-```js title="chunk"
+```js
 const chunk = (inputArray, quantity) => {
   return inputArray.reduce((resultArray, item, index) => {
     const chunkIndex = Math.floor(index / quantity);
@@ -33,7 +33,7 @@ console.log(chunk(inputArray, perChunk));
 Creates an array with all falsey values removed. The values false, null, 0, "",
 undefined, and NaN are falsey
 
-```js title="compact"
+```js
 const compact = (inputArray) => inputArray.filter(Boolean);
 
 const inputArray = ["a", false, null, 0, "", undefined, NaN, "d"];
@@ -47,7 +47,7 @@ Given two 0-indexed integer arrays `nums1` and `nums2`, return a list answer of 
 - `answer[0]` is a list of all distinct integers in `nums1` which are not present in `nums2`
 - `answer[1]` is a list of all distinct integers in `nums2` which are not present in `nums1`
 
-```js title="difference"
+```js
 const findDifference = function (nums1, nums2) {
   let set1 = new Set(nums1);
   let set2 = new Set(nums2);
@@ -75,7 +75,7 @@ console.log(result); // [ [ 1 ], [] ]
 
 Same as difference but with objects, key required
 
-```js title="differenceBy"
+```js
 const includesWithKey = function (arr, valueToFind, key) {
   if (arr.length === 0) {
     return false;
@@ -112,7 +112,7 @@ console.log(result); // [ [ { x: 2 } ], [] ]
 
 ## intersection
 
-```js title="intersection"
+```js
 const intersection = function (nums1, nums2) {
   let set1 = new Set(nums1);
   let set2 = new Set(nums2);
@@ -134,7 +134,7 @@ console.log(intersection([2, 1], [2, 3])) // [ 2 ]
 
 Creates an array of unique values, in order, from all given arrays
 
-```js title="union"
+```js
 const union = (...arrays) => {
   return Array.from(new Set([].concat(...arrays)));
 };
@@ -145,7 +145,7 @@ console.log(union([1, 2], [1, 7, 7], [3, 1]));
 
 ## keyBy
 
-```js title="keyBy"
+```js
 function keyBy(collection, iteratee) {
   const result = {};
 
@@ -178,7 +178,7 @@ Creates an array of elements split into two groups, the first of which contains
 elements predicate returns truthy for, the second of which contains elements
 predicate returns falsey for. The predicate is invoked with one argument: (value)
 
-```js title="partition"
+```js
 function partition(array, predicate) {
   return array.reduce(
     (result, element) => {
@@ -207,7 +207,7 @@ console.log(inactive);
 
 ## orderBy
 
-```js title="orderBy"
+```js
 function orderBy(array, property, order = "asc") {
   return array.slice().sort((a, b) => {
     if (a[property] < b[property]) {
@@ -245,7 +245,7 @@ console.log(sortedByAgeDesc);
 
 ## pick
 
-```js title="pick"
+```js
 function pick(obj, keys) {
   return keys.reduce((result, key) => {
     if (obj.hasOwnProperty(key)) {
@@ -269,7 +269,7 @@ console.log(picked);
 
 ## omit
 
-```js title="omit"
+```js
 function omit(obj, keys) {
   const result = { ...obj };
   keys.forEach((key) => {
@@ -292,7 +292,7 @@ console.log(omitted);
 
 ## curry
 
-```js title="curry"
+```js
 function curry(func) {
   return function curried(...args) {
     if (args.length >= func.length) {
@@ -318,7 +318,7 @@ console.log(curried(1, 2, 3)); // [1, 2, 3]
 
 ## memoize
 
-```js title="memoize"
+```js
 function memoize(func, resolver) {
   const cache = new Map();
 

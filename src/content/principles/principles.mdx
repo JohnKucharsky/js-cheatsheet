@@ -25,7 +25,7 @@ never change. Instead, classes should use promises (interfaces, parents), so cla
 Don't create too big components that have too much jobs to do. Break into smaller ones, name = description. Every component has
 one responsibility, first render card, second contains button that calls the dialog component
 
-```tsx title="S"
+```tsx
 import { useState } from 'react'
 // bad
 const UserCard = ({ user }: { user: User }) => {
@@ -83,7 +83,7 @@ Problem with first components is that we can't pass another color without changi
 In the second case, this problem is fixed, now we don't need to change `FancyIconButton2`. So, it's open to
 be used by others, closed to modification
 
-```tsx title="O"
+```tsx
 // bad
 const FancyIconButton = ({
   red,
@@ -137,7 +137,7 @@ const FancyIconButton2 = ({
 This way we can have many buttons with different styles, but they all can be used same way as original
 `IconButton`
 
-```tsx title="L"
+```tsx
 import { IconButton, IconButtonProps } from '@mui/material'
 
 const fancyStyles = {}
@@ -182,7 +182,7 @@ const RandomComponent = () => {
 When classes promise each other something, they should separate these promises (interfaces)
 into many small promises, so it's easier to understand
 
-```ts title="I"
+```ts
 // bad
 interface Animal {
   walk(): void;
@@ -241,7 +241,7 @@ When classes talk to each other in a very specific way, they both depend on each
 never change. Instead, classes should use promises (interfaces, parents), so classes can change
 as long as they keep the promise
 
-```ts title="D"
+```ts
 interface ShoppingCart {}
 // High-level module
 class ShoppingCartService {

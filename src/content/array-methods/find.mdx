@@ -5,7 +5,7 @@ Returns the first element in the provided array that satisfies the
 provided testing function. If no values satisfy the testing function,
 undefined is returned
 
-```js title="Array.prototype.find()"
+```js
 Array.prototype.customFind = function (callback) {
   for (let i = 0; i < this.length; i++) {
     if (callback.call(this, this[i])) {
@@ -37,7 +37,7 @@ Returns the index of the first element in an array that satisfies
 the provided testing function. If no elements satisfy the testing function,
 -1 is returned
 
-```js title="Array.prototype.findIndex()"
+```js
 Array.prototype.customFindIndex = function (callback) {
   for (let i = 0; i < this.length; i++) {
     if (callback.call(this, this[i])) {
@@ -71,7 +71,7 @@ Iterates the array in reverse order and returns the value of the first element t
 satisfies the provided testing function. If no elements satisfy the testing function,
 undefined is returned
 
-```js title="Array.prototype.findLast()"
+```js
 Array.prototype.customFindLast = function (callback) {
   for (let i = this.length; i >= 0; i--) {
     if (callback.call(this, this[i])) {

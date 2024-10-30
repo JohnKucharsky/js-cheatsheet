@@ -8,7 +8,7 @@ iterable is passed), with an array of the fulfillment values. It
 rejects when any of the input's promises rejects, with this first
 rejection reason.
 
-```js title="Promise.all()"
+```js
 function myPromiseAll(promises) {
   if (promises.length === 0) return Promise.resolve([]);
   return new Promise(function (resolve, reject) {

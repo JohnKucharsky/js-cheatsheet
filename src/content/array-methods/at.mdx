@@ -5,7 +5,7 @@ Takes an integer value and returns the item at that index,
 allowing for positive and negative integers. Negative integers
 count back from the last item in the array
 
-```js title="Array.prototype.at()"
+```js
 Array.prototype.customAt = function (index) {
   if (index < 0) {
     index = this.length + index;

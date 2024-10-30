@@ -11,7 +11,7 @@ previous calculation". If supplied, an initial value may be used in its
 place. Otherwise, the array element at index 0 is used as the initial value
 and iteration starts from the next element (index 1 instead of index 0).
 
-```js title="Array.prototype.reduce()"
+```js
 Array.prototype.customReduce = function (callback, initialValue) {
   let accumulator = initialValue !== undefined ? initialValue : this[0];
 

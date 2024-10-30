@@ -18,7 +18,7 @@ of non-space characters only.
 **Output:** 4 \
 **Explanation:** The last word is "moon" with length 4.
 
-```js title="factorial"
+```js
 function lengthOfLastWord(s) {
   let res = 0;
 
@@ -58,7 +58,7 @@ Note that buying on day 2 and selling on day 1 is not allowed because you must b
 **Output:** 0 \
 **Explanation:** In this case, no transactions are done and the max profit = 0.
 
-```js title="maxProfit"
+```js
 function maxProfit(prices) {
   let buyPrice = prices[0];
   let profit = 0;
@@ -97,7 +97,7 @@ non-overlapping intervals that cover all the intervals in the input
 **Output:** [[1,5]] \
 **Explanation:** Intervals [1,4] and [4,5] are considered overlapping \
 
-```js title="mergeIntervals"
+```js
 function mergeIntervals(intervals) {
   if (!intervals.length) return [];
 
@@ -152,7 +152,7 @@ console.log(mergeIntervals(intervals3));
 Check if number is power of 2. `2^30` is the largest power of two within
 the range of a 32-bit signed integer
 
-```typescript title="isPowerOfTwo"
+```typescript
 function isPowerOfTwo(n: number) {
   for (let i = 0; i < 31; i++) {
     if (Math.pow(2, i) === n) {
@@ -186,7 +186,7 @@ Explanation: `mountain[0]` and `mountain[4]` can not be a peak because they are 
 `mountain[2]` also can not be a peak because it is not strictly greater than `mountain[3]` and `mountain[1]`.
 But `mountain[1]` and `mountain[3]` are strictly greater than their neighboring elements. So the answer is `[1,3]`
 
-```js title="findPeaks"
+```js
 function findPeaks(mountain) {
   const peaks = [];
   const n = mountain.length;
@@ -225,7 +225,7 @@ So the number of elements in the array with maximum frequency is 4 \
 **Explanation:** All elements of the array have a frequency of 1 which is the maximum. \
 So the number of elements in the array with maximum frequency is 5 \
 
-```js title="maxFrequencyElements"
+```js
 function maxFrequencyElements(nums) {
   const freqCounter = new Map();
 

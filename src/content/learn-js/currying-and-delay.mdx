@@ -3,7 +3,7 @@
 
 Sum with an arbitrary amount of brackets.
 
-```js title="currying"
+```js
 function sum(a) {
   let currentSum = a;
 
@@ -29,7 +29,7 @@ console.log(sum(0)(1)(2)(3)(4)(5)); // 15
 
 Decorator delay(f, ms) delays each call of f by ms milliseconds.
 
-```js title="delay decorator"
+```js
 function delay(f, ms) {
   return function (args) {
     setTimeout(() => f.call(this, args), ms);

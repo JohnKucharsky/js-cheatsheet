@@ -6,7 +6,7 @@
 - `{ status: "fulfilled", value: result }` for successful responses
 - `{ status: "rejected", reason: error }` for errors
 
-```js title="Promise.allSettled()"
+```js
 const rejectHandler = (reason) => ({ status: "rejected", reason });
 const resolveHandler = (value) => ({ status: "fulfilled", value });
 

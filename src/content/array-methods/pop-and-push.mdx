@@ -5,7 +5,7 @@ The pop() method of Array instances removes the last element
 from an array and returns that element. This method changes the
 length of the array
 
-```js title="Array.prototype.pop()"
+```js
 Array.prototype.customPop = function () {
   if (this.length === 0) {
     return undefined;
@@ -28,7 +28,7 @@ console.log(fruits); // [ "Apple", "Banana" ]
 Adds the specified elements to the end of an array and returns
 the new length of the array.
 
-```js title="Array.prototype.push()"
+```js
 Array.prototype.customPush = function () {
   for (let i = 0; i < arguments.length; i++) {
     this[this.length] = arguments[i];

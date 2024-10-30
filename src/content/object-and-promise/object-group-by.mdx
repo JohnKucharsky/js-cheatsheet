@@ -6,7 +6,7 @@ string values returned by a provided callback function. The
 returned object has separate properties for each group,
 containing arrays with the elements in the group.
 
-```js title="Object.groupBy()"
+```js
 const groupBy = (arr, callback) => {
   return arr.reduce((acc = {}, item) => {
     const key = callback(item);

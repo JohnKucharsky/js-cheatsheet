@@ -7,7 +7,7 @@ built upon converting the elements into strings, then comparing their
 sequences of UTF-16 code units values. The time and space complexity
 of the sort cannot be guaranteed as it depends on the implementation
 
-```js title="Array.prototype.sort()"
+```js
 Array.prototype.customSort = function (compareFn) {
   if (!compareFn) {
     compareFn = (a, b) => (a > b ? 1 : -1);

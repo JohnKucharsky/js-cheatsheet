@@ -5,7 +5,7 @@ useEffect runs after component is added to the DOM, this is
 why usePrevious returns before useEffect fired. Value of ref is changing
 when hook already returned, and this is the reason why values lags behind
 
-```tsx title="usePrevious"
+```tsx
 import { useState, useEffect, useRef } from "react";
 
 function usePrevious(value: string | number) {

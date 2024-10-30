@@ -5,7 +5,7 @@ Creates an array of elements split into two groups, the first of which contains
 elements predicate returns truthy for, the second of which contains elements
 predicate returns falsey for. The predicate is invoked with one argument: (value)
 
-```js title="partition"
+```js
 function partition(array, predicate) {
   return array.reduce(
     (result, element) => {
@@ -34,7 +34,7 @@ console.log(inactive);
 
 ## orderBy
 
-```js title="orderBy"
+```js
 function orderBy(array, property, order = "asc") {
   return array.slice().sort((a, b) => {
     if (a[property] < b[property]) {

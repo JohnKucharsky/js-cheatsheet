@@ -4,7 +4,7 @@
 The copying version of the sort() method. It returns a
 new array with the elements sorted in ascending order.
 
-```js title="Array.prototype.toSorted()"
+```js
 Array.prototype.customToSorted = function (compareFn) {
   if (!compareFn) {
     compareFn = (a, b) => (a > b ? 1 : -1);

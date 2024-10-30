@@ -21,7 +21,7 @@ last memorized arguments and context.
 The 3rd step runs not `func`, but `wrapper`, because we not only need to execute `func`,
 but once again enter the cooldown state and setup the timeout to reset it.
 
-```js title="throttling decorator"
+```js
 function throttle(func, ms) {
 
   let isThrottled = false,

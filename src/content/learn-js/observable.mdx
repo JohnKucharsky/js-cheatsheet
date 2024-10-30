@@ -1,7 +1,7 @@
 
 ## observable
 
-```js title="observable"
+```js
 const handlers = Symbol("handlers");
 
 function makeObservable(target) {
@@ -42,3 +42,5 @@ user.name = "John";
 // logged 2 times, because 2 handlers registered
 // SET name=John
 ```
+
+

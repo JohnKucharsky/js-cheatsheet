@@ -6,7 +6,7 @@ If all the given promises are rejected, then the returned promise is rejected wi
 [`AggregateError`](mdn:js/AggregateError) - a special error object that stores all promise
 errors in its `errors` property.
 
-```js title="Promise.any()"
+```js
 Promise.customAny = function (promises) {
   return new Promise((resolve, reject) => {
     const errors = [];

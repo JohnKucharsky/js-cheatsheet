@@ -1,7 +1,7 @@
 
 ## curry
 
-```js title="curry"
+```js
 function curry(func) {
   return function curried(...args) {
     if (args.length >= func.length) {
@@ -27,7 +27,7 @@ console.log(curried(1, 2, 3)); // [1, 2, 3]
 
 ## memoize
 
-```js title="memoize"
+```js
 function memoize(func, resolver) {
   const cache = new Map();
 

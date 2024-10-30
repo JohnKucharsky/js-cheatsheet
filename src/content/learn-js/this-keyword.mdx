@@ -7,7 +7,7 @@ A call to `users.customFilter(army.canJoin, army)` can be replaced with
 `users.customFilterNoThis(user => army.canJoin(user))`, that does the same.
 This is an object before dot
 
-```js title="losing this"
+```js
 Array.prototype.customFilter = function (callback, thisArg) {
   let result = [];
 
