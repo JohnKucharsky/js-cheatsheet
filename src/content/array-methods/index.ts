@@ -7,6 +7,7 @@ import fill from "./fill.mdx";
 import filter from "./filter.mdx";
 import find from "./find.mdx";
 import flat from "./flat.mdx";
+import flatMap from "./flat-map.mdx";
 import includes from "./includes.mdx";
 import indexOf from "./index-of.mdx";
 import join from "./join.mdx";
@@ -30,6 +31,7 @@ export const arrayMethods = [
   filter,
   find,
   flat,
+  flatMap,
   includes,
   indexOf,
   join,
