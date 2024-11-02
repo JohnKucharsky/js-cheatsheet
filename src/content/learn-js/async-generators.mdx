@@ -10,12 +10,14 @@ async function* generateSequence(start, end) {
   }
 }
 
-(async () => {
+const timer = async (callback) => {
   let generator = generateSequence(1, 5);
   for await (let value of generator) {
-    console.log(value);
+    callback(value);
   }
-})()
-// 1, then 2, then 3, then 4, then 5 (with delay between)
+};
+
+timer(console.log).catch(console.error);
+// 1, 2, 3, 4, 5 (with delay between)
 ```
 
