@@ -15,13 +15,5 @@ Array.prototype.customAt = function (index) {
 };
 
 const array1 = [5, 12, 8, 130, 44];
-
-let index = 2;
-console.log(`An index of ${index} returns ${array1.customAt(index)}`);
-// "An index of 2 returns 8"
-
-index = -2;
-console.log(`An index of ${index} returns ${array1.customAt(index)}`);
-// "An index of -2 returns 130"
+console.log(array1.customAt(-1)); // 44
 ```
-

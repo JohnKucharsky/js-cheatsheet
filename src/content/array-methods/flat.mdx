@@ -23,18 +23,11 @@ Array.prototype.customFlat = function (depth = 1) {
   return result;
 };
 
-const arr1 = [0, 1, 2, [3, 4]];
-
-console.log(arr1.customFlat());
-// [0, 1, 2, 3, 4]
-
-const arr2 = [0, 1, [2, [3, [4, 5]]]];
-
-console.log(arr2.customFlat());
+const arr = [0, 1, [2, [3, [4, 5]]]];
+console.log(arr.customFlat());
 // [0, 1, 2, [3, [4, 5]]]
-console.log(arr2.customFlat(2));
+console.log(arr.customFlat(2));
 // [0, 1, 2, 3, [4, 5]]
-console.log(arr2.customFlat(Infinity));
+console.log(arr.customFlat(Infinity));
 // [0, 1, 2, 3, 4, 5]
 ```
-

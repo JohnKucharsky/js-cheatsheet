@@ -13,21 +13,15 @@ function debounce(func, ms) {
   };
 }
 
-// runs only the last one
-const f = debounce(console.log, 1000);
+const timeLoggedConsoleLog = (...args) => {
+  console.log(`Logged after ${Date.now() - startTime} ms:`, ...args);
+};
+
+const startTime = Date.now();
+const f = debounce(timeLoggedConsoleLog, 500);
+
 f("a"); // skip
 setTimeout(() => f("b"), 200); // skip
-setTimeout(() => f("c"), 500); // run after 1000ms
-
-const f2 = debounce(console.log, 100);
-f2("a"); // runs after 100
-setTimeout(() => f2("b"), 200); // runs after 200
-setTimeout(() => f2("c"), 500); // run after 500ms
-
-// if called together
-// a
-// b
-// c
-// c
+setTimeout(() => f("c"), 600);
+// Logged after 1131 ms: c
 ```
-

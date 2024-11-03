@@ -1,0 +1,49 @@
+
+## event loop
+
+```js
+const promise1 = Promise.resolve(3);
+const promise2 = new Promise((resolve, reject) => {
+  setTimeout(resolve, 1000, "foo");
+});
+const promise3 = 42;
+
+Promise.all([promise1, promise2, promise3]).then((values) => {
+  console.log(values);
+});
+
+// Using setTimeout, we can execute code after the queue is empty
+setTimeout(() => {
+  console.log("the queue is now empty");
+});
+
+const p3 = Promise.all([]); // Will be immediately resolved
+const p4 = Promise.all([1337, "hi"]);
+
+// Non-promise values are ignored, but the evaluation is done asynchronously
+console.log({ p3 });
+console.log({ p4 });
+
+setTimeout(() => {
+  console.log({ p4 });
+});
+
+Promise.all([promise1, promise2, promise3]).then((values) => {
+  console.log({ values2: values });
+});
+
+const promise4 = Promise.resolve(3);
+const promise5 = 42;
+
+Promise.all([promise4, promise5]).then((values) => {
+  console.log({ values3: values });
+});
+
+// { p3: Promise { [] } }
+// { p4: Promise { <pending> } }
+// { values3: [ 3, 42 ] }
+// the queue is now empty
+// { p4: Promise { [ 1337, 'hi' ] } }
+// [ 3, 'foo', 42 ]
+// { values2: [ 3, 'foo', 42 ] }
+```
