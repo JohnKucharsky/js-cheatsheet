@@ -6,28 +6,25 @@ returning true or false as appropriate
 
 ```js
 function sameValueZero(x, y) {
-  if (typeof x === "number" && typeof y === "number") {
-    // x and y are equal (can be -0 and 0) or they are both NaN
-    return x === y || (x !== x && y !== y);
-  }
-  return x === y;
+  return (
+    x === y ||
+    (typeof x === "number" && typeof y === "number" && x !== x && y !== y)
+  );
 }
 
 Array.prototype.customIncludes = function (searchElement, fromIndex = 0) {
-  if (this.length === 0) {
+  const length = this.length;
+
+  if (length === 0) {
     return false;
   }
 
-  if (fromIndex < 0 && Math.abs(fromIndex) <= this.length) {
-    fromIndex = this.length + fromIndex;
+  if (fromIndex < 0) {
+    fromIndex = Math.max(length + fromIndex, 0);
   }
 
-  for (let i = fromIndex; i < this.length; i++) {
+  for (let i = fromIndex; i < length; i++) {
     if (sameValueZero(this[i], searchElement)) {
-      return true;
-    }
-
-    if (this[i] === searchElement) {
       return true;
     }
   }
@@ -43,11 +40,10 @@ console.log([1, 2, NaN].customIncludes(NaN)); // true
 console.log(["1", "2", "3"].customIncludes(3)); // false
 
 const arr = ["a", "b", "c"];
-
-console.log(arr.includes("a", -100)); // true
-console.log(arr.includes("b", -100)); // true
-console.log(arr.includes("c", -100)); // true
-console.log(arr.includes("a", -2)); // false
-console.log(arr.includes("a", -3)); // true
+// Since -100 is much less than the array length,
+// it starts checking from index 0.
+console.log(arr.customIncludes("a", -100)); // true
+console.log(arr.customIncludes("a", -2)); // false
+console.log(arr.customIncludes("a", -3)); // true
 ```
 

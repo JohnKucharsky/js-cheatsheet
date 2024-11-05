@@ -36,13 +36,12 @@ console.log(inactive);
 
 ```js
 function orderBy(array, property, order = "asc") {
-  return array.slice().sort((a, b) => {
-    if (a[property] < b[property]) {
-      return order === "asc" ? -1 : 1;
-    }
-    if (a[property] > b[property]) {
-      return order === "asc" ? 1 : -1;
-    }
+  const multiplier = order === "asc" ? 1 : -1;
+  const deepCopiedArray = structuredClone(array);
+
+  return deepCopiedArray.sort((a, b) => {
+    if (a[property] < b[property]) return -1 * multiplier;
+    if (a[property] > b[property]) return 1 * multiplier;
     return 0;
   });
 }
@@ -61,8 +60,8 @@ console.log(sortedByAgeAsc);
 //   { user: 'fred', age: 40 }
 // ]
 
-const sortedByAgeDesc = orderBy(users, "user", "desc");
-console.log(sortedByAgeDesc);
+const sortedByUserDesc = orderBy(users, "user", "desc");
+console.log(sortedByUserDesc);
 // [
 //   { user: 'pebbles', age: 1 },
 //   { user: 'fred', age: 40 },

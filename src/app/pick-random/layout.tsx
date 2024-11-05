@@ -4,6 +4,7 @@ import UserInfo from "@/components/user-info";
 import ShuffleButton from "@/components/shuffle-button";
 import { quantity } from "@/app/api/quantity-and-list";
 import { itemsLeftInList } from "@/app/api/actions";
+import Spinner from "@/components/spinner";
 
 export default async function Layout({ children }: { children: ReactElement }) {
   const session = await auth();
@@ -56,7 +57,7 @@ export default async function Layout({ children }: { children: ReactElement }) {
       </div>
 
       {Boolean(session) && (
-        <Suspense fallback={"waiting..."}>{children}</Suspense>
+        <Suspense fallback={<Spinner />}>{children}</Suspense>
       )}
     </>
   );

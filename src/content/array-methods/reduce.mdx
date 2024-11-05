@@ -15,7 +15,9 @@ and iteration starts from the next element (index 1 instead of index 0).
 Array.prototype.customReduce = function (callback, initialValue) {
   let accumulator = initialValue !== undefined ? initialValue : this[0];
 
-  for (let i = initialValue !== undefined ? 0 : 1; i < this.length; i++) {
+  const startIndex = initialValue !== undefined ? 0 : 1;
+
+  for (let i = startIndex; i < this.length; i++) {
     accumulator = callback(accumulator, this[i], i, this);
   }
 
@@ -24,19 +26,10 @@ Array.prototype.customReduce = function (callback, initialValue) {
 
 const array1 = [15, 16, 17, 18, 19];
 
-// 15 + 16 + 17 + 18 + 19
-const initialValue = 0;
-const sumWithInitial = array1.customReduce(
-  (accumulator, currentValue) => accumulator + currentValue,
-  initialValue,
-);
+const sumWithInitial = array1.customReduce((acc, cur) => acc + cur, 0);
 console.log(sumWithInitial); // 85
 
-// no initial value, first element is array[0]
-// 15 + 16 + 17 + 18 + 19
-const sumWithoutInitial = array1.customReduce(
-  (accumulator, currentValue) => accumulator + currentValue,
-);
+const sumWithoutInitial = array1.customReduce((acc, cur) => acc + cur);
 console.log(sumWithoutInitial); // 85
 
 const pipe =
@@ -44,20 +37,15 @@ const pipe =
   (initialValue) =>
     functions.customReduce((acc, fn) => fn(acc), initialValue);
 
-// Building blocks to use for composition
-const double = (x) => 2 * x;
-const triple = (x) => 3 * x;
+const double = (x) => x * 2;
+const triple = (x) => x * 3;
 
-// Composed functions for multiplication of specific values
 const multiply6 = pipe(double, triple);
 const multiply9 = pipe(triple, triple);
 
-// Usage
 console.log(multiply6(6)); // 36
 console.log(multiply9(9)); // 81
 
-// Compare this with pipe: fn(acc) is changed to acc.then(fn),
-// and initialValue is ensured to be a promise
 const asyncPipe =
   (...functions) =>
   (initialValue) =>
@@ -66,19 +54,17 @@ const asyncPipe =
       Promise.resolve(initialValue),
     );
 
-// Building blocks to use for composition
 const p1 = async (a) => a * 5;
 const p2 = async (a) => a * 2;
-// The composed functions can also return non-promises, because the values are
-// all eventually wrapped in promises
 const f3 = (a) => a * 3;
 const p4 = async (a) => a * 4;
 
 asyncPipe(p1, p2, f3, p4)(10).then(console.log); // 1200
 
-// same with async/await
 const asyncPipeAsync =
   (...functions) =>
   (initialValue) =>
     functions.customReduce(async (acc, fn) => fn(await acc), initialValue);
+
+asyncPipeAsync(p1, p2, f3, p4)(10).then(console.log); // 1200
 ```

@@ -19,14 +19,8 @@ Array.prototype.customMap = function (callbackFn) {
 };
 
 const array1 = [1, 4, 9, 16];
-
-const map1 = array1.customMap((x) => x * 2);
-console.log(map1); // [ 2, 8, 18, 32 ]
-
-const numbers = [1, 4, 9];
-const roots = numbers.customMap((num) => Math.sqrt(num));
-console.log(numbers); // [ 1, 4, 9 ]
-console.log(roots); // [ 1, 2, 3 ]
+const doubled = array1.customMap((x) => x * 2);
+console.log(doubled); // [ 2, 8, 18, 32 ]
 
 const kvArray = [
   { key: 1, value: 10 },
@@ -40,27 +34,13 @@ console.log(formattedArray); // [ { 1: 10 }, { 2: 20 }, { 3: 30 } ]
 
 console.log(["1", "2", "3"].customMap(Number)); // [ 1, 2, 3 ]
 
-const numbers2 = [3, 1, 4, 1, 5];
-const averaged = numbers2.customMap((num, idx, arr) => {
-  const prev = arr[idx - 1];
-  const next = arr[idx + 1];
-
-  let count = 1;
-  let total = num;
-
-  if (prev !== undefined) {
-    count++;
-    total += prev;
-  }
-  if (next !== undefined) {
-    count++;
-    total += next;
-  }
-
-  const average = total / count;
-
-  return Math.round(average * 100) / 100;
+const numbers2 = [1, 2, 3, 4, 5];
+const cumulativeSum = numbers2.customMap((num, idx, arr) => {
+  // Calculate cumulative sum by adding the current number to the sum of previous numbers
+  const previousSum =
+    idx > 0 ? arr.slice(0, idx).reduce((acc, curr) => acc + curr, 0) : 0;
+  return previousSum + num;
 });
-console.log(averaged); // [ 2, 2.67, 2, 3.33, 3 ]
+console.log(cumulativeSum); // [ 1, 3, 6, 10, 15 ]
 ```
 

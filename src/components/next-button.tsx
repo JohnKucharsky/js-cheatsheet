@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { nextItem } from "@/app/api/actions";
+import Spinner from "@/components/spinner";
 
 export default function NextButton() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -13,7 +14,7 @@ export default function NextButton() {
   };
   return (
     <button disabled={loading} onClick={handleClick} className={"text-white"}>
-      {loading ? "waiting..." : "next"}
+      {loading ? <Spinner /> : "next"}
     </button>
   );
 }

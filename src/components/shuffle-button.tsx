@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { shuffleArray } from "@/app/api/actions";
+import Spinner from "@/components/spinner";
 
 export default function ShuffleButton() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -13,7 +14,7 @@ export default function ShuffleButton() {
   };
   return (
     <button disabled={loading} onClick={handleClick} className={"text-white"}>
-      {loading ? "waiting..." : "shuffle"}
+      {loading ? <Spinner /> : "shuffle"}
     </button>
   );
 }

@@ -8,21 +8,37 @@ function sum(a) {
   let currentSum = a;
 
   function f(b) {
+    // Return the sum if no argument is provided
+    if (b === undefined) return currentSum;
     currentSum += b;
-     return f;
+    return f;
   }
-
-  f.toString = function () {
-    return currentSum;
-  };
 
   return f;
 }
 
 console.log(sum(1)(2)); // 3
 console.log(sum(5)(-1)(2)); // 6
-console.log(sum(6)(-1)(-2)(-3)); // 0
-console.log(sum(0)(1)(2)(3)(4)(5)); // 15
+
+function sum2(a) {
+  let currentSum = a;
+
+  function f(b) {
+    currentSum += b;
+
+    return f;
+  }
+
+  f.valueOf = function () {
+    return currentSum;
+  };
+
+  return f;
+}
+
+// need to convert to number, to call valueOf
+console.log(+sum2(1)(2)); // 3
+console.log(+sum2(5)(-1)(2)); // 6
 ```
 
 ## delay decorator
@@ -30,15 +46,49 @@ console.log(sum(0)(1)(2)(3)(4)(5)); // 15
 Decorator delay(f, ms) delays each call of f by ms milliseconds.
 
 ```js
+const obj1 = {
+  info: "obj1 info",
+  showInfo(prefix) {
+    console.log(`${prefix}: ${this.info}`);
+  },
+};
+
+const obj2 = {
+  info: "obj2 info",
+};
+
 function delay(f, ms) {
-  return function (args) {
-    setTimeout(() => f.call(this, args), ms);
+  return function (...args) {
+    setTimeout(() => {
+      // Uses apply to handle `this` dynamically
+      f.apply(this, args);
+    }, ms);
   };
 }
 
-const f1000 = delay(console.log, 1000);
+obj1.delayedShowInfo = delay(obj1.showInfo, 1000);
+obj2.delayedShowInfo = delay(obj1.showInfo, 1000);
 
-f1000("test");
+obj1.delayedShowInfo("Info", "one"); // Info: obj1 info
+obj2.delayedShowInfo("Info"); // Info: obj2 info
 ```
 
+```js
+function delay(f, ms) {
+  return function (...args) {
+    setTimeout(() => {
+      // f(args); Name: Alice, Age: undefined
+      f.apply(this, args);
+    }, ms);
+  };
+}
+
+function showDetails(name, age) {
+  console.log(`Name: ${name}, Age: ${age}`);
+}
+
+const delayedShowDetails = delay(showDetails, 1000);
+delayedShowDetails("Alice", 25);
+// Name: Alice, Age: 25
+```
 

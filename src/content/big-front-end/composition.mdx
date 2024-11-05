@@ -54,3 +54,87 @@ const showDateLabel = pipe(dateFunc, textFunc, labelFunc, showLabelFunc);
 showDateLabel(); // Today Sat Sep 28 2024
 ```
 
+```typescript
+const generateNumbers = (count: number): number[] => {
+  return Array.from({ length: count }, (_, i) => i + 1);
+};
+
+const filterEvenNumbers = (numbers: number[]): number[] => {
+  return numbers.filter(num => num % 2 !== 0);
+};
+
+const doubleNumbers = (numbers: number[]): number[] => {
+  return numbers.map(num => num * 2);
+};
+
+const formatNumbers = (numbers: number[]): string => {
+  return numbers.join(", ");
+};
+
+const displayResult = (result: string): void => {
+  console.log(`Transformed Numbers: ${result}`);
+};
+
+function pipe<T>(...steps: Array<(arg: T) => T>) {
+  return function runSteps(input: T): T {
+    return steps.reduce((result, step) => step(result), input);
+  };
+}
+
+const transformNumbers = pipe(
+  (count: number) => generateNumbers(count),
+  filterEvenNumbers,
+  doubleNumbers,
+  formatNumbers,
+  displayResult
+);
+
+transformNumbers(10); // Transformed Numbers: 4, 12, 16, 20
+```
+
+### inheritance
+
+```typescript
+// Base class
+class Vehicle {
+  private readonly _make: string;
+  private readonly _model: string;
+  private readonly _year: number;
+
+  constructor(make: string, model: string, year: number) {
+    this._make = make;
+    this._model = model;
+    this._year = year;
+  }
+
+  displayInfo(): string {
+    return `${this._year} ${this._make} ${this._model}`;
+  }
+}
+
+// Derived class
+class Car extends Vehicle {
+  private readonly _doors: number;
+
+  constructor(
+    make: string,
+    model: string,
+    year: number,
+    doors: number,
+  ) {
+    super(make, model, year); // Call the constructor of the base class
+    this._doors = doors;
+  }
+
+  displayInfo(): string {
+    return `${super.displayInfo()} - ${this._doors} doors`;
+  }
+}
+
+const vehicle = new Vehicle("Toyota", "Corolla", 2020);
+console.log(vehicle.displayInfo()); // 2020 Toyota Corolla
+
+const car = new Car("Honda", "Civic", 2022, 4);
+console.log(car.displayInfo()); // 2022 Honda Civic - 4 doors
+```
+
