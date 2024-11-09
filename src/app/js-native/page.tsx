@@ -11,8 +11,8 @@ export default function Page() {
   return (
     <>
       <Link href={"/"}>back</Link>
-      {jsNative.map((Content) => (
-        <Content />
+      {jsNative.map((Content, idx) => (
+        <Content key={idx} />
       ))}
       <div className={"flex justify-between my-4"}>
         <Link href={"/"}>menu</Link>

@@ -12,6 +12,7 @@ export default function ShuffleButton() {
     await shuffleArray();
     setLoading(false);
   };
+
   return (
     <button disabled={loading} onClick={handleClick} className={"text-white"}>
       {loading ? <Spinner /> : "shuffle"}

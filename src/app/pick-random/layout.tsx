@@ -21,7 +21,7 @@ export default async function Layout({ children }: { children: ReactElement }) {
       >
         {Boolean(session) && (
           <div className="flex items-center gap-4">
-            <Link href={"/"} className={"not-prose"}>
+            <Link href={"/"} style={{ borderBottom: "none" }}>
               <HomeIcon />
             </Link>
             <ShuffleButton />

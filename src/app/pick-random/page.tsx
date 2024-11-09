@@ -10,7 +10,7 @@ export default async function Page() {
   const res = await getFirstItem();
 
   if (res[0].shuff_num === undefined || res[0].shuff_num === null) {
-    return <>array is empty, shuffle again</>;
+    return <h4>array is empty, shuffle again</h4>;
   }
 
   redirect(`/pick-random/${res[0].shuff_num}`);

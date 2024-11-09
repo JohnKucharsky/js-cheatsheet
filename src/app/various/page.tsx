@@ -11,8 +11,8 @@ export default function Page() {
   return (
     <>
       <Link href={"/"}>back</Link>
-      {various.map((Content) => (
-        <Content />
+      {various.map((Content, idx) => (
+        <Content key={idx} />
       ))}
       <div className={"flex justify-between my-4"}>
         <Link href={"/"}>menu</Link>
