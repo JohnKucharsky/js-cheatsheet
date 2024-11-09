@@ -1,0 +1,42 @@
+
+## currying
+
+Sum with an arbitrary amount of brackets.
+
+```js
+function sum(a) {
+  let currentSum = a;
+
+  function f(b) {
+    // Return the sum if no argument is provided
+    if (b === undefined) return currentSum;
+    currentSum += b;
+    return f;
+  }
+
+  return f;
+}
+
+console.log(sum(1)(2)); // 3
+console.log(sum(5)(-1)(2)); // 6
+
+function sum2(a) {
+  let currentSum = a;
+
+  function f(b) {
+    currentSum += b;
+
+    return f;
+  }
+
+  f.valueOf = function () {
+    return currentSum;
+  };
+
+  return f;
+}
+
+// need to convert to number, to call valueOf
+console.log(+sum2(1)(2)); // 3
+console.log(+sum2(5)(-1)(2)); // 6
+```

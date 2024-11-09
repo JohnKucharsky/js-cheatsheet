@@ -1,0 +1,24 @@
+
+## pick
+
+```js
+function pick(obj, keys) {
+  return keys.reduce((result, key) => {
+    if (obj.hasOwnProperty(key)) {
+      result[key] = obj[key];
+    }
+    return result;
+  }, {});
+}
+
+const user = {
+  name: "Alice",
+  age: 25,
+  email: "alice@example.com",
+  city: "Wonderland",
+};
+
+const picked = pick(user, ["name", "email"]);
+console.log(picked);
+// { name: 'Alice', email: 'alice@example.com' }
+```

@@ -5,7 +5,6 @@ import findThePeaks from "./find-the-peaks.mdx";
 import houseRobber from "./house-robber.mdx";
 import implementQueueUsingStacks from "./implement-queue-using-stacks.mdx";
 import insertInterval from "./insert-interval.mdx";
-import isPowerOfTwo from "./is-power-of-two.mdx";
 import lengthOfLastWord from "./length-of-last-word.mdx";
 import maxConsecutiveOnes from "./max-consecutive-ones.mdx";
 import moveZeroes from "./move-zeroes.mdx";
@@ -21,7 +20,6 @@ export const leetcode = [
   houseRobber,
   implementQueueUsingStacks,
   insertInterval,
-  isPowerOfTwo,
   lengthOfLastWord,
   maxConsecutiveOnes,
   moveZeroes,

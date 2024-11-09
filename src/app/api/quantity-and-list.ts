@@ -1,25 +1,21 @@
-import { arrayMethods } from "@/content/array-methods";
-import { bigFrontEnd } from "@/content/big-front-end";
-import { learnJs } from "@/content/learn-js";
+import { design } from "@/content/design";
+import { jsNative } from "@/content/js-native";
+import { learnJsAndMdn } from "@/content/learn-js-and-mdn";
 import { leetcode } from "@/content/leetcode";
 import { lodash } from "@/content/lodash";
-import { objectAndPromise } from "@/content/object-and-promise";
+import { react } from "@/content/react";
+import { theory } from "@/content/theory";
 import { various } from "@/content/various";
-import { various2 } from "@/content/various2";
-import { principles } from "@/content/principles";
-import { design } from "@/content/design";
 
 export const listOfAllItems = [
-  ...arrayMethods,
-  ...bigFrontEnd,
-  ...learnJs,
+  ...design,
+  ...jsNative,
+  ...learnJsAndMdn,
   ...leetcode,
   ...lodash,
-  ...objectAndPromise,
-  principles,
+  ...react,
+  ...theory,
   ...various,
-  ...various2,
-  ...design,
 ];
 
 export const quantity = listOfAllItems.length;

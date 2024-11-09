@@ -1,0 +1,28 @@
+
+## shift
+
+Removes the first element from an array and returns that removed
+element. This method changes the length of the array
+
+```js
+Array.prototype.customShift = function () {
+  if (this.length > 0) {
+    const firstElement = this[0];
+
+    for (let i = 0; i < this.length; i++) {
+      this[i] = this[i + 1];
+    }
+
+    this.length -= 1;
+
+    return firstElement;
+  }
+};
+
+const array1 = [1, 2, 3];
+
+const firstElement = array1.customShift();
+
+console.log(array1); // [2, 3]
+console.log(firstElement); // 1
+```

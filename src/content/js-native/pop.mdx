@@ -1,0 +1,24 @@
+
+## pop
+
+The pop() method of Array instances removes the last element
+from an array and returns that element. This method changes the
+length of the array
+
+```js
+Array.prototype.customPop = function () {
+  if (this.length === 0) {
+    return undefined;
+  }
+
+  const lastElement = this[this.length - 1];
+  this.length = this.length - 1;
+
+  return lastElement;
+};
+
+const fruits = ["Apple", "Banana", "Cherry"];
+const lastFruit = fruits.customPop();
+console.log(lastFruit); // Cherry
+console.log(fruits); // [ "Apple", "Banana" ]
+```

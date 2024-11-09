@@ -1,0 +1,80 @@
+
+## flatMap
+
+```js
+Array.prototype.customFlatMap = function (callback, thisArg) {
+  const result = [];
+
+  for (let i = 0; i < this.length; i++) {
+    if (i in this) {
+      // Check if the index is valid
+      const mapped = callback.call(thisArg, this[i], i, this);
+      if (mapped && mapped.length) {
+        for (let j = 0; j < mapped.length; j++) {
+          result.push(mapped[j]);
+        }
+      }
+    }
+  }
+
+  return result; // Return the flattened result
+};
+
+const data = [
+  {
+    id: 1,
+    name: "Category A",
+    items: [
+      {
+        id: 2,
+        name: "Subcategory A1",
+      },
+      {
+        id: 5,
+        name: "Subcategory A2",
+      },
+    ],
+  },
+  {
+    id: 8,
+    name: "Category B",
+    items: [
+      {
+        id: 9,
+        name: "Subcategory B1",
+      },
+      {
+        id: 12,
+        name: "Subcategory B2",
+      },
+    ],
+  },
+];
+
+const items = data.map((category) => category.items.map((item) => item));
+console.log(items);
+// [
+//   [
+//     { id: 2, name: 'Subcategory A1' },
+//     { id: 5, name: 'Subcategory A2' }
+//   ],
+//   [
+//     { id: 9, name: 'Subcategory B1' },
+//     { id: 12, name: 'Subcategory B2' }
+//   ]
+// ]
+
+const items2 = data.customFlatMap((category) =>
+  category.items.map((item) => ({
+    item,
+    category: category.name,
+  })),
+);
+console.log(items2);
+// [
+//   { item: { id: 2, name: 'Subcategory A1' }, category: 'Category A' },
+//   { item: { id: 5, name: 'Subcategory A2' }, category: 'Category A' },
+//   { item: { id: 9, name: 'Subcategory B1' }, category: 'Category B' },
+//   { item: { id: 12, name: 'Subcategory B2' }, category: 'Category B' }
+// ]
+```

@@ -1,0 +1,45 @@
+
+## call stack
+
+```js
+function first() {
+  second();
+  console.log("first");
+}
+function second() {
+  third();
+  console.log("second");
+}
+function third() {
+  console.log("third");
+}
+first();
+// third
+// second
+// first
+
+function first2() {
+  console.log("first");
+  second2();
+}
+function second2() {
+  console.log("second");
+  third2();
+}
+function third2() {
+  console.log("third");
+}
+first2();
+// first
+// second
+// third
+
+function recursive(n) {
+  console.log(n);
+  if (n === 0) {
+    return n;
+  }
+  return recursive(n - 1);
+}
+recursive(2); // 2 1 0
+```

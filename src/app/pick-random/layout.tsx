@@ -5,6 +5,8 @@ import ShuffleButton from "@/components/shuffle-button";
 import { quantity } from "@/app/api/quantity-and-list";
 import { itemsLeftInList } from "@/app/api/actions";
 import Spinner from "@/components/spinner";
+import HomeIcon from "@/components/home-icon";
+import Link from "next/link";
 
 export default async function Layout({ children }: { children: ReactElement }) {
   const session = await auth();
@@ -19,6 +21,9 @@ export default async function Layout({ children }: { children: ReactElement }) {
       >
         {Boolean(session) && (
           <div className="flex items-center gap-4">
+            <Link href={"/"} className={"not-prose"}>
+              <HomeIcon />
+            </Link>
             <ShuffleButton />
             <div>{`${count} of ${quantity}`}</div>
           </div>

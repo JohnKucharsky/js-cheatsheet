@@ -16,7 +16,7 @@ export default function Page() {
       ))}
       <div className={"flex justify-between my-4"}>
         <Link href={"/"}>menu</Link>
-        <Link href={"/object-and-promise"}>object and promise</Link>
+        <Link href={"/react"}>react</Link>
       </div>
     </>
   );

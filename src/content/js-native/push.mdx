@@ -1,0 +1,26 @@
+
+## push
+
+Adds the specified elements to the end of an array and returns
+the new length of the array.
+
+```js
+Array.prototype.customPush = function () {
+  for (let i = 0; i < arguments.length; i++) {
+    this[this.length] = arguments[i];
+  }
+
+  return this.length;
+};
+
+const animals = ["pigs", "goats"];
+
+const count = animals.customPush("cows");
+console.log(count); // 3
+
+console.log(animals); // [ 'pigs', 'goats', 'cows' ]
+
+animals.customPush("chickens", "cats");
+console.log(animals);
+// [ 'pigs', 'goats', 'cows', 'chickens', 'cats' ]
+```

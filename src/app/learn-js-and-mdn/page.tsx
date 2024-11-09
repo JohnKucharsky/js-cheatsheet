@@ -1,22 +1,22 @@
 import { Metadata } from "next";
 import * as React from "react";
 import Link from "next/link";
-import { design } from "@/content/design";
+import { learnJsAndMdn } from "@/content/learn-js-and-mdn";
 
 export const metadata: Metadata = {
-  title: "Design",
+  title: "LearnJS & MDN",
 };
 
 export default function Page() {
   return (
     <>
       <Link href={"/"}>back</Link>
-      {design.map((Content) => (
+      {learnJsAndMdn.map((Content) => (
         <Content />
       ))}
       <div className={"flex justify-between my-4"}>
         <Link href={"/"}>menu</Link>
-        <Link href={"/js-native"}>js native</Link>
+        <Link href={"/leetcode"}>leetcode</Link>
       </div>
     </>
   );

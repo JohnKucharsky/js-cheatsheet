@@ -1,0 +1,23 @@
+
+## omit
+
+```js
+function omit(obj, keys) {
+  const result = { ...obj };
+  keys.forEach((key) => {
+    delete result[key];
+  });
+  return result;
+}
+
+const user = {
+  name: "Alice",
+  age: 25,
+  email: "alice@example.com",
+  city: "Wonderland",
+};
+
+const omitted = omit(user, ["age", "city"]);
+console.log(omitted);
+// { name: 'Alice', email: 'alice@example.com' }
+```

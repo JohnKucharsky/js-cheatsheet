@@ -1,14 +1,17 @@
 "use client";
 import clsx from "clsx";
 import { ReactElement, useRef, useState } from "react";
+import CopyIcon from "@/components/copy-icon";
 
 interface ICopyToClipboard {
   children: ReactElement;
 }
 
 export const CopyToClipboard = ({ children }: ICopyToClipboard) => {
-  const textInput = useRef<HTMLDivElement>(null);
   const [copied, setCopied] = useState(false);
+
+  const textInput = useRef<HTMLDivElement>(null);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   const onExit = () => {
     setCopied(false);
@@ -16,10 +19,17 @@ export const CopyToClipboard = ({ children }: ICopyToClipboard) => {
 
   const onCopy = () => {
     setCopied(true);
-    if (textInput.current !== null && textInput.current.textContent !== null)
+    if (textInput.current !== null && textInput.current.textContent !== null) {
       navigator.clipboard.writeText(textInput.current.textContent);
-    setTimeout(() => {
+    }
+
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+
+    timeoutRef.current = setTimeout(() => {
       setCopied(false);
+      timeoutRef.current = null;
     }, 2000);
   };
 
@@ -28,45 +38,15 @@ export const CopyToClipboard = ({ children }: ICopyToClipboard) => {
       <button
         aria-label="Copy code"
         type="button"
-        className={clsx(
-          "absolute right-2 top-2 w-8 h-8 p-1 rounded border-2 bg-gray-700 dark:bg-gray-900",
-          {
-            "focus:outline-none focus:border-green-400 border-green-400":
-              copied,
-            "hover:border-gray-400": !copied,
-          },
-        )}
+        className={"absolute right-2 top-2 w-8 h-8"}
         onClick={onCopy}
       >
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-          fill="none"
-          className={copied ? "text-green-400" : "text-gray-400"}
-        >
-          {copied ? (
-            <>
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9
-                 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4"
-              />
-            </>
-          ) : (
-            <>
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9
-                 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
-              />
-            </>
-          )}
-        </svg>
+        <CopyIcon
+          classN={clsx({
+            "text-green-400": copied,
+            "text-gray-300 hover:text-gray-400": !copied,
+          })}
+        />
       </button>
 
       {children}

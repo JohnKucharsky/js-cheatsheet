@@ -1,22 +1,22 @@
 import { Metadata } from "next";
 import * as React from "react";
 import Link from "next/link";
-import { design } from "@/content/design";
+import { react } from "@/content/react";
 
 export const metadata: Metadata = {
-  title: "Design",
+  title: "React",
 };
 
 export default function Page() {
   return (
     <>
       <Link href={"/"}>back</Link>
-      {design.map((Content) => (
+      {react.map((Content) => (
         <Content />
       ))}
       <div className={"flex justify-between my-4"}>
         <Link href={"/"}>menu</Link>
-        <Link href={"/js-native"}>js native</Link>
+        <Link href={"/theory"}>theory</Link>
       </div>
     </>
   );

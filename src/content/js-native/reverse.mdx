@@ -1,0 +1,28 @@
+
+## reverse
+
+Reverses an array in place and returns the reference to the same array,
+the first array element now becoming the last, and the last array element
+becoming the first. In other words, elements order in the array will be
+turned towards the direction opposite to that previously stated
+
+```js
+Array.prototype.customReverse = function () {
+  const middle = Math.floor(this.length / 2);
+
+  for (let i = 0; i < middle; i++) {
+    const temp = this[i];
+    this[i] = this[this.length - 1 - i];
+    this[this.length - 1 - i] = temp;
+  }
+
+  return this;
+};
+
+const array1 = ["one", "two", "three", "four"];
+
+const reversed = array1.customReverse();
+console.log(reversed); // [ 'four', 'three', 'two', 'one' ]
+// reverse changes the original array
+console.log(array1); // [ 'four', 'three', 'two', 'one' ]
+```

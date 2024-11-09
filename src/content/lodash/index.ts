@@ -1,15 +1,27 @@
-import chunkAndCompact from "./chunk-and-compact.mdx";
-import curryAndMemoize from "./curry-and-memoize.mdx";
-import intersectionAndDifference from "./intersection-and-difference.mdx";
-import keyByAndUnion from "./key-by-and-union.mdx";
-import partitionAndOrderBy from "./partition-and-order-by.mdx";
-import pickOmit from "./pick-omit.mdx";
+import chunk from "./chunk.mdx";
+import compact from "./compact.mdx";
+import curry from "./curry.mdx";
+import difference from "./difference.mdx";
+import intersection from "./intersection.mdx";
+import keyBy from "./key-by.mdx";
+import memoize from "./memoize.mdx";
+import omit from "./omit.mdx";
+import orderBy from "./order-by.mdx";
+import partition from "./partition.mdx";
+import pick from "./pick.mdx";
+import union from "./union.mdx";
 
 export const lodash = [
-  chunkAndCompact,
-  curryAndMemoize,
-  intersectionAndDifference,
-  keyByAndUnion,
-  partitionAndOrderBy,
-  pickOmit,
+  chunk,
+  compact,
+  curry,
+  difference,
+  intersection,
+  keyBy,
+  memoize,
+  omit,
+  orderBy,
+  partition,
+  pick,
+  union,
 ];

@@ -1,0 +1,71 @@
+
+## promise all settled with objects
+
+```typescript
+type SettledResult<T> =
+  | { status: "fulfilled"; value: T }
+  | { status: "rejected"; reason: Error };
+
+type SettledObject<T> = {
+  [K in keyof T]: SettledResult<Awaited<T[K]>>;
+};
+
+async function allSettledWithObject<
+  T extends Record<string, any>,
+>(promises: T): Promise<SettledObject<T>> {
+  const keys = Object.keys(promises) as (keyof T)[];
+  const result: Partial<SettledObject<T>> = {};
+
+  for (const key of keys) {
+    try {
+      const value = await promises[key]; // Await the promise
+      result[key] = { status: "fulfilled", value }; // Store fulfilled result
+    } catch (reason) {
+      const error = reason as Error;
+      result[key] = { status: "rejected", reason: error }; // Store rejected result
+    }
+  }
+
+  return result as SettledObject<T>; // Cast to SettledObject<T>
+}
+
+const second = async function () {
+  return "one";
+};
+
+const promiseObject = {
+  first: Promise.resolve({ p: 1 }),
+  second: second(),
+  third: Promise.resolve(true),
+};
+allSettledWithObject(promiseObject)
+  .then((results) => {
+    console.log("result:", results);
+  })
+  .catch((error) => console.error("error:", error));
+// result: {
+//   first: { status: 'fulfilled', value: { p: 1 } },
+//   second: { status: 'fulfilled', value: 'one' },
+//   third: { status: 'fulfilled', value: true }
+// }
+
+const promiseObjectWithRejection = {
+  first: Promise.resolve(1),
+  second: Promise.reject(new Error("Promise rejected")),
+  third: Promise.resolve("three"),
+};
+allSettledWithObject(promiseObjectWithRejection)
+  .then((results) => {
+    for (const [key, value] of Object.entries(results)) {
+      if (value.status === "fulfilled") {
+        console.log("result:", key, value.value);
+      } else {
+        console.log("result:", key, value.reason.message);
+      }
+    }
+  })
+  .catch((error) => console.error("error:", error));
+// result: first 1
+// result: second Promise rejected
+// result: third three
+```

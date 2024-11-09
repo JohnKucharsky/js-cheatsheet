@@ -1,0 +1,13 @@
+
+## union
+
+Creates an array of unique values, in order, from all given arrays
+
+```js
+const union = (...arrays) => {
+  return Array.from(new Set([].concat(...arrays)));
+};
+
+console.log(union([1, 2], [1, 7, 7], [3, 1]));
+// [ 1, 2, 7, 3 ]
+```

@@ -1,0 +1,281 @@
+
+## dictionary of nested arrays
+
+```js
+const data = [
+  {
+    id: 1,
+    name: "Category A",
+    items: [
+      {
+        id: 2,
+        name: "Subcategory A1",
+        items: [
+          { id: 3, name: "Item A1-1", value: 10 },
+          { id: 4, name: "Item A1-2", value: 15 }
+        ]
+      },
+      {
+        id: 5,
+        name: "Subcategory A2",
+        items: [
+          { id: 6, name: "Item A2-1", value: 20 },
+          { id: 7, name: "Item A2-2", value: 25 }
+        ]
+      }
+    ]
+  },
+  {
+    id: 8,
+    name: "Category B",
+    items: [
+      {
+        id: 9,
+        name: "Subcategory B1",
+        items: [
+          { id: 10, name: "Item B1-1", value: 30 },
+          { id: 11, name: "Item B1-2", value: 35 }
+        ]
+      },
+      {
+        id: 12,
+        name: "Subcategory B2",
+        items: [
+          { id: 13, name: "Item B2-1", value: 40 },
+          { id: 14, name: "Item B2-2", value: 45 }
+        ]
+      }
+    ]
+  }
+];
+
+function createNestedDictionary(data) {
+  const dictionary = {};
+
+  data.forEach(category => {
+    dictionary[category.id] = { ...category, subcategories: {} };
+
+    category.items.forEach(subcategory => {
+      dictionary[category.id].subcategories[subcategory.id] = { ...subcategory, items: {} };
+
+      subcategory.items.forEach(item => {
+        dictionary[category.id].subcategories[subcategory.id].items[item.id] = item;
+      });
+    });
+  });
+
+  return dictionary;
+}
+
+const nestedDictionary = createNestedDictionary(data);
+
+// Access examples
+console.log(nestedDictionary[1].name); // Category A
+console.log(nestedDictionary[1].subcategories[5].name); // Subcategory A2
+console.log(nestedDictionary[1].subcategories[5].items[7].name); // Item A2-2
+console.log(nestedDictionary[8].subcategories[12].items[14].value); // 45
+```
+
+```js
+const data = [
+  {
+    id: 1,
+    name: "Category A",
+    items: [
+      {
+        id: 2,
+        name: "Subcategory A1",
+        items: [
+          { id: 3, name: "Item A1-1", value: 10 },
+          { id: 4, name: "Item A1-2", value: 15 },
+        ],
+      },
+      {
+        id: 5,
+        name: "Subcategory A2",
+        items: [
+          { id: 6, name: "Item A2-1", value: 20 },
+          { id: 7, name: "Item A2-2", value: 25 },
+        ],
+      },
+    ],
+  },
+  {
+    id: 8,
+    name: "Category B",
+    items: [
+      {
+        id: 9,
+        name: "Subcategory B1",
+        items: [
+          { id: 10, name: "Item B1-1", value: 30 },
+          { id: 11, name: "Item B1-2", value: 35 },
+        ],
+      },
+      {
+        id: 12,
+        name: "Subcategory B2",
+        items: [
+          { id: 13, name: "Item B2-1", value: 40 },
+          { id: 14, name: "Item B2-2", value: 45 },
+        ],
+      },
+    ],
+  },
+];
+
+function createNestedDictionary(data) {
+  return data.reduce((acc, category) => {
+    acc[category.id] = {
+      ...category,
+      subcategories: category.items.reduce((subAcc, subcategory) => {
+        subAcc[subcategory.id] = {
+          ...subcategory,
+          items: subcategory.items.reduce((itemAcc, item) => {
+            itemAcc[item.id] = item;
+            return itemAcc;
+          }, {}),
+        };
+        return subAcc;
+      }, {}),
+    };
+    return acc;
+  }, {});
+}
+
+const nestedDictionary = createNestedDictionary(data);
+
+// Access examples
+console.log(nestedDictionary[1].name); // Category A
+console.log(nestedDictionary[1].subcategories[5].name); // Subcategory A2
+console.log(nestedDictionary[1].subcategories[5].items[7].name); // Item A2-2
+console.log(nestedDictionary[8].subcategories[12].items[14].value); // 45
+```
+
+### typescript
+
+```ts
+type Item = {
+  id: number;
+  name: string;
+  value: number;
+};
+
+type Subcategory = {
+  id: number;
+  name: string;
+  items: Item[];
+};
+
+type Category = {
+  id: number;
+  name: string;
+  items: Subcategory[];
+};
+
+type NestedDictionary = {
+  [categoryId: number]: {
+    name: string;
+    subcategories: {
+      [subcategoryId: number]: {
+        name: string;
+        items: {
+          [itemId: number]: Item;
+        };
+      };
+    };
+  };
+};
+
+function createNestedDictionary(
+  data: Category[],
+): NestedDictionary {
+  return data.reduce((acc, category) => {
+    acc[category.id] = {
+      name: category.name,
+      subcategories: category.items.reduce(
+        (subAcc, subcategory) => {
+          subAcc[subcategory.id] = {
+            name: subcategory.name,
+            items: subcategory.items.reduce(
+              (itemAcc, item) => {
+                itemAcc[item.id] = item;
+                return itemAcc;
+              },
+              {} as { [itemId: number]: Item },
+            ),
+          };
+          return subAcc;
+        },
+        {} as {
+          [subcategoryId: number]: {
+            name: string;
+            items: { [itemId: number]: Item };
+          };
+        },
+      ),
+    };
+    return acc;
+  }, {} as NestedDictionary);
+}
+
+// Example usage
+const data: Category[] = [
+  {
+    id: 1,
+    name: "Category A",
+    items: [
+      {
+        id: 2,
+        name: "Subcategory A1",
+        items: [
+          { id: 3, name: "Item A1-1", value: 10 },
+          { id: 4, name: "Item A1-2", value: 15 },
+        ],
+      },
+      {
+        id: 5,
+        name: "Subcategory A2",
+        items: [
+          { id: 6, name: "Item A2-1", value: 20 },
+          { id: 7, name: "Item A2-2", value: 25 },
+        ],
+      },
+    ],
+  },
+  {
+    id: 8,
+    name: "Category B",
+    items: [
+      {
+        id: 9,
+        name: "Subcategory B1",
+        items: [
+          { id: 10, name: "Item B1-1", value: 30 },
+          { id: 11, name: "Item B1-2", value: 35 },
+        ],
+      },
+      {
+        id: 12,
+        name: "Subcategory B2",
+        items: [
+          { id: 13, name: "Item B2-1", value: 40 },
+          { id: 14, name: "Item B2-2", value: 45 },
+        ],
+      },
+    ],
+  },
+];
+
+const nestedDictionary = createNestedDictionary(data);
+
+// Access examples
+console.log(nestedDictionary[1].name); // Category A
+console.log(nestedDictionary[1].subcategories[5].name); // Subcategory A2
+console.log(
+  nestedDictionary[1].subcategories[5].items[7].name,
+); // Item A2-2
+console.log(
+  nestedDictionary[8].subcategories[12].items[14].value,
+); // 45
+```
