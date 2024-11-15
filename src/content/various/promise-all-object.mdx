@@ -18,17 +18,29 @@ async function allWithObject<T extends Record<string, any>>(
   ) as AwaitedObject<T>;
 }
 
+const randomRequest = async (): Promise<number> => {
+  return new Promise((resolve) =>
+    setTimeout(() => resolve(34), 2000),
+  );
+};
+
 const promiseObject = {
   first: Promise.resolve({ p: 1 }),
   second: Promise.resolve("two"),
   third: Promise.resolve(true),
+  fourth: randomRequest(),
 };
 allWithObject(promiseObject)
   .then((results) =>
-    console.log("results:", results.first.p),
+    console.log(
+      "results:",
+      results.fourth,
+      results.first.p,
+    ),
   )
   .catch((error) => console.error("error:", error));
-// results: 1
+// after 2 seconds
+// results: 34 1
 
 const promiseObjectWithRejection = {
   first: Promise.resolve(1),
