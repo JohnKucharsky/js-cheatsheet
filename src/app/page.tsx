@@ -4,6 +4,7 @@ import TelegramIcon from "@/components/telegram-icon";
 import Link from "next/link";
 import Image from "next/image";
 import GitHubImg from "@/components/github-mark-white.png";
+// import { createSearchIndex } from "@/search";
 
 export const metadata: Metadata = {
   title: "JS Cheatsheet",
