@@ -41,7 +41,6 @@ plugins.push(
   nextMDX({
     extension: /\.(md|mdx)$/,
     options: {
-      remarkPlugins: [],
       rehypePlugins: [[rehypePrettyCode, options], rehypeSlug],
     },
   }),

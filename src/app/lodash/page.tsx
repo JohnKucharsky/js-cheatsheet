@@ -1,17 +1,22 @@
 import { Metadata } from "next";
 import * as React from "react";
 import Link from "next/link";
-import { lodash } from "@/content/lodash";
+import { getMDXComponents } from "@/get-mdx-components";
+import { SectionNameEnum } from "@/common/types";
 
 export const metadata: Metadata = {
   title: "Lodash",
 };
 
-export default function Page() {
+export default async function Page() {
+  const mdxItems = await getMDXComponents({
+    pathName: SectionNameEnum.lodash,
+  });
+
   return (
     <>
       <Link href={"/"}>back</Link>
-      {lodash.map((Content, idx) => (
+      {mdxItems.map((Content, idx) => (
         <Content key={idx} />
       ))}
       <div className={"flex justify-between my-4"}>

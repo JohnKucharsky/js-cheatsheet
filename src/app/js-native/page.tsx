@@ -1,17 +1,22 @@
 import { Metadata } from "next";
 import * as React from "react";
 import Link from "next/link";
-import { jsNative } from "@/content/js-native";
+import { getMDXComponents } from "@/get-mdx-components";
+import { SectionNameEnum } from "@/common/types";
 
 export const metadata: Metadata = {
   title: "JS Native",
 };
 
-export default function Page() {
+export default async function Page() {
+  const mdxItems = await getMDXComponents({
+    pathName: SectionNameEnum["js-native"],
+  });
+
   return (
     <>
       <Link href={"/"}>back</Link>
-      {jsNative.map((Content, idx) => (
+      {mdxItems.map((Content, idx) => (
         <Content key={idx} />
       ))}
       <div className={"flex justify-between my-4"}>
