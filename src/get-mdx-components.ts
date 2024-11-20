@@ -8,6 +8,34 @@ import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import { SectionNameEnum } from "@/common/types";
 
+const contentDirectory = path.join(process.cwd(), "./src/content");
+
+const getAllFiles = (
+  dirPath: string,
+  arrayOfFiles: string[] = [],
+): string[] => {
+  const files = fs.readdirSync(dirPath);
+
+  files.forEach((file) => {
+    const filePath = path.join(dirPath, file);
+    if (fs.statSync(filePath).isDirectory()) {
+      arrayOfFiles = getAllFiles(filePath, arrayOfFiles);
+    } else if (filePath.endsWith(".mdx")) {
+      arrayOfFiles.push(filePath);
+    }
+  });
+
+  return arrayOfFiles;
+};
+
+export const getAllFilesNames = () => {
+  const filePaths = getAllFiles(contentDirectory);
+
+  return filePaths.map((filePath) => ({
+    slug: path.basename(filePath, ".mdx"),
+  }));
+};
+
 export async function getMDXComponents({
   pathName,
 }: {
@@ -21,6 +49,7 @@ export async function getMDXComponents({
     if (fileName.endsWith(".mdx")) {
       const filePath = path.join(folderPath, fileName);
       const fileContent = await readFile(filePath, "utf-8");
+
       const MDXContent = await evaluate(fileContent, {
         ...(runtime as Readonly<EvaluateOptions>),
         rehypePlugins: [
@@ -39,4 +68,35 @@ export async function getMDXComponents({
   }
 
   return mdxComponents;
+}
+
+export async function getAllMDXComponents() {
+  const filePaths = getAllFiles(contentDirectory);
+  const mdxComponents: MDXContent[] = [];
+  const mdxCompObject: Record<string, MDXContent> = {};
+
+  for (const filePath of filePaths) {
+    if (filePath.endsWith(".mdx")) {
+      const fileContent = await readFile(filePath, "utf-8");
+      const slug = path.basename(filePath, ".mdx");
+
+      const MDXContent = await evaluate(fileContent, {
+        ...(runtime as Readonly<EvaluateOptions>),
+        rehypePlugins: [
+          [
+            rehypePrettyCode,
+            {
+              keepBackground: false,
+              theme: "github-dark",
+            },
+          ],
+          rehypeSlug,
+        ],
+      });
+      mdxCompObject[slug] = MDXContent.default;
+      mdxComponents.push(MDXContent.default);
+    }
+  }
+
+  return { array: mdxComponents, object: mdxCompObject };
 }

@@ -1,26 +1,27 @@
 import { notFound } from "next/navigation";
 import NextButton from "@/components/next-button";
 import { Metadata } from "next";
-import { listOfAllItems, quantity } from "@/app/api/quantity-and-list";
+import { getAllFilesNames, getAllMDXComponents } from "@/get-mdx-components";
 
 export const metadata: Metadata = {
   title: "Pick Random",
 };
 
 export async function generateStaticParams() {
-  return Array(quantity)
-    .fill(0)
-    .map((_, idx) => ({ id: String(idx) }));
+  const filesNames = getAllFilesNames();
+
+  return filesNames.map(({ slug }) => ({ id: slug }));
 }
 
 export default async function Page(props: { params: Promise<{ id: string }> }) {
   const params = await props.params;
+  const allFiles = await getAllMDXComponents();
 
-  if (Number(params.id) >= quantity || isNaN(Number(params.id))) {
+  if (!allFiles.object[params.id]) {
     notFound();
   }
 
-  const Content = listOfAllItems[Number(params.id)];
+  const Content = allFiles.object[params.id];
 
   return (
     <>

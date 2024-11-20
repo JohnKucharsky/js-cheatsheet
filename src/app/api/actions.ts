@@ -2,19 +2,20 @@
 import { auth } from "@/auth";
 import { Pool } from "pg";
 import { redirect } from "next/navigation";
-import { quantity } from "@/app/api/quantity-and-list";
+import { getAllFilesNames } from "@/get-mdx-components";
 
 const client = new Pool();
 
-const shuffleArrayFromQty = (qty: number) => {
-  const shuffle = (array: number[]) => {
+const shuffleArrayOfItems = () => {
+  const shuffle = (array: string[]) => {
     for (let i = array.length - 1; i > 0; i--) {
       let j = Math.floor(Math.random() * (i + 1));
       [array[i], array[j]] = [array[j], array[i]];
     }
   };
 
-  const shuffledArray = Array.from({ length: qty }, (_, i) => i);
+  const allNames = getAllFilesNames();
+  const shuffledArray = allNames.map(({ slug }) => slug);
   shuffle(shuffledArray);
 
   return shuffledArray;
@@ -30,37 +31,34 @@ export async function shuffleArray() {
   );
 
   if (data.rows.length === 0) {
-    const shuffledArray = shuffleArrayFromQty(quantity);
+    const shuffledArray = shuffleArrayOfItems();
 
     await client.query(
       `
-    INSERT INTO js_cheatsheet(id, shuffledArray, easyIdsArray)
+    INSERT INTO js_cheatsheet(id, shuffledArray)
     VALUES
-    ($1, $2, ARRAY[]::int[])`,
+    ($1, $2)`,
       [session?.user?.email, shuffledArray],
     );
   } else {
-    const shuffledArray = shuffleArrayFromQty(quantity);
+    const shuffledArray = shuffleArrayOfItems();
 
     await client.query(
       `UPDATE js_cheatsheet
-    SET shuffledArray = $1,
-        easyIdsArray = ARRAY[]::int[]
+    SET shuffledArray = $1
     WHERE id = $2;`,
       [shuffledArray, session?.user?.email],
     );
   }
-
-  redirect("/pick-random");
 }
 
 export async function getFirstItem(): Promise<
-  Record<"shuff_num", number | null>[]
+  Record<"problem_name", number | null>[]
 > {
   const session = await auth();
 
   const res = await client.query(
-    `SELECT shuffledArray[array_length(shuffledArray, 1)] as shuff_num FROM js_cheatsheet
+    `SELECT shuffledArray[array_length(shuffledArray, 1)] as problem_name FROM js_cheatsheet
         WHERE id = $1`,
     [session?.user?.email],
   );
@@ -75,12 +73,15 @@ export async function nextItem() {
     `UPDATE js_cheatsheet
     SET shuffledArray = 
     array_remove(shuffledArray, shuffledArray[array_length(shuffledArray, 1)])
-    WHERE id = $1 returning shuffledArray[array_length(shuffledArray, 1)] as shuff_num`,
+    WHERE id = $1 returning shuffledArray[array_length(shuffledArray, 1)] as problem_name`,
     [session?.user?.email],
   );
 
-  if (res.rows[0]?.shuff_num !== undefined && res.rows[0].shuff_num !== null) {
-    redirect(`/pick-random/${res.rows[0].shuff_num}`);
+  if (
+    res.rows[0]?.problem_name !== undefined &&
+    res.rows[0].problem_name !== null
+  ) {
+    redirect(`/pick-random/${res.rows[0].problem_name}`);
   } else {
     redirect(`/pick-random`);
   }

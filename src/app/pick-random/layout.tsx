@@ -2,15 +2,17 @@ import { ReactElement, Suspense } from "react";
 import { auth, signIn, signOut } from "@/auth";
 import UserInfo from "@/components/user-info";
 import ShuffleButton from "@/components/shuffle-button";
-import { quantity } from "@/app/api/quantity-and-list";
 import { itemsLeftInList } from "@/app/api/actions";
 import Spinner from "@/components/spinner";
 import HomeIcon from "@/components/home-icon";
 import Link from "next/link";
+import { getAllFilesNames } from "@/get-mdx-components";
 
 export default async function Layout({ children }: { children: ReactElement }) {
   const session = await auth();
   const count = await itemsLeftInList();
+  const allFiles = getAllFilesNames();
+  const quantity = allFiles.length;
 
   return (
     <>
@@ -25,7 +27,7 @@ export default async function Layout({ children }: { children: ReactElement }) {
               <HomeIcon />
             </Link>
             <ShuffleButton />
-            <div>{`${count} of ${quantity}`}</div>
+            <div>{`${count || "none"} of ${quantity}`}</div>
           </div>
         )}
         <div className={"flex gap-4 items-start"}>
