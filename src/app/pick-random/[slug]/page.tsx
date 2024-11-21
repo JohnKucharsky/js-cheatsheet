@@ -10,18 +10,20 @@ export const metadata: Metadata = {
 export async function generateStaticParams() {
   const filesNames = getAllFilesNames();
 
-  return filesNames.map(({ slug }) => ({ id: slug }));
+  return filesNames.map(({ slug }) => ({ slug }));
 }
 
-export default async function Page(props: { params: Promise<{ id: string }> }) {
+export default async function Page(props: {
+  params: Promise<{ slug: string }>;
+}) {
   const params = await props.params;
   const allFiles = await getAllMDXComponents();
 
-  if (!allFiles.object[params.id]) {
+  if (!allFiles.object[params.slug]) {
     notFound();
   }
 
-  const Content = allFiles.object[params.id];
+  const Content = allFiles.object[params.slug];
 
   return (
     <>
