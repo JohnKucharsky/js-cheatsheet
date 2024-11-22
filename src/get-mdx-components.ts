@@ -7,7 +7,18 @@ import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import { SectionNameEnum } from "@/common/types";
 import { MDXContent } from "mdx/types";
-import githubDark from "tm-themes/themes/github-dark.json";
+import { createHighlighter, Highlighter } from "shiki";
+
+let highlighterInstance: Highlighter;
+export const getShikiHighlighter = async () => {
+  if (!highlighterInstance) {
+    highlighterInstance = await createHighlighter({
+      themes: [],
+      langs: ["javascript", "typescript"],
+    });
+  }
+  return highlighterInstance;
+};
 
 const contentDirectory = path.join(process.cwd(), "./src/content");
 
@@ -40,6 +51,7 @@ export async function getMDXComponents({
 }) {
   const folderPath = path.join(contentDirectory, pathName);
   const filePaths = getAllFiles(folderPath);
+  const highlighter = await getShikiHighlighter();
 
   return Promise.all(
     filePaths.map(async (filePath) => {
@@ -51,7 +63,7 @@ export async function getMDXComponents({
             rehypePrettyCode,
             {
               keepBackground: false,
-              theme: githubDark,
+              highlighter,
             },
           ],
           rehypeSlug,
@@ -66,6 +78,7 @@ export async function getAllMDXComponents() {
   const filePaths = getAllFiles(contentDirectory);
   const mdxComponents: MDXContent[] = [];
   const mdxCompObject: Record<string, MDXContent> = {};
+  const highlighter = await getShikiHighlighter();
 
   for (const filePath of filePaths) {
     const fileContent = await readFile(filePath, "utf-8");
@@ -78,7 +91,7 @@ export async function getAllMDXComponents() {
           rehypePrettyCode,
           {
             keepBackground: false,
-            theme: githubDark,
+            highlighter,
           },
         ],
         rehypeSlug,

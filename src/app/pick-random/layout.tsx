@@ -1,9 +1,8 @@
-import { ReactElement, Suspense } from "react";
+import { ReactElement } from "react";
 import { auth, signIn, signOut } from "@/auth";
 import UserInfo from "@/components/user-info";
 import ShuffleButton from "@/components/shuffle-button";
 import { itemsLeftInList } from "@/app/api/actions";
-import Spinner from "@/components/spinner";
 import HomeIcon from "@/components/home-icon";
 import Link from "next/link";
 import { getAllFilesNames } from "@/get-mdx-components";
@@ -63,9 +62,7 @@ export default async function Layout({ children }: { children: ReactElement }) {
         </div>
       </div>
 
-      {Boolean(session) && (
-        <Suspense fallback={<Spinner />}>{children}</Suspense>
-      )}
+      {Boolean(session) && children}
     </>
   );
 }

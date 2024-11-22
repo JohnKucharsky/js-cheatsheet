@@ -2725,11 +2725,6 @@ third-party-capital@1.0.20:
   resolved "https://registry.yarnpkg.com/third-party-capital/-/third-party-capital-1.0.20.tgz#e218a929a35bf4d2245da9addb8ab978d2f41685"
   integrity sha512-oB7yIimd8SuGptespDAZnNkzIz+NWaJCu2RMsbs4Wmp9zSDUM8Nhi3s2OOcqYuv3mN4hitXc8DVx+LyUmbUDiA==
 
-tm-themes@^1.9.3:
-  version "1.9.3"
-  resolved "https://registry.yarnpkg.com/tm-themes/-/tm-themes-1.9.3.tgz#c11cc9a9abcbcc64ebcba9fcd9e41857467e84f3"
-  integrity sha512-zcHyfj7bgEKkU9JJI/hTjxVbAsK5LBNwO25vb9fX8OmPYvWifJKAhxI6QZtXLwRVFa6XgMsDFIvfF87ycLytOQ==
-
 to-regex-range@^5.0.1:
   version "5.0.1"
   resolved "https://registry.yarnpkg.com/to-regex-range/-/to-regex-range-5.0.1.tgz#1648c44aae7c8d988a326018ed72f5b4dd0392e4"
