@@ -52,20 +52,15 @@ export async function shuffleArray() {
 }
 
 export async function getFirstItem(): Promise<
-  Record<"problem_name", number | null>[]
+  Record<"problem_name", string | null>[]
 > {
   const session = await auth();
-  console.log(session);
+
   const res = await client.query(
     `SELECT shuffledArray[array_length(shuffledArray, 1)] as problem_name FROM js_cheatsheet
      WHERE id = $1`,
     [session?.user?.email],
   );
-  console.log({ res });
-  if (res.rows?.[0]?.problem_name) {
-    console.log(res, "inside redirect");
-    redirect(`/pick-random/${res.rows[0].problem_name}`);
-  }
 
   return res.rows;
 }
@@ -87,7 +82,7 @@ export async function nextItem() {
   ) {
     redirect(`/pick-random/${res.rows[0].problem_name}`);
   } else {
-    await getFirstItem();
+    redirect("/");
   }
 }
 
