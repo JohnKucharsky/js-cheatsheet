@@ -12,7 +12,7 @@ export default function ShuffleButton() {
 
   const handleClick = async () => {
     setLoading(true);
-    console.log("here");
+
     await shuffleArray();
     const res = await getFirstItem();
     startTransition(() => {
