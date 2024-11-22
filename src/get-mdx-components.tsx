@@ -8,6 +8,8 @@ import rehypeSlug from "rehype-slug";
 import { SectionNameEnum } from "@/common/types";
 import { MDXContent } from "mdx/types";
 import { Pluggable } from "unified";
+import { CopyToClipboard } from "@/components/copy-to-clipboard";
+import * as React from "react";
 
 const contentDirectory = path.join(process.cwd(), "./src/content");
 
@@ -58,6 +60,13 @@ export async function getMDXComponents({
       const MDXContent = await evaluate(fileContent, {
         ...(runtime as Readonly<EvaluateOptions>),
         rehypePlugins,
+        useMDXComponents: () => ({
+          pre: (props) => (
+            <CopyToClipboard>
+              <pre {...props} />
+            </CopyToClipboard>
+          ),
+        }),
       });
       return MDXContent.default;
     }),
@@ -76,6 +85,13 @@ export async function getAllMDXComponents() {
     const MDXContent = await evaluate(fileContent, {
       ...(runtime as Readonly<EvaluateOptions>),
       rehypePlugins,
+      useMDXComponents: () => ({
+        pre: (props) => (
+          <CopyToClipboard>
+            <pre {...props} />
+          </CopyToClipboard>
+        ),
+      }),
     });
     mdxCompObject[slug] = MDXContent.default;
     mdxComponents.push(MDXContent.default);

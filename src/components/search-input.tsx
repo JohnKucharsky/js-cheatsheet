@@ -31,7 +31,7 @@ export default function SearchInput({
             <Link
               className="cursor-pointer"
               key={item.slug}
-              href={`/${item.slug}`}
+              href={`/pick-random/${item.slug}`}
             >
               {item.slug}
             </Link>
