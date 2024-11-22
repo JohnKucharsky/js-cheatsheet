@@ -7,20 +7,20 @@ import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import { SectionNameEnum } from "@/common/types";
 import { MDXContent } from "mdx/types";
-import { createHighlighter, Highlighter } from "shiki";
-
-let highlighterInstance: Highlighter;
-export const getShikiHighlighter = async () => {
-  if (!highlighterInstance) {
-    highlighterInstance = await createHighlighter({
-      themes: [],
-      langs: ["javascript", "typescript"],
-    });
-  }
-  return highlighterInstance;
-};
+import { Pluggable } from "unified";
 
 const contentDirectory = path.join(process.cwd(), "./src/content");
+
+const rehypePlugins: Pluggable[] = [
+  [
+    rehypePrettyCode,
+    {
+      keepBackground: false,
+      theme: "github-dark",
+    },
+  ],
+  rehypeSlug,
+];
 
 const getAllFiles = (dirPath: string): string[] => {
   const files = fs.readdirSync(dirPath);
@@ -51,23 +51,13 @@ export async function getMDXComponents({
 }) {
   const folderPath = path.join(contentDirectory, pathName);
   const filePaths = getAllFiles(folderPath);
-  const highlighter = await getShikiHighlighter();
 
   return Promise.all(
     filePaths.map(async (filePath) => {
       const fileContent = await readFile(filePath, "utf-8");
       const MDXContent = await evaluate(fileContent, {
         ...(runtime as Readonly<EvaluateOptions>),
-        rehypePlugins: [
-          [
-            rehypePrettyCode,
-            {
-              keepBackground: false,
-              highlighter,
-            },
-          ],
-          rehypeSlug,
-        ],
+        rehypePlugins,
       });
       return MDXContent.default;
     }),
@@ -78,7 +68,6 @@ export async function getAllMDXComponents() {
   const filePaths = getAllFiles(contentDirectory);
   const mdxComponents: MDXContent[] = [];
   const mdxCompObject: Record<string, MDXContent> = {};
-  const highlighter = await getShikiHighlighter();
 
   for (const filePath of filePaths) {
     const fileContent = await readFile(filePath, "utf-8");
@@ -86,16 +75,7 @@ export async function getAllMDXComponents() {
 
     const MDXContent = await evaluate(fileContent, {
       ...(runtime as Readonly<EvaluateOptions>),
-      rehypePlugins: [
-        [
-          rehypePrettyCode,
-          {
-            keepBackground: false,
-            highlighter,
-          },
-        ],
-        rehypeSlug,
-      ],
+      rehypePlugins,
     });
     mdxCompObject[slug] = MDXContent.default;
     mdxComponents.push(MDXContent.default);
