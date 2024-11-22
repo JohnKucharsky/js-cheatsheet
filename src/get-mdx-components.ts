@@ -1,37 +1,34 @@
 import fs from "fs";
 import path from "path";
 import { evaluate, EvaluateOptions } from "@mdx-js/mdx";
-import { MDXContent } from "mdx/types";
 import { readFile } from "node:fs/promises";
 import * as runtime from "react/jsx-runtime";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
 import { SectionNameEnum } from "@/common/types";
+import { MDXContent } from "mdx/types";
+import githubDark from "tm-themes/themes/github-dark.json";
 
 const contentDirectory = path.join(process.cwd(), "./src/content");
 
-const getAllFiles = (
-  dirPath: string,
-  arrayOfFiles: string[] = [],
-): string[] => {
+const getAllFiles = (dirPath: string): string[] => {
   const files = fs.readdirSync(dirPath);
+  const allFiles: string[] = [];
 
   files.forEach((file) => {
     const filePath = path.join(dirPath, file);
     if (fs.statSync(filePath).isDirectory()) {
-      arrayOfFiles = getAllFiles(filePath, arrayOfFiles);
+      allFiles.push(...getAllFiles(filePath));
     } else if (filePath.endsWith(".mdx")) {
-      arrayOfFiles.push(filePath);
+      allFiles.push(filePath);
     }
   });
 
-  return arrayOfFiles;
+  return allFiles;
 };
 
 export const getAllFilesNames = () => {
-  const filePaths = getAllFiles(contentDirectory);
-
-  return filePaths.map((filePath) => ({
+  return getAllFiles(contentDirectory).map((filePath) => ({
     slug: path.basename(filePath, ".mdx"),
   }));
 };
@@ -41,15 +38,12 @@ export async function getMDXComponents({
 }: {
   pathName: SectionNameEnum;
 }) {
-  const folderPath = path.join(process.cwd(), `./src/content/${pathName}`);
-  const fileNames = fs.readdirSync(folderPath);
-  const mdxComponents: MDXContent[] = [];
+  const folderPath = path.join(contentDirectory, pathName);
+  const filePaths = getAllFiles(folderPath);
 
-  for (const fileName of fileNames) {
-    if (fileName.endsWith(".mdx")) {
-      const filePath = path.join(folderPath, fileName);
+  return Promise.all(
+    filePaths.map(async (filePath) => {
       const fileContent = await readFile(filePath, "utf-8");
-
       const MDXContent = await evaluate(fileContent, {
         ...(runtime as Readonly<EvaluateOptions>),
         rehypePlugins: [
@@ -57,17 +51,15 @@ export async function getMDXComponents({
             rehypePrettyCode,
             {
               keepBackground: false,
-              theme: "github-dark",
+              theme: githubDark,
             },
           ],
           rehypeSlug,
         ],
       });
-      mdxComponents.push(MDXContent.default);
-    }
-  }
-
-  return mdxComponents;
+      return MDXContent.default;
+    }),
+  );
 }
 
 export async function getAllMDXComponents() {
@@ -76,26 +68,24 @@ export async function getAllMDXComponents() {
   const mdxCompObject: Record<string, MDXContent> = {};
 
   for (const filePath of filePaths) {
-    if (filePath.endsWith(".mdx")) {
-      const fileContent = await readFile(filePath, "utf-8");
-      const slug = path.basename(filePath, ".mdx");
+    const fileContent = await readFile(filePath, "utf-8");
+    const slug = path.basename(filePath, ".mdx");
 
-      const MDXContent = await evaluate(fileContent, {
-        ...(runtime as Readonly<EvaluateOptions>),
-        rehypePlugins: [
-          [
-            rehypePrettyCode,
-            {
-              keepBackground: false,
-              theme: "github-dark",
-            },
-          ],
-          rehypeSlug,
+    const MDXContent = await evaluate(fileContent, {
+      ...(runtime as Readonly<EvaluateOptions>),
+      rehypePlugins: [
+        [
+          rehypePrettyCode,
+          {
+            keepBackground: false,
+            theme: githubDark,
+          },
         ],
-      });
-      mdxCompObject[slug] = MDXContent.default;
-      mdxComponents.push(MDXContent.default);
-    }
+        rehypeSlug,
+      ],
+    });
+    mdxCompObject[slug] = MDXContent.default;
+    mdxComponents.push(MDXContent.default);
   }
 
   return { array: mdxComponents, object: mdxCompObject };

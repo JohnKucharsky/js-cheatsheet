@@ -34,10 +34,10 @@ export async function shuffleArray() {
     const shuffledArray = shuffleArrayOfItems();
 
     await client.query(
-        `INSERT INTO js_cheatsheet(id, shuffledArray)
+      `INSERT INTO js_cheatsheet(id, shuffledArray)
         VALUES
         ($1, $2)`,
-        [session?.user?.email, shuffledArray],
+      [session?.user?.email, shuffledArray],
     );
   } else {
     const shuffledArray = shuffleArrayOfItems();
@@ -61,6 +61,10 @@ export async function getFirstItem(): Promise<
      WHERE id = $1`,
     [session?.user?.email],
   );
+
+  if (res.rows?.[0]?.problem_name) {
+    redirect(`/pick-random/${res.rows[0].problem_name}`);
+  }
 
   return res.rows;
 }
