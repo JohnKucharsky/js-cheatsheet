@@ -29,7 +29,7 @@ export default async function Page(props: {
   return (
     <div>
       <Link href={"/"}>back</Link>
-      <Content />;
+      <Content />
     </div>
   );
 }

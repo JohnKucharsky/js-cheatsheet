@@ -1,15 +1,9 @@
 "use client";
 
 import Fuse from "fuse.js";
-import {
-  Command,
-  CommandEmpty,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { Input } from "@/components/ui/input";
 
 export default function SearchInput({
   documents,
@@ -22,28 +16,30 @@ export default function SearchInput({
     minMatchCharLength: 2,
   });
   const resultData = fuse.search(input);
-
-  const router = useRouter();
-  console.log(resultData);
+  const hasData = resultData.length > 0;
 
   return (
-    <Command onValueChange={(string) => console.log(string)}>
-      <CommandInput
-        onValueChange={(string) => setInput(string)}
+    <div className="pt-3">
+      <Input
+        onChange={(e) => setInput(e.target.value)}
         placeholder="Search..."
       />
-      <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
-        {resultData.map(({ item }) => (
-          <CommandItem
-            style={{ cursor: "pointer" }}
-            key={item.slug}
-            onSelect={(value) => router.push(`/${value}`)}
-          >
-            {item.slug}
-          </CommandItem>
-        ))}
-      </CommandList>
-    </Command>
+
+      {hasData ? (
+        <div className="flex flex-col gap-2 pt-2">
+          {resultData.map(({ item }) => (
+            <Link
+              className="cursor-pointer"
+              key={item.slug}
+              href={`/${item.slug}`}
+            >
+              {item.slug}
+            </Link>
+          ))}
+        </div>
+      ) : (
+        <h5 className="pt-2">No results found.</h5>
+      )}
+    </div>
   );
 }

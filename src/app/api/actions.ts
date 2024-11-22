@@ -34,19 +34,18 @@ export async function shuffleArray() {
     const shuffledArray = shuffleArrayOfItems();
 
     await client.query(
-      `
-    INSERT INTO js_cheatsheet(id, shuffledArray)
-    VALUES
-    ($1, $2)`,
-      [session?.user?.email, shuffledArray],
+        `INSERT INTO js_cheatsheet(id, shuffledArray)
+        VALUES
+        ($1, $2)`,
+        [session?.user?.email, shuffledArray],
     );
   } else {
     const shuffledArray = shuffleArrayOfItems();
 
     await client.query(
       `UPDATE js_cheatsheet
-    SET shuffledArray = $1
-    WHERE id = $2;`,
+        SET shuffledArray = $1
+        WHERE id = $2;`,
       [shuffledArray, session?.user?.email],
     );
   }
@@ -59,7 +58,7 @@ export async function getFirstItem(): Promise<
 
   const res = await client.query(
     `SELECT shuffledArray[array_length(shuffledArray, 1)] as problem_name FROM js_cheatsheet
-        WHERE id = $1`,
+     WHERE id = $1`,
     [session?.user?.email],
   );
 
