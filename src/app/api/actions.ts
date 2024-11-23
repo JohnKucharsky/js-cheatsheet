@@ -1,7 +1,6 @@
 "use server";
 import { auth } from "@/auth";
 import { Pool } from "pg";
-import { redirect } from "next/navigation";
 import { getAllFilesNames } from "@/get-mdx-components";
 
 const client = new Pool();
@@ -76,14 +75,7 @@ export async function nextItem() {
     [session?.user?.email],
   );
 
-  if (
-    res.rows[0]?.problem_name !== undefined &&
-    res.rows[0].problem_name !== null
-  ) {
-    redirect(`/pick-random/${res.rows[0].problem_name}`);
-  } else {
-    redirect("/");
-  }
+  return res.rows;
 }
 
 export async function itemsLeftInList(): Promise<number | null | undefined> {

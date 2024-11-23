@@ -8,7 +8,7 @@ import { SearchIcon } from "lucide-react";
 import SearchInput from "@/components/search-input";
 import { getAllFilesNames } from "@/get-mdx-components";
 
-export default function Search() {
+export default function SearchDialog() {
   const documents = getAllFilesNames();
 
   return (

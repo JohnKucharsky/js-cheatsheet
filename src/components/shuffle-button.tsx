@@ -12,17 +12,18 @@ export default function ShuffleButton() {
 
   const handleClick = async () => {
     setLoading(true);
-
     await shuffleArray();
     const res = await getFirstItem();
-    startTransition(() => {
-      router.push(`/pick-random/${res[0].problem_name}`);
-    });
     setLoading(false);
+    startTransition(() => router.push(`/pick-random/${res[0].problem_name}`));
   };
 
   return (
-    <button disabled={loading} onClick={handleClick} className={"text-white"}>
+    <button
+      disabled={loading || isPending}
+      onClick={handleClick}
+      className={"text-white"}
+    >
       {loading || isPending ? <Spinner /> : "shuffle"}
     </button>
   );

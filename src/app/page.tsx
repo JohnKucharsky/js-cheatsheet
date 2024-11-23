@@ -4,7 +4,7 @@ import TelegramIcon from "@/components/telegram-icon";
 import Link from "next/link";
 import Image from "next/image";
 import GitHubImg from "@/components/github-mark-white.png";
-import Search from "@/components/search";
+import SearchDialog from "@/components/search-dialog";
 
 export const metadata: Metadata = {
   title: "JS Cheatsheet",
@@ -15,7 +15,7 @@ export default function Page() {
     <>
       <div className={"flex flex-row items-center justify-between my-6"}>
         <h2 style={{ margin: 0 }}>List of topics</h2>
-        <Search />
+        <SearchDialog />
       </div>
       <Menu />
       <h3>Links</h3>

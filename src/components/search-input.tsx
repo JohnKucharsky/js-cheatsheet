@@ -19,7 +19,7 @@ export default function SearchInput({
   const hasData = resultData.length > 0;
 
   return (
-    <div className="pt-3">
+    <div>
       <Input
         onChange={(e) => setInput(e.target.value)}
         placeholder="Search..."
@@ -31,7 +31,7 @@ export default function SearchInput({
             <Link
               className="cursor-pointer"
               key={item.slug}
-              href={`/pick-random/${item.slug}`}
+              href={`/${item.slug}`}
             >
               {item.slug}
             </Link>

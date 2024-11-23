@@ -9,7 +9,9 @@ const Search = forwardRef<HTMLInputElement, SearchProps>(
     return (
       <div
         className={cn(
-          "flex h-10 items-center rounded-md border border-input bg-white pl-3 text-sm ring-offset-background focus-within:ring-1 focus-within:ring-ring focus-within:ring-offset-2",
+          "flex h-10 items-center rounded-md border border-input bg-white pl-3 " +
+            "text-sm ring-offset-background focus-within:ring-1 focus-within:ring-ring" +
+            " focus-within:ring-offset-2",
           className,
         )}
       >
