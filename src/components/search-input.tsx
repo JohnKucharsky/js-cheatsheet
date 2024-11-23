@@ -26,7 +26,7 @@ export default function SearchInput({
       />
 
       {hasData ? (
-        <div className="flex flex-col gap-2 pt-2">
+        <div className="flex flex-col gap-2 pt-2 max-h-80 overflow-y-scroll hide-scrollbar">
           {resultData.map(({ item }) => (
             <Link
               className="cursor-pointer"
