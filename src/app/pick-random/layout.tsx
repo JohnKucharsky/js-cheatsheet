@@ -1,4 +1,4 @@
-import { ReactElement } from "react";
+import { ReactElement, Suspense } from "react";
 import { auth, signIn, signOut } from "@/auth";
 import UserInfo from "@/components/user-info";
 import ShuffleButton from "@/components/shuffle-button";
@@ -6,6 +6,7 @@ import { itemsLeftInList } from "@/app/api/actions";
 import HomeIcon from "@/components/home-icon";
 import Link from "next/link";
 import { getAllFilesNames } from "@/get-mdx-components";
+import Spinner from "@/components/spinner";
 
 export default async function Layout({ children }: { children: ReactElement }) {
   const session = await auth();
@@ -62,7 +63,9 @@ export default async function Layout({ children }: { children: ReactElement }) {
         </div>
       </div>
 
-      {Boolean(session) && children}
+      {Boolean(session) && (
+        <Suspense fallback={<Spinner />}>{children}</Suspense>
+      )}
     </>
   );
 }

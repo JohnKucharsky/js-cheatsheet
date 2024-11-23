@@ -19,7 +19,7 @@ export default function SearchDialog() {
           <SearchIcon />
         </button>
       </DialogTrigger>
-      <DialogContent className="min-h-5 [&>button]:absolute [&>button]:top-2 [&>button]:right-2">
+      <DialogContent className="min-h-5 bg-stone-950 [&>button]:absolute [&>button]:top-2 [&>button]:right-2">
         <SearchInput documents={documents} />
       </DialogContent>
     </Dialog>
