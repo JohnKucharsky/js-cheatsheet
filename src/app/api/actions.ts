@@ -3,17 +3,11 @@
 import { auth } from "@/auth";
 import { Pool } from "pg";
 import { getAllFilesNames } from "@/get-mdx-components";
+import { shuffle } from "@/lib/utils";
 
-const client = new Pool();
+const db = new Pool();
 
 const shuffleArrayOfItems = () => {
-  const shuffle = (array: string[]) => {
-    for (let i = array.length - 1; i > 0; i--) {
-      let j = Math.floor(Math.random() * (i + 1));
-      [array[i], array[j]] = [array[j], array[i]];
-    }
-  };
-
   const allNames = getAllFilesNames();
   const shuffledArray = allNames.map(({ slug }) => slug);
   shuffle(shuffledArray);
@@ -24,7 +18,7 @@ const shuffleArrayOfItems = () => {
 export async function shuffleArray() {
   const session = await auth();
 
-  const data = await client.query(
+  const data = await db.query(
     `SELECT id FROM 
     js_cheatsheet WHERE id = $1`,
     [session?.user?.email],
@@ -33,7 +27,7 @@ export async function shuffleArray() {
   if (data.rows.length === 0) {
     const shuffledArray = shuffleArrayOfItems();
 
-    await client.query(
+    await db.query(
       `INSERT INTO js_cheatsheet(id, shuffledArray)
         VALUES
         ($1, $2)`,
@@ -43,7 +37,7 @@ export async function shuffleArray() {
   } else {
     const shuffledArray = shuffleArrayOfItems();
 
-    await client.query(
+    await db.query(
       `UPDATE js_cheatsheet
         SET shuffledArray = $1,
         current_index = 0
@@ -57,7 +51,7 @@ export async function shuffleArray() {
 export async function getAllItems() {
   const session = await auth();
 
-  const res = await client.query<{
+  const res = await db.query<{
     shuffledarray: string[];
     current_index: number;
   }>(`select shuffledArray, current_index from js_cheatsheet WHERE id = $1`, [
@@ -70,7 +64,7 @@ export async function getAllItems() {
 export async function nextItem({ currentIndex }: { currentIndex: number }) {
   const session = await auth();
 
-  await client.query(
+  await db.query(
     `UPDATE js_cheatsheet
     SET current_index = $2
     WHERE id = $1`,

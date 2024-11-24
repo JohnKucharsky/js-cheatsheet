@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import * as React from "react";
 import Link from "next/link";
 import { getMDXComponents } from "@/get-mdx-components";
-import { SectionNameEnum } from "@/common/types";
+import { SectionNameEnum } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "Design",

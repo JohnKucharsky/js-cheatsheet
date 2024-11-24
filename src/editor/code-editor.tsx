@@ -1,30 +1,56 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Editor } from "@monaco-editor/react";
 import clsx from "clsx";
 import { executeCode } from "@/editor/api";
 import Link from "next/link";
-import * as React from "react";
 
-const CodeEditor = ({
-  language,
-  snippet,
+export default function CodeEditor({
+  data,
 }: {
-  language: "typescript" | "javascript";
-  snippet: string;
-}) => {
+  data: { language: "typescript" | "javascript"; content: string }[];
+}) {
+  const [index, setIndex] = useState<number>(0);
+  const [value, setValue] = useState(data[0].content);
+  const [output, setOutput] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [isError, setIsError] = useState<boolean>(false);
+
   const editorRef = useRef<any>();
-  const [value, setValue] = useState(snippet);
 
   const onMount = (editor: any) => {
     editorRef.current = editor;
     editor.focus();
   };
 
-  const [output, setOutput] = useState<string[] | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [isError, setIsError] = useState<boolean>(false);
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if ((event.ctrlKey || event.metaKey) && event.key === "s") {
+        event.preventDefault();
+        runCode().catch(console.error);
+      }
+    };
+
+    window.addEventListener("keydown", handleKeyDown);
+    return () => {
+      window.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
+  const getErrorMessage = (input: string) => {
+    const match = input.match(
+      /Validation failed! Result: (.*), Expected: (.*)/,
+    );
+
+    if (match) {
+      return `Validation failed! 
+Result: ${match[1]} 
+Expected: ${match[2]}`;
+    }
+
+    return input;
+  };
 
   const runCode = async () => {
     const sourceCode = editorRef.current?.getValue();
@@ -32,8 +58,9 @@ const CodeEditor = ({
 
     try {
       setIsLoading(true);
-      const { run } = await executeCode(language, sourceCode);
-      setOutput(run.output.split("\n"));
+      const { run } = await executeCode(data[index].language, sourceCode);
+
+      setOutput(run.code !== 0 ? getErrorMessage(run.output) : run.output);
       setIsError(run.code !== 0);
     } catch (error) {
       console.error(error);
@@ -42,13 +69,23 @@ const CodeEditor = ({
     }
   };
 
+  const nextSnippet = () => {
+    const nextIndex = (index + 1) % data.length;
+    setIndex(nextIndex);
+    setValue(data[nextIndex].content);
+    setOutput(null);
+    setIsError(false);
+  };
+
   return (
     <div>
       <div className="mb-2 flex flex-row items-center gap-3 justify-between">
         <Link href={"/"}>back</Link>
+
         <button onClick={runCode} disabled={isLoading}>
           {isLoading ? "running..." : "run"}
         </button>
+        <button onClick={nextSnippet}>next</button>
       </div>
 
       <div className="flex space-x-4">
@@ -61,8 +98,8 @@ const CodeEditor = ({
             }}
             height="30rem"
             theme="vs-dark"
-            language={language}
-            defaultValue={snippet}
+            language={data[index].language}
+            defaultValue={data[index].content}
             onMount={onMount}
             value={value}
             onChange={(value) => setValue(value || "")}
@@ -76,11 +113,11 @@ const CodeEditor = ({
             })}
           >
             {output ? (
-              output.map((line, i) => (
-                <p key={i} className="h- text-sm text-white">
-                  {line}
-                </p>
-              ))
+              <p
+                className={`m-0 ${isError ? "text-red-500" : "text-gray-100"} whitespace-pre-wrap font-mono text-sm overflow-auto`}
+              >
+                {output}
+              </p>
             ) : (
               <p className="text-white text-sm">
                 Click run to see the output here
@@ -91,5 +128,4 @@ const CodeEditor = ({
       </div>
     </div>
   );
-};
-export default CodeEditor;
+}

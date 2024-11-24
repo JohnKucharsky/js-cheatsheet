@@ -2,15 +2,15 @@ import { Metadata } from "next";
 import * as React from "react";
 import Link from "next/link";
 import { getMDXComponents } from "@/get-mdx-components";
-import { SectionNameEnum } from "@/common/types";
+import { SectionNameEnum } from "@/lib/types";
 
 export const metadata: Metadata = {
-  title: "Lodash",
+  title: "React",
 };
 
 export default async function Page() {
   const mdxItems = await getMDXComponents({
-    pathName: SectionNameEnum.lodash,
+    pathName: SectionNameEnum.react,
   });
 
   return (
@@ -21,7 +21,7 @@ export default async function Page() {
       ))}
       <div className={"flex justify-between my-4"}>
         <Link href={"/"}>menu</Link>
-        <Link href={"/react"}>react</Link>
+        <Link href={"/theory"}>theory</Link>
       </div>
     </>
   );
