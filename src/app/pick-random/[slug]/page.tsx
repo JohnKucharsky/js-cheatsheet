@@ -1,5 +1,4 @@
 import { notFound } from "next/navigation";
-import NextButton from "@/components/next-button";
 import { Metadata } from "next";
 import { getAllFilesNames, getAllMDXComponents } from "@/get-mdx-components";
 
@@ -25,12 +24,5 @@ export default async function Page(props: {
 
   const Content = allFiles.object[params.slug];
 
-  return (
-    <>
-      <Content />
-      <div className={"flex flex-row justify-end"}>
-        <NextButton />
-      </div>
-    </>
-  );
+  return <Content />;
 }

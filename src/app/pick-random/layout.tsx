@@ -2,17 +2,23 @@ import { ReactElement, Suspense } from "react";
 import { auth, signIn, signOut } from "@/auth";
 import UserInfo from "@/components/user-info";
 import ShuffleButton from "@/components/shuffle-button";
-import { itemsLeftInList } from "@/app/api/actions";
 import HomeIcon from "@/components/home-icon";
 import Link from "next/link";
 import { getAllFilesNames } from "@/get-mdx-components";
 import Spinner from "@/components/spinner";
+import { getAllItems } from "@/app/api/actions";
+import NextButton from "@/components/next-button";
 
 export default async function Layout({ children }: { children: ReactElement }) {
   const session = await auth();
-  const count = await itemsLeftInList();
+  const allItems = await getAllItems();
   const allFiles = getAllFilesNames();
   const quantity = allFiles.length;
+
+  const itemsLeft = () => {
+    const currIdx = allItems?.[0]?.current_index || 0;
+    return quantity - currIdx;
+  };
 
   return (
     <>
@@ -27,7 +33,7 @@ export default async function Layout({ children }: { children: ReactElement }) {
               <HomeIcon />
             </Link>
             <ShuffleButton />
-            <div>{`${count || "none"} of ${quantity}`}</div>
+            <div>{`${itemsLeft() || "none"} of ${quantity}`}</div>
           </div>
         )}
         <div className={"flex gap-4 items-start"}>
@@ -64,7 +70,12 @@ export default async function Layout({ children }: { children: ReactElement }) {
       </div>
 
       {Boolean(session) && (
-        <Suspense fallback={<Spinner />}>{children}</Suspense>
+        <Suspense fallback={<Spinner />}>
+          {children}
+          <div className={"flex flex-row justify-end"}>
+            <NextButton allItems={allItems[0]} />
+          </div>
+        </Suspense>
       )}
     </>
   );

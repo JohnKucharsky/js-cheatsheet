@@ -1,4 +1,5 @@
 "use server";
+
 import { auth } from "@/auth";
 import { Pool } from "pg";
 import { getAllFilesNames } from "@/get-mdx-components";
@@ -38,53 +39,41 @@ export async function shuffleArray() {
         ($1, $2)`,
       [session?.user?.email, shuffledArray],
     );
+    return shuffledArray[0];
   } else {
     const shuffledArray = shuffleArrayOfItems();
 
     await client.query(
       `UPDATE js_cheatsheet
-        SET shuffledArray = $1
+        SET shuffledArray = $1,
+        current_index = 0
         WHERE id = $2;`,
       [shuffledArray, session?.user?.email],
     );
+    return shuffledArray[0];
   }
 }
 
-export async function getFirstItem(): Promise<
-  Record<"problem_name", string | null>[]
-> {
+export async function getAllItems() {
   const session = await auth();
 
-  const res = await client.query(
-    `SELECT shuffledArray[array_length(shuffledArray, 1)] as problem_name FROM js_cheatsheet
-     WHERE id = $1`,
-    [session?.user?.email],
-  );
+  const res = await client.query<{
+    shuffledarray: string[];
+    current_index: number;
+  }>(`select shuffledArray, current_index from js_cheatsheet WHERE id = $1`, [
+    session?.user?.email,
+  ]);
 
   return res.rows;
 }
 
-export async function nextItem() {
+export async function nextItem({ currentIndex }: { currentIndex: number }) {
   const session = await auth();
 
-  const res = await client.query(
+  await client.query(
     `UPDATE js_cheatsheet
-    SET shuffledArray = 
-    array_remove(shuffledArray, shuffledArray[array_length(shuffledArray, 1)])
-    WHERE id = $1 returning shuffledArray[array_length(shuffledArray, 1)] as problem_name`,
-    [session?.user?.email],
+    SET current_index = $2
+    WHERE id = $1`,
+    [session?.user?.email, currentIndex],
   );
-
-  return res.rows;
-}
-
-export async function itemsLeftInList(): Promise<number | null | undefined> {
-  const session = await auth();
-
-  const res = await client.query(
-    `SELECT shuffledArray FROM js_cheatsheet WHERE id = $1`,
-    [session?.user?.email],
-  );
-
-  return res.rows[0]?.shuffledarray?.length;
 }

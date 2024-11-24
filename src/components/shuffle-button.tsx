@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useTransition } from "react";
-import { getFirstItem, shuffleArray } from "@/app/api/actions";
+import { shuffleArray } from "@/app/api/actions";
 import Spinner from "@/components/spinner";
 import { useRouter } from "next/navigation";
 
@@ -12,10 +12,9 @@ export default function ShuffleButton() {
 
   const handleClick = async () => {
     setLoading(true);
-    await shuffleArray();
-    const res = await getFirstItem();
+    const firstItem = await shuffleArray();
     setLoading(false);
-    startTransition(() => router.push(`/pick-random/${res[0].problem_name}`));
+    startTransition(() => router.push(`/pick-random/${firstItem}`));
   };
 
   return (
