@@ -20,7 +20,6 @@ export default function SearchInput({
     minMatchCharLength: 2,
   });
   const resultData = fuse.search(input);
-
   const hasData = resultData.length > 0;
 
   const handleChangeRoute = (slug: string) => {

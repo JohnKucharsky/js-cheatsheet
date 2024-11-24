@@ -1,7 +1,7 @@
 "use client";
 import clsx from "clsx";
 import { ReactElement, useRef, useState } from "react";
-import CopyIcon from "@/components/copy-icon";
+import CopyIcon from "@/components/icons/copy-icon";
 
 interface ICopyToClipboard {
   children: ReactElement;

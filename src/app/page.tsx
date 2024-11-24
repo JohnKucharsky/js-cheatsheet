@@ -1,9 +1,9 @@
 import Menu from "./menu.mdx";
 import { Metadata } from "next";
-import TelegramIcon from "@/components/telegram-icon";
+import TelegramIcon from "@/components/icons/telegram-icon";
 import Link from "next/link";
 import Image from "next/image";
-import GitHubImg from "@/components/github-mark-white.png";
+import GitHubImg from "@/components/icons/github-mark-white.png";
 import SearchDialog from "@/components/search-dialog";
 
 export const metadata: Metadata = {

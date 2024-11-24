@@ -2,10 +2,10 @@ import { ReactElement, Suspense } from "react";
 import { auth, signIn, signOut } from "@/auth";
 import UserInfo from "@/components/user-info";
 import ShuffleButton from "@/components/shuffle-button";
-import HomeIcon from "@/components/home-icon";
+import HomeIcon from "@/components/icons/home-icon";
 import Link from "next/link";
 import { getAllFilesNames } from "@/get-mdx-components";
-import Spinner from "@/components/spinner";
+import Spinner from "@/components/icons/spinner";
 import { getAllItems } from "@/app/api/actions";
 import NextButton from "@/components/next-button";
 

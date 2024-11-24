@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { nextItem } from "@/app/api/actions";
-import Spinner from "@/components/spinner";
+import Spinner from "@/components/icons/spinner";
 import { useRouter } from "next/navigation";
 
 export default function NextButton({

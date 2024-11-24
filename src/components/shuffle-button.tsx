@@ -2,7 +2,7 @@
 
 import { useState, useTransition } from "react";
 import { shuffleArray } from "@/app/api/actions";
-import Spinner from "@/components/spinner";
+import Spinner from "@/components/icons/spinner";
 import { useRouter } from "next/navigation";
 
 export default function ShuffleButton() {
@@ -14,6 +14,7 @@ export default function ShuffleButton() {
     setLoading(true);
     const firstItem = await shuffleArray();
     setLoading(false);
+
     startTransition(() => router.push(`/pick-random/${firstItem}`));
   };
 
