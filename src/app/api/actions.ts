@@ -1,6 +1,5 @@
 "use server";
 
-import { auth } from "@/auth";
 import { Pool } from "pg";
 import { getAllFilesNames } from "@/get-mdx-components";
 import { shuffle } from "@/lib/utils";
@@ -15,13 +14,11 @@ const shuffleArrayOfItems = () => {
   return shuffledArray;
 };
 
-export async function shuffleArray() {
-  const session = await auth();
-
+export async function shuffleArray(email: string | null | undefined) {
   const data = await db.query(
     `SELECT id FROM 
     js_cheatsheet WHERE id = $1`,
-    [session?.user?.email],
+    [email],
   );
 
   if (data.rows.length === 0) {
@@ -31,7 +28,7 @@ export async function shuffleArray() {
       `INSERT INTO js_cheatsheet(id, shuffledArray)
         VALUES
         ($1, $2)`,
-      [session?.user?.email, shuffledArray],
+      [email, shuffledArray],
     );
     return shuffledArray[0];
   } else {
@@ -42,32 +39,34 @@ export async function shuffleArray() {
         SET shuffledArray = $1,
         current_index = 0
         WHERE id = $2;`,
-      [shuffledArray, session?.user?.email],
+      [shuffledArray, email],
     );
     return shuffledArray[0];
   }
 }
 
-export async function getAllItems() {
-  const session = await auth();
-
+export async function getAllItems(email: string | undefined | null) {
   const res = await db.query<{
     shuffledarray: string[];
     current_index: number;
   }>(`select shuffledArray, current_index from js_cheatsheet WHERE id = $1`, [
-    session?.user?.email,
+    email,
   ]);
 
   return res.rows;
 }
 
-export async function nextItem({ currentIndex }: { currentIndex: number }) {
-  const session = await auth();
-
+export async function nextItem({
+  currentIndex,
+  email,
+}: {
+  currentIndex: number;
+  email: string | null | undefined;
+}) {
   await db.query(
     `UPDATE js_cheatsheet
     SET current_index = $2
     WHERE id = $1`,
-    [session?.user?.email, currentIndex],
+    [email, currentIndex],
   );
 }

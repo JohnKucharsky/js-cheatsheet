@@ -1,27 +1,28 @@
-import { ReactElement, Suspense } from "react";
+import { Fragment, ReactElement } from "react";
 import { auth, signIn, signOut } from "@/auth";
 import UserInfo from "@/components/user-info";
 import ShuffleButton from "@/components/shuffle-button";
 import HomeIcon from "@/components/icons/home-icon";
 import Link from "next/link";
-import { getAllFilesNames } from "@/get-mdx-components";
-import Spinner from "@/components/icons/spinner";
 import { getAllItems } from "@/app/api/actions";
 import NextButton from "@/components/next-button";
+import Redirect from "@/components/redirect";
 
 export default async function Layout({ children }: { children: ReactElement }) {
   const session = await auth();
-  const allItems = await getAllItems();
-  const allFiles = getAllFilesNames();
-  const quantity = allFiles.length;
+  const allItems = await getAllItems(session?.user?.email);
+  const quantity = allItems[0].shuffledarray.length;
 
   const itemsLeft = () => {
     const currIdx = allItems?.[0]?.current_index || 0;
     return quantity - currIdx;
   };
 
+  const slug = allItems[0].shuffledarray[allItems[0].current_index];
+
   return (
     <>
+      <Redirect slug={slug} />
       <div
         className={
           "flex flex-col-reverse md:flex-row gap-4 items-start md:items-center justify-between"
@@ -32,7 +33,7 @@ export default async function Layout({ children }: { children: ReactElement }) {
             <Link href={"/"} style={{ borderBottom: "none" }}>
               <HomeIcon />
             </Link>
-            <ShuffleButton />
+            <ShuffleButton email={session?.user?.email} />
             <div>{`${itemsLeft() || "none"} of ${quantity}`}</div>
           </div>
         )}
@@ -70,12 +71,13 @@ export default async function Layout({ children }: { children: ReactElement }) {
       </div>
 
       {Boolean(session) && (
-        <Suspense fallback={<Spinner />}>
-          {children}
+        <Fragment>
+          {slug ? children : <h4>Array is empty, shuffle again</h4>}
+
           <div className={"flex flex-row justify-end"}>
-            <NextButton allItems={allItems[0]} />
+            <NextButton allItems={allItems[0]} email={session?.user?.email} />
           </div>
-        </Suspense>
+        </Fragment>
       )}
     </>
   );

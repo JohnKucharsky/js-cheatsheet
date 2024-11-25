@@ -7,11 +7,13 @@ import { useRouter } from "next/navigation";
 
 export default function NextButton({
   allItems,
+  email,
 }: {
   allItems: {
     shuffledarray: string[];
     current_index: number;
   };
+  email: string | null | undefined;
 }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
@@ -19,9 +21,8 @@ export default function NextButton({
 
   const handleClick = async () => {
     setLoading(true);
-    await nextItem({ currentIndex: allItems.current_index + 1 });
+    await nextItem({ currentIndex: allItems.current_index + 1, email });
     setLoading(false);
-
     if (allItems.shuffledarray[allItems.current_index + 1]) {
       startTransition(() =>
         router.push(

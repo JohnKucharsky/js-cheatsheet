@@ -5,14 +5,18 @@ import { shuffleArray } from "@/app/api/actions";
 import Spinner from "@/components/icons/spinner";
 import { useRouter } from "next/navigation";
 
-export default function ShuffleButton() {
+export default function ShuffleButton({
+  email,
+}: {
+  email: string | null | undefined;
+}) {
   const [loading, setLoading] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   const handleClick = async () => {
     setLoading(true);
-    const firstItem = await shuffleArray();
+    const firstItem = await shuffleArray(email);
     setLoading(false);
 
     startTransition(() => router.push(`/pick-random/${firstItem}`));
