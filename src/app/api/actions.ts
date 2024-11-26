@@ -52,7 +52,6 @@ export async function getAllItems(email: string | undefined | null) {
   }>(`select shuffledArray, current_index from js_cheatsheet WHERE id = $1`, [
     email,
   ]);
-
   return res.rows;
 }
 
