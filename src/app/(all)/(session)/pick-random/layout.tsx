@@ -36,8 +36,10 @@ export default function Layout({ children }: { children: ReactElement }) {
     return quantity - currIdx;
   };
 
+  const withSlug = pathname.includes("pick-random/");
+
   useEffect(() => {
-    if (!pathname.includes("pick-random/") && slug) {
+    if (!withSlug && slug) {
       router.push(`/pick-random/${slug}`);
     }
   }, [slug, pathname]);
@@ -64,7 +66,10 @@ export default function Layout({ children }: { children: ReactElement }) {
             <Link href={"/"} style={{ borderBottom: "none" }}>
               <HomeIcon />
             </Link>
-            <ShuffleButton email={session?.user?.email} />
+            <ShuffleButton
+              email={session?.user?.email}
+              setAllItems={setAllItems}
+            />
             <div>{`${itemsLeft() || "none"} of ${quantity}`}</div>
           </div>
         )}
@@ -75,20 +80,15 @@ export default function Layout({ children }: { children: ReactElement }) {
               imgSrc={session.user?.image}
               email={session.user?.email}
             >
-              <button
-                className={"text-white"}
-                type="submit"
-                onClick={() => signOut()}
-              >
+              <button className={"text-white"} onClick={() => signOut()}>
                 sign out
               </button>
             </UserInfo>
           ) : (
             <>
-              {status === "loading" ? (
+              {status === "unauthenticated" ? (
                 <button
                   className={"text-white"}
-                  type="submit"
                   onClick={() => signIn("google")}
                 >
                   sign in with Google
@@ -105,7 +105,7 @@ export default function Layout({ children }: { children: ReactElement }) {
         <Fragment>
           {children}
           <div className={"flex flex-row justify-end"}>
-            {allItems && (
+            {allItems && withSlug && (
               <NextButton allItems={allItems} setAllItems={setAllItems} />
             )}
           </div>
@@ -115,17 +115,29 @@ export default function Layout({ children }: { children: ReactElement }) {
   );
 }
 
-function ShuffleButton({ email }: { email: string | null | undefined }) {
+function ShuffleButton({
+  email,
+  setAllItems,
+}: {
+  email: string | null | undefined;
+  setAllItems: Dispatch<
+    SetStateAction<{
+      shuffledarray: string[];
+      current_index: number;
+    } | null>
+  >;
+}) {
   const [loading, setLoading] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
   const handleClick = async () => {
     setLoading(true);
-    const firstItem = await shuffleArray(email);
+    const shuffledArray = await shuffleArray(email);
+    setAllItems({ current_index: 0, shuffledarray: shuffledArray });
     setLoading(false);
 
-    startTransition(() => router.push(`/pick-random/${firstItem}`));
+    startTransition(() => router.push(`/pick-random/${shuffledArray[0]}`));
   };
 
   return (
@@ -155,6 +167,7 @@ function NextButton({
   >;
 }) {
   const [loading, setLoading] = useState(false);
+
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
 
@@ -168,14 +181,13 @@ function NextButton({
     }).catch(console.error);
     setLoading(false);
 
-    setAllItems({ ...allItems, current_index: allItems.current_index + 1 });
-
     if (allItems.shuffledarray[allItems.current_index + 1]) {
-      startTransition(() =>
+      startTransition(() => {
+        setAllItems({ ...allItems, current_index: allItems.current_index + 1 });
         router.push(
           `/pick-random/${allItems.shuffledarray[allItems.current_index + 1]}`,
-        ),
-      );
+        );
+      });
     } else {
       startTransition(() => router.push("/"));
     }

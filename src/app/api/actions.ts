@@ -30,7 +30,7 @@ export async function shuffleArray(email: string | null | undefined) {
         ($1, $2)`,
       [email, shuffledArray],
     );
-    return shuffledArray[0];
+    return shuffledArray;
   } else {
     const shuffledArray = shuffleArrayOfItems();
 
@@ -41,7 +41,7 @@ export async function shuffleArray(email: string | null | undefined) {
         WHERE id = $2;`,
       [shuffledArray, email],
     );
-    return shuffledArray[0];
+    return shuffledArray;
   }
 }
 
