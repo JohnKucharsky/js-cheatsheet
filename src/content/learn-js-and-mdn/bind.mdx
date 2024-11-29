@@ -21,9 +21,7 @@ setTimeout(function () {
   user.sayHi(); // Hello, John!
 }, 1000);
 // or shorter
-setTimeout(() => {
-  user.sayHi(); // Hello, John!
-}, 1000);
+setTimeout(() => user.sayHi(), 1000); // Hello, John!
 
 // solution 2
 const sayHi = user.sayHi.bind(user);

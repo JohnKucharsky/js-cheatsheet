@@ -6,9 +6,7 @@ Prototype of random pick implemented in this app
 ```js
 class RandomPickPlus {
   constructor() {
-    this.allIDs = [];
     this.shuffledIds = [];
-    this.easyIDs = [];
   }
 
   shuffle(array) {
@@ -19,52 +17,25 @@ class RandomPickPlus {
   }
 
   onStart(ids) {
-    this.allIDs = ids;
-    this.shuffledIds = ids.filter(
-      (item) => !this.easyIDs.includes(item),
-    );
-    this.shuffle(this.shuffledIds);
-  }
-
-  startAndReset(ids) {
-    this.allIDs = ids;
     this.shuffledIds = ids;
     this.shuffle(this.shuffledIds);
   }
 
-  nextEasy(id) {
-    this.shuffledIds = this.shuffledIds.filter(
-      (item) => item !== id,
-    );
-    this.easyIDs.push(id);
-  }
-
   next(id) {
-    this.shuffledIds = this.shuffledIds.filter(
-      (item) => item !== id,
-    );
+    this.shuffledIds = this.shuffledIds.filter((item) => item !== id);
   }
 
   printAll() {
     console.log({
-      allIDs: this.allIDs,
       shuffledIds: this.shuffledIds,
-      easyIDs: this.easyIDs,
     });
   }
 }
 
-const randomPickPlus: RandomPickPlus = new RandomPickPlus();
-randomPickPlus.onStart([1, 2, 3]);
-randomPickPlus.next(1);
-randomPickPlus.nextEasy(2);
-randomPickPlus.next(3);
+const randomPickPlus = new RandomPickPlus();
+randomPickPlus.onStart(["sort", "map", "reduce"]);
+randomPickPlus.next("sort");
+randomPickPlus.next("map");
 randomPickPlus.printAll();
-// { allIDs: [ 1, 2, 3 ], shuffledIds: [], easyIDs: [ 2 ] }
-randomPickPlus.onStart([1, 2, 3]);
-randomPickPlus.printAll();
-// { allIDs: [ 1, 2, 3 ], shuffledIds: [ 3, 1 ], easyIDs: [ 2 ] }
-randomPickPlus.startAndReset([1, 2, 3]);
-randomPickPlus.printAll();
-// { allIDs: [ 1, 2, 3 ], shuffledIds: [ 1, 2, 3 ], easyIDs: [ 2 ] }
+// { shuffledIds: [ 'reduce' ] }
 ```

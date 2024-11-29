@@ -41,4 +41,5 @@ sql.createTable("users", ["id", "name", "age"]);
 sql.insertRow("users", { id: 1, name: "Alice", age: 30 });
 sql.insertRow("users", { id: 2, name: "Bob", age: 25 });
 console.log(sql.select("users", ["name", "age"]));
+// [ { name: 'Alice', age: 30 }, { name: 'Bob', age: 25 } ]
 ```
