@@ -6,19 +6,16 @@ existing arrays, but instead returns a new array
 
 ```js
 Array.prototype.myConcat = function (...arrays) {
-  const result = [];
-  for (let i = 0; i < this.length; i++) {
-    result[result.length] = this[i];
-  }
+  const result = [...this];
+
   for (const array of arrays) {
     if (Array.isArray(array)) {
-      for (let i = 0; i < array.length; i++) {
-        result[result.length] = array[i];
-      }
+      result.push(...array);
     } else {
-      result[result.length] = array;
+      result.push(array);
     }
   }
+
   return result;
 };
 
@@ -27,6 +24,5 @@ const arr2 = [4, 5, 6, [1]];
 const arr3 = [7, 8, 9];
 const concat = arr.myConcat(arr2, arr3, 10);
 console.log(concat);
-// Output: [1, 2, 3, 4, 5, 6, [1], 7, 8, 9, 10]
+// [1, 2, 3, 4, 5, 6, [1], 7, 8, 9, 10]
 ```
-

@@ -11,7 +11,7 @@ async function* generateSequence(start, end) {
 }
 
 const timer = async (callback) => {
-  let generator = generateSequence(1, 5);
+  const generator = generateSequence(1, 5);
   for await (let value of generator) {
     callback(value);
   }

@@ -20,6 +20,7 @@ function isPalindrome(word) {
 }
 
 console.log(isPalindrome("racecar")); // true
+console.log(isPalindrome("cheatsheet")); // true
 ```
 
 ## Stack
@@ -56,13 +57,10 @@ class Stack {
 const myStack = new Stack();
 
 myStack.push(1).push(2).push(3);
-// [ 1, 2, 3 ]
-myStack.peek(); // 3
-myStack.pop(); // [ 1, 2 ]
-myStack.peek(); // 2
-myStack.push("freeCodeCamp");
-// [ 1, 2, 'freeCodeCamp' ]
+console.log(myStack.peek()); // 3
+myStack.pop();
+console.log(myStack.peek()); // 2
+myStack.push("js-cheatsheet");
 myStack.size(); // 3
-myStack.pop(); // [ 1, 2 ]
-myStack.peek(); // 2
+console.log(myStack.peek()); // cheatsheet
 ```

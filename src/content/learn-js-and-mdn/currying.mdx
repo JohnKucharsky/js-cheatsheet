@@ -8,35 +8,20 @@ function sum(a) {
   let currentSum = a;
 
   function f(b) {
-    // Return the sum if no argument is provided
     if (b === undefined) return currentSum;
+    // Handle cases like sum(1)(2)(undefined)
     currentSum += b;
     return f;
   }
 
-  return f;
-}
-
-console.log(sum(1)(2)); // 3
-console.log(sum(5)(-1)(2)); // 6
-
-function sum2(a) {
-  let currentSum = a;
-
-  function f(b) {
-    currentSum += b;
-
-    return f;
-  }
-
-  f.valueOf = function () {
-    return currentSum;
-  };
+  f.valueOf = () => currentSum;
+  // For implicit conversion to a number (e.g., +sum(1)(2))
 
   return f;
 }
 
-// need to convert to number, to call valueOf
-console.log(+sum2(1)(2)); // 3
-console.log(+sum2(5)(-1)(2)); // 6
+console.log(+sum(1)(2)); // 3
+console.log(+sum(5)(-1)(2)); // 6
+console.log(sum(1)(2)()); // 3
+console.log(sum(5)(-1)(2)(undefined)); // 6
 ```
