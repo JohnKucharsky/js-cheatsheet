@@ -13,52 +13,40 @@ class Twitter {
     if (!this.tweets.has(userId)) {
       this.tweets.set(userId, []);
     }
-    this.tweets
-      .get(userId)
-      .unshift({ tweetId, timestamp: this.timestamp++, userId });
+    this.tweets.get(userId).unshift({ tweetId, timestamp: this.timestamp++ });
 
     if (!this.follows.has(userId)) {
       this.follows.set(userId, new Set());
-      this.follows.get(userId).add(userId);
+      this.follows.get(userId).add(userId); // User follows themselves
     }
   }
 
   getNewsFeed(userId) {
-    const feed = [];
-    if (!this.follows.has(userId)) {
-      return feed;
-    }
+    if (!this.follows.has(userId)) return [];
 
     const followed = this.follows.get(userId);
-    const allTweets = [];
+    const feed = [];
 
     for (const followeeId of followed) {
       if (this.tweets.has(followeeId)) {
-        allTweets.push(...this.tweets.get(followeeId));
+        feed.push(...this.tweets.get(followeeId).slice(0, 10)); // Only take recent tweets
       }
     }
 
-    allTweets.sort((a, b) => b.timestamp - a.timestamp);
-
-    for (let i = 0; i < Math.min(10, allTweets.length); i++) {
-      feed.push(allTweets[i].tweetId);
-    }
-
-    return feed;
+    feed.sort((a, b) => b.timestamp - a.timestamp); // Sort by timestamp
+    return feed.slice(0, 10).map((tweet) => tweet.tweetId); // Return the top 10 tweets
   }
 
   follow(followerId, followeeId) {
     if (!this.follows.has(followerId)) {
       this.follows.set(followerId, new Set());
-      this.follows.get(followerId).add(followerId);
+      this.follows.get(followerId).add(followerId); // User follows themselves
     }
     this.follows.get(followerId).add(followeeId);
   }
 
   unfollow(followerId, followeeId) {
-    if (followerId === followeeId) {
-      return;
-    }
+    if (followerId === followeeId) return; // Cannot unfollow oneself
     if (this.follows.has(followerId)) {
       this.follows.get(followerId).delete(followeeId);
     }
@@ -66,11 +54,25 @@ class Twitter {
 }
 
 const twitter = new Twitter();
+
+// User 1 posts a tweet with ID 5
 twitter.postTweet(1, 5);
-console.log(twitter.getNewsFeed(1)); // Output: [5]
+
+// User 1 retrieves their news feed (should contain only tweet 5)
+console.log(twitter.getNewsFeed(1)); // [5]
+
+// User 1 follows User 2
 twitter.follow(1, 2);
+
+// User 2 posts a tweet with ID 6
 twitter.postTweet(2, 6);
-console.log(twitter.getNewsFeed(1)); // Output: [6, 5]
+
+// User 1 retrieves their news feed (should contain tweets 6 and 5, most recent first)
+console.log(twitter.getNewsFeed(1)); // [6, 5]
+
+// User 1 unfollows User 2
 twitter.unfollow(1, 2);
-console.log(twitter.getNewsFeed(1)); // Output: [5]
+
+// User 1 retrieves their news feed (should only contain their own tweet, 5)
+console.log(twitter.getNewsFeed(1)); // [5]
 ```
