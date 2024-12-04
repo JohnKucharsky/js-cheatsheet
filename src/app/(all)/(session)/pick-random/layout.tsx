@@ -70,7 +70,7 @@ export default function Layout({ children }: { children: ReactElement }) {
               email={session?.user?.email}
               setAllItems={setAllItems}
             />
-            <div>{`${itemsLeft() || "none"} of ${quantity}`}</div>
+            <div>{`${itemsLeft() || "..."} of ${quantity}`}</div>
           </div>
         )}
         <div className={"flex gap-4 items-start"}>

@@ -6,13 +6,16 @@ function memoize(func, resolver) {
   const cache = new Map();
 
   const memoized = function (...args) {
-    const key = resolver ? resolver(...args) : args[0];
+    // Compute cache key
+    const key = resolver ? resolver(...args) : JSON.stringify(args);
 
+    // Check for cached result
     if (cache.has(key)) {
       return cache.get(key);
     }
 
-    const result = func.apply(this, args);
+    // Compute result and store it in the cache
+    const result = func.apply(null, args);
     cache.set(key, result);
 
     return result;
@@ -26,15 +29,16 @@ function memoize(func, resolver) {
 const object = { a: 1, b: 2 };
 const other = { c: 3, d: 4 };
 
-const values = memoize(Object.values);
-console.log(values(object)); // [1, 2]
+const values = memoize(Object.values, (obj) => JSON.stringify(obj));
 
+console.log(values(object)); // [1, 2]
 console.log(values(other)); // [3, 4]
 
+// Updating `object` does not affect the cached value
 object.a = 2;
 console.log(values(object)); // [1, 2]
 
-// Modify the result cache.
-values.cache.set(object, ["a", "b"]);
+// Modify the cache manually
+values.cache.set(JSON.stringify(object), ["a", "b"]);
 console.log(values(object)); // ['a', 'b']
 ```
