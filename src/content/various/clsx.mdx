@@ -25,18 +25,13 @@ function clsx(...args) {
   return classes.join(" "); // Join classes with a space
 }
 
-const className = clsx("base-class", { active: true, disabled: false }, [
-  "additional-class",
-  "another-class",
-]);
-
-console.log(className); // "base-class active additional-class another-class"
-console.log(clsx(null, false, "bar", undefined, { baz: null }, "")); // bar
-
-const obj = new Map();
-obj.cool = "!";
-console.log(clsx({ BFE: [], dev: true, is: 3 }, obj));
-// 'BFE dev is cool'
-console.log(clsx(["BFE", [{ dev: true }, ["is", [obj]]]]));
-// 'BFE dev is cool'
+console.log(
+  clsx("base-class", { active: true, disabled: false }, [
+    "additional-class",
+    "another-class",
+  ]),
+); // base-class active additional-class another-class
+console.log(
+  clsx(null, false, "bar", undefined, { baz: null }, "", [[[{ one: 1 }]]]),
+); // bar one
 ```
