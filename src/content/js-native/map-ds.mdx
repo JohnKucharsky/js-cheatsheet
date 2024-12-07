@@ -1,0 +1,108 @@
+
+## Map
+
+The Map object holds key-value pairs and remembers the original
+insertion order of the keys. Any value (both objects and primitive
+values) may be used as either a key or a value.
+
+```js
+// Creating a Map and adding entries
+const map = new Map();
+map.set("name", "Alice");
+map.set("age", 25);
+map.set("country", "USA");
+console.log(map);
+// Map(3) { 'name' => 'Alice', 'age' => 25, 'country' => 'USA' }
+
+// Size
+console.log(map.size); // 3
+
+// Accessing values
+console.log(map.get("name")); // Alice
+
+// Checking for a key
+console.log(map.has("age")); // true
+
+// Removing a key
+map.delete("country");
+console.log(map);
+// Map(2) { 'name' => 'Alice', 'age' => 25 }
+
+// Iterating over a Map
+map.set("city", "New York");
+map.set("hobby", "Painting");
+
+// Using forEach
+console.log("Using forEach:");
+map.forEach((value, key) => {
+  console.log(key, ":", value);
+});
+
+// Using for...of
+console.log("Using for...of:");
+for (const [key, value] of map) {
+  console.log(key, ":", value);
+}
+
+// Getting all keys, values, or entries
+console.log("Keys:", [...map.keys()]);
+// Keys: [ 'name', 'age', 'city', 'hobby' ]
+console.log("Values:", [...map.values()]);
+// Values: [ 'Alice', 25, 'New York', 'Painting' ]
+console.log("Entries:", [...map.entries()]);
+// Entries: [
+//     [ 'name', 'Alice' ],
+//     [ 'age', 25 ],
+//     [ 'city', 'New York' ],
+//     [ 'hobby', 'Painting' ]
+// ]
+
+// Clearing the map
+map.clear();
+console.log(map); // Map(0) {}
+
+// Creating a Map with an array of entries
+const mapFromArray = new Map([
+  ["fruit", "Apple"],
+  ["color", "Red"],
+  ["quantity", 10],
+]);
+console.log(mapFromArray);
+// Map(3) { 'fruit' => 'Apple', 'color' => 'Red', 'quantity' => 10 }
+
+// Converting a Map back to an object
+const obj = Object.fromEntries(mapFromArray);
+console.log(obj);
+// { fruit: 'Apple', color: 'Red', quantity: 10 }
+
+// Map vs Object comparison
+const objExample = { a: 1, b: 2, c: 3 };
+const mapExample = new Map(Object.entries(objExample));
+console.log(objExample);
+// { a: 1, b: 2, c: 3 }
+console.log(mapExample);
+// Map(3) { 'a' => 1, 'b' => 2, 'c' => 3 }
+
+// Keys of different types
+const map2 = new Map();
+const keyObj = {};
+const keyFunc = function () {};
+
+map2.set("hello", "string value");
+map2.set(keyObj, "obj value");
+map2.set(keyFunc, "func value");
+map2.set(NaN, "NaN value");
+
+console.log(map2);
+// Map(4) {
+//   'hello' => 'string value',
+//   {} => 'obj value',
+//   [Function: keyFunc] => 'func value',
+//   NaN => 'NaN value'
+// }
+
+console.log(map2.get("hello")); // string value
+console.log(map2.get(keyObj)); // obj value
+console.log(map2.get(keyFunc)); // func value
+console.log(map2.get(NaN)); // NaN value
+```

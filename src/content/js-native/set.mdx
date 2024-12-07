@@ -1,0 +1,71 @@
+
+## Set
+
+```js
+// Create a Set
+const mySet = new Set([1, 2, 3, 4, 5]);
+console.log("Initial Set:", mySet); // Set { 1, 2, 3, 4, 5 }
+
+// returns a new set iterator object that contains the values
+// for each element in this set in insertion order
+const setValues = mySet.values();
+console.log(setValues);
+// [Set Iterator] { 1, 2, 3, 4, 5 }
+console.log(setValues.next()); // { value: 1, done: false }
+
+// Add elements to a Set
+mySet.add(6); // Adds a new element
+mySet.add(2); // Duplicate values are ignored
+console.log("After adding elements:", mySet); // Set { 1, 2, 3, 4, 5, 6 }
+
+// Check if a Set contains an element
+console.log("Set contains 3:", mySet.has(3)); // true
+console.log("Set contains 10:", mySet.has(10)); // false
+
+// Remove elements from a Set
+mySet.delete(4); // Removes the element 4
+console.log("After deleting 4:", mySet); // Set { 1, 2, 3, 5, 6 }
+
+// Get the size of a Set
+console.log("Size of the Set:", mySet.size); // 5
+
+// Iterate over a Set
+console.log("Iterating over Set:");
+mySet.forEach((value) => {
+  console.log(value); // Logs each value in the Set
+});
+
+// Using for...of loop
+for (const value of mySet) {
+  console.log(value); // Logs each value in the Set
+}
+
+// Convert a Set to an Array
+const arrayFromSet = Array.from(mySet); // Using Array.from()
+console.log("Array from Set:", arrayFromSet); // [1, 2, 3, 5, 6]
+
+const anotherArray = [...mySet]; // Using spread operator
+console.log("Array using spread operator:", anotherArray);
+// [1, 2, 3, 5, 6]
+
+// Clear a Set
+mySet.clear(); // Removes all elements
+console.log("Set after clear:", mySet); // Set {}
+
+// Find the Union of Two Sets
+const setA = new Set([1, 2, 3]);
+const setB = new Set([3, 4, 5]);
+// Combines elements from both sets
+const union = new Set([...setA, ...setB]);
+console.log("Union of setA and setB:", union); // Set { 1, 2, 3, 4, 5 }
+
+// Find the Intersection of Two Sets
+// Common elements
+const intersection = new Set([...setA].filter((x) => setB.has(x)));
+console.log("Intersection of setA and setB:", intersection); // Set { 3 }
+
+// Find the Difference of Two Sets
+// Elements in setA not in setB
+const difference = new Set([...setA].filter((x) => !setB.has(x)));
+console.log("Difference of setA and setB:", difference); // Set { 1, 2 }
+```
