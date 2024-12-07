@@ -5,60 +5,47 @@ Changes the contents of an array by removing or replacing
 existing elements and/or adding new elements in place
 
 ```js
-Array.prototype.customSplice = function (startIndex, deleteCount) {
-  let array = this;
-  let endIndex = startIndex + deleteCount;
+Array.prototype.customSplice = function (
+  startIndex,
+  deleteCount,
+  ...itemsToAdd
+) {
+  const array = this;
+  const length = array.length;
 
-  let itemsBeforeSplice = []; // array till startIndex
-  let splicedItems = []; // removed items array
-  let itemsAfterSplice = []; // array from endIndex
+  // Handle negative indices
+  startIndex =
+    startIndex < 0
+      ? Math.max(length + startIndex, 0)
+      : Math.min(startIndex, length);
 
-  for (let i = 0; i < array.length; i++) {
-    if (i < startIndex) {
-      itemsBeforeSplice.push(array[i]);
-    }
-    if (i >= startIndex && i < endIndex) {
-      splicedItems.push(array[i]);
-    }
-    if (i >= endIndex) {
-      itemsAfterSplice.push(array[i]);
-    }
+  // If deleteCount is undefined, remove all elements starting from startIndex
+  if (deleteCount === undefined) {
+    deleteCount = length - startIndex;
+  } else {
+    // Normalize deleteCount
+    deleteCount = Math.max(0, Math.min(deleteCount, length - startIndex));
   }
 
-  // Insert all arguments/parameters after numItems
-  for (let i = 2; i < arguments.length; i++) {
-    itemsBeforeSplice.push(arguments[i]);
+  // Extract the items to be deleted
+  const splicedItems = array.slice(startIndex, startIndex + deleteCount);
+
+  // Create the resulting array by combining parts and items to add
+  const remainingItems = [
+    ...array.slice(0, startIndex),
+    ...itemsToAdd,
+    ...array.slice(startIndex + deleteCount),
+  ];
+
+  // Update the original array
+  array.length = 0; // Clear the array
+  for (let i = 0; i < remainingItems.length; i++) {
+    array[i] = remainingItems[i];
   }
 
-  // Combine before/after arrays
-  let remainingItems = itemsBeforeSplice.concat(itemsAfterSplice);
-
-  // Rewrite array
-  for (
-    let i = 0, len = Math.max(array.length, remainingItems.length);
-    i < len;
-    i++
-  ) {
-    if (remainingItems.length > i) {
-      array[i] = remainingItems[i];
-    } else {
-      array.pop();
-    }
-  }
-
+  // Return the deleted items
   return splicedItems;
 };
-
-const months = ["Jan", "March", "April", "June"];
-months.customSplice(1, 0, "Feb");
-// Inserts at index 1
-console.log(months);
-// ["Jan", "Feb", "March", "April", "June"]
-
-months.customSplice(4, 1, "May");
-// Replaces 1 element at index 4
-console.log(months);
-// ["Jan", "Feb", "March", "April", "May"]
 
 // Remove 0 (zero) elements before index 2, and insert "drum"
 const myFish = ["angel", "clown", "mandarin", "sturgeon"];
@@ -119,16 +106,14 @@ console.log({ myFish7, removed7 });
 // removed7: [ 'blue', 'trumpet' ]
 
 // Remove 1 element from index -2
-// problem with polyfill
 const myFish8 = ["angel", "clown", "mandarin", "sturgeon"];
-const removed8 = myFish8.splice(-2, 1);
+const removed8 = myFish8.customSplice(-2, 1);
 console.log({ myFish8, removed8 });
 // myFish8: [ 'angel', 'clown', 'sturgeon' ], removed8: [ 'mandarin' ]
 
 // Remove all elements, starting from index 2
-// problem with polyfill
 const myFish9 = ["angel", "clown", "mandarin", "sturgeon"];
-const removed9 = myFish9.splice(2);
+const removed9 = myFish9.customSplice(2);
 console.log({ myFish9, removed9 });
 // myFish9: [ 'angel', 'clown' ], removed9: [ 'mandarin', 'sturgeon' ]
 ```

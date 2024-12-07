@@ -8,16 +8,15 @@ into it recursively up to the specified depth
 Array.prototype.customFlat = function (depth = 1) {
   const result = [];
 
-  const flatten = (arr, depth) => {
-    for (let i = 0; i < arr.length; i++) {
-      if (Array.isArray(arr[i]) && depth > 0) {
-        flatten(arr[i], depth - 1);
+  const flatten = (array, depth) => {
+    for (const item of array) {
+      if (Array.isArray(item) && depth > 0) {
+        flatten(item, depth - 1);
       } else {
-        result.push(arr[i]);
+        result.push(item);
       }
     }
   };
-
   flatten(this, depth);
 
   return result;
