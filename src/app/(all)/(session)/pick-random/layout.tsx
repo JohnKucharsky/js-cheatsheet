@@ -6,23 +6,25 @@ import {
   ReactElement,
   SetStateAction,
   useEffect,
+  useMemo,
   useState,
   useTransition,
 } from "react";
-import { signIn, signOut } from "@/auth";
 import UserInfo from "@/components/user-info";
 import HomeIcon from "@/components/icons/home-icon";
 import Link from "next/link";
 import { getAllItems, nextItem, shuffleArray } from "@/app/api/actions";
 import Spinner from "@/components/icons/spinner";
-import { useSession } from "next-auth/react";
+import { useSession, signIn, signOut } from "next-auth/react";
 import { usePathname, useRouter } from "next/navigation";
 
+interface AllItems {
+  shuffledarray: string[];
+  current_index: number;
+}
+
 export default function Layout({ children }: { children: ReactElement }) {
-  const [allItems, setAllItems] = useState<{
-    shuffledarray: string[];
-    current_index: number;
-  } | null>(null);
+  const [allItems, setAllItems] = useState<AllItems | null>(null);
 
   const { data: session, status } = useSession();
   const router = useRouter();
@@ -31,10 +33,10 @@ export default function Layout({ children }: { children: ReactElement }) {
   const slug = allItems?.shuffledarray[allItems.current_index];
   const quantity = allItems?.shuffledarray.length || 0;
 
-  const itemsLeft = () => {
+  const itemsLeft = useMemo(() => {
     const currIdx = allItems?.current_index || 0;
     return quantity - currIdx;
-  };
+  }, [quantity, allItems?.current_index]);
 
   const withSlug = pathname.includes("pick-random/");
 
@@ -42,7 +44,7 @@ export default function Layout({ children }: { children: ReactElement }) {
     if (!withSlug && slug) {
       router.push(`/pick-random/${slug}`);
     }
-  }, [slug, pathname]);
+  }, [slug, withSlug]);
 
   useEffect(() => {
     if (session?.user?.email) {
@@ -53,6 +55,12 @@ export default function Layout({ children }: { children: ReactElement }) {
         .catch(console.error);
     }
   }, [session?.user?.email]);
+
+  useEffect(() => {
+    if (itemsLeft === 0 && session?.user?.email) {
+      shuffleArray(session?.user?.email).catch(console.error);
+    }
+  }, [itemsLeft, session?.user?.email]);
 
   return (
     <>
@@ -66,11 +74,8 @@ export default function Layout({ children }: { children: ReactElement }) {
             <Link href={"/"} style={{ borderBottom: "none" }}>
               <HomeIcon />
             </Link>
-            <ShuffleButton
-              email={session?.user?.email}
-              setAllItems={setAllItems}
-            />
-            <div>{`${itemsLeft() || "..."} of ${quantity}`}</div>
+            <ShuffleButton setAllItems={setAllItems} />
+            <div>{`${itemsLeft} of ${quantity}`}</div>
           </div>
         )}
         <div className={"flex gap-4 items-start"}>
@@ -104,11 +109,11 @@ export default function Layout({ children }: { children: ReactElement }) {
       {Boolean(session) && (
         <Fragment>
           {children}
-          <div className={"flex flex-row justify-end"}>
-            {allItems && withSlug && (
+          {allItems && withSlug && (
+            <div className={"flex flex-row justify-end mb-8 not-prose"}>
               <NextButton allItems={allItems} setAllItems={setAllItems} />
-            )}
-          </div>
+            </div>
+          )}
         </Fragment>
       )}
     </>
@@ -116,28 +121,28 @@ export default function Layout({ children }: { children: ReactElement }) {
 }
 
 function ShuffleButton({
-  email,
   setAllItems,
 }: {
-  email: string | null | undefined;
-  setAllItems: Dispatch<
-    SetStateAction<{
-      shuffledarray: string[];
-      current_index: number;
-    } | null>
-  >;
+  setAllItems: Dispatch<SetStateAction<AllItems | null>>;
 }) {
   const [loading, setLoading] = useState<boolean>(false);
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
+  const { data: session } = useSession();
 
   const handleClick = async () => {
-    setLoading(true);
-    const shuffledArray = await shuffleArray(email);
-    setAllItems({ current_index: 0, shuffledarray: shuffledArray });
-    setLoading(false);
+    if (!session?.user?.email) return;
 
-    startTransition(() => router.push(`/pick-random/${shuffledArray[0]}`));
+    setLoading(true);
+    try {
+      const shuffledArray = await shuffleArray(session.user.email);
+      setAllItems({ current_index: 0, shuffledarray: shuffledArray });
+      startTransition(() => router.push(`/pick-random/${shuffledArray[0]}`));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -155,16 +160,8 @@ function NextButton({
   allItems,
   setAllItems,
 }: {
-  allItems: {
-    shuffledarray: string[];
-    current_index: number;
-  };
-  setAllItems: Dispatch<
-    SetStateAction<{
-      shuffledarray: string[];
-      current_index: number;
-    } | null>
-  >;
+  allItems: AllItems;
+  setAllItems: Dispatch<SetStateAction<AllItems | null>>;
 }) {
   const [loading, setLoading] = useState(false);
 
@@ -174,22 +171,25 @@ function NextButton({
   const { data: session } = useSession();
 
   const handleClick = async () => {
-    setLoading(true);
-    await nextItem({
-      currentIndex: allItems.current_index + 1,
-      email: session?.user?.email,
-    }).catch(console.error);
-    setLoading(false);
+    if (!session?.user?.email) return;
 
-    if (allItems.shuffledarray[allItems.current_index + 1]) {
+    setLoading(true);
+    try {
+      const newIndex = allItems.current_index + 1;
+      await nextItem({ currentIndex: newIndex, email: session.user.email });
+
       startTransition(() => {
-        setAllItems({ ...allItems, current_index: allItems.current_index + 1 });
-        router.push(
-          `/pick-random/${allItems.shuffledarray[allItems.current_index + 1]}`,
-        );
+        if (allItems.shuffledarray[newIndex]) {
+          setAllItems({ ...allItems, current_index: newIndex });
+          router.push(`/pick-random/${allItems.shuffledarray[newIndex]}`);
+        } else {
+          router.push("/");
+        }
       });
-    } else {
-      startTransition(() => router.push("/"));
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   };
 
