@@ -1,23 +1,28 @@
 
 ## flatMap
 
+The `flatMap()` method of Array instances returns a new array
+formed by applying a given callback function to each element
+of the array, and then flattening the result by one level.
+It is identical to a `map()` followed by a `flat()` of depth 1
+`(arr.map(...args).flat())`, but slightly more efficient than
+calling those two methods separately.
+
 ```js
 Array.prototype.customFlatMap = function (callback, thisArg) {
   const result = [];
 
   for (let i = 0; i < this.length; i++) {
-    if (i in this) {
-      // Check if the index is valid
-      const mapped = callback.call(thisArg, this[i], i, this);
-      if (mapped && mapped.length) {
-        for (let j = 0; j < mapped.length; j++) {
-          result.push(mapped[j]);
-        }
-      }
+    const mapped = callback.call(thisArg, this[i], i, this);
+
+    if (Array.isArray(mapped)) {
+      result.push(...mapped); // Use spread operator for flattening
+    } else {
+      result.push(mapped);
     }
   }
 
-  return result; // Return the flattened result
+  return result;
 };
 
 const data = [
@@ -51,30 +56,28 @@ const data = [
   },
 ];
 
-const items = data.map((category) => category.items.map((item) => item));
+const items = data
+  .map((category) =>
+    category.items.map((item) => ({
+      ...item,
+      category: category.name,
+    })),
+  )
+  .flat();
 console.log(items);
 // [
-//   [
-//     { id: 2, name: 'Subcategory A1' },
-//     { id: 5, name: 'Subcategory A2' }
-//   ],
-//   [
-//     { id: 9, name: 'Subcategory B1' },
-//     { id: 12, name: 'Subcategory B2' }
-//   ]
+//   { id: 2, name: 'Subcategory A1', category: 'Category A' },
+//   { id: 5, name: 'Subcategory A2', category: 'Category A' },
+//   { id: 9, name: 'Subcategory B1', category: 'Category B' },
+//   { id: 12, name: 'Subcategory B2', category: 'Category B' }
 // ]
 
 const items2 = data.customFlatMap((category) =>
   category.items.map((item) => ({
-    item,
+    ...item,
     category: category.name,
   })),
 );
 console.log(items2);
-// [
-//   { item: { id: 2, name: 'Subcategory A1' }, category: 'Category A' },
-//   { item: { id: 5, name: 'Subcategory A2' }, category: 'Category A' },
-//   { item: { id: 9, name: 'Subcategory B1' }, category: 'Category B' },
-//   { item: { id: 12, name: 'Subcategory B2' }, category: 'Category B' }
-// ]
+// ...same result
 ```

@@ -23,14 +23,13 @@ but once again enter the cooldown state and setup the timeout to reset it.
 
 ```js
 function throttle(func, ms) {
-
   let isThrottled = false,
     savedArgs,
     savedThis;
-
   function wrapper() {
-
-    if (isThrottled) { // (2)
+    console.log({ isThrottled });
+    if (isThrottled) {
+      // (2)
       savedArgs = arguments;
       savedThis = this;
       return;
@@ -39,7 +38,7 @@ function throttle(func, ms) {
 
     func.apply(this, arguments); // (1)
 
-    setTimeout(function() {
+    setTimeout(function () {
       isThrottled = false; // (3)
       if (savedArgs) {
         wrapper.apply(savedThis, savedArgs);
@@ -51,17 +50,24 @@ function throttle(func, ms) {
   return wrapper;
 }
 
-function f(a) {
-  console.log(a);
-}
+const timeLoggedConsoleLog = (...args) => {
+  console.log(`Logged after ${Date.now() - startTime} ms:`, ...args);
+};
 
-// f1000 passes calls to f at maximum once per 1000 ms
-let f1000 = throttle(f, 1000);
+const startTime = Date.now();
+const f = throttle(timeLoggedConsoleLog, 500);
 
-f1000(1); // shows 1
-f1000(2); // (throttling, 1000ms not out yet)
-f1000(3); // (throttling, 1000ms not out yet)
-
-// when 1000 ms time out...
-// ...outputs 3, intermediate value 2 was ignored
+f("a");
+setTimeout(() => f("b"), 200);
+setTimeout(() => f("c"), 600); // skip
+setTimeout(() => f("d"), 600);
+// { isThrottled: false }
+// Logged after 16 ms: a
+// { isThrottled: true }
+// { isThrottled: false }
+// Logged after 526 ms: b
+// { isThrottled: true }
+// { isThrottled: true }
+// { isThrottled: false }
+// Logged after 1040 ms: d
 ```
