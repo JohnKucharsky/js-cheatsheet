@@ -1,0 +1,52 @@
+
+## retry
+
+```js
+const retry = async (fn, options) => {
+  const { retries, delay = 0 } = options;
+  let attempts = 0;
+
+  while (attempts < retries) {
+    try {
+      return await fn();
+    } catch (error) {
+      attempts++;
+
+      if (attempts >= retries) {
+        throw error; // Exhausted retries
+      }
+
+      if (delay > 0) {
+        await new Promise((resolve) => setTimeout(resolve, delay));
+      }
+    }
+  }
+
+  throw new Error("Unexpected error: retry logic did not exit as expected.");
+};
+
+let attempt = 0;
+
+const mockFetch = () => {
+  return new Promise((resolve, reject) => {
+    attempt++;
+
+    if (attempt < 3) {
+      reject(new Error(`Attempt ${attempt}: Failed`));
+    } else {
+      resolve(`Attempt ${attempt}: Success`);
+    }
+  });
+};
+
+const testRetry = async () => {
+  try {
+    const result = await retry(mockFetch, { retries: 3, delay: 500 });
+    console.log("Result:", result); // Result: Attempt 3: Success
+  } catch (error) {
+    console.error("Failed after retries:", error);
+  }
+};
+
+testRetry().catch(console.error);
+```

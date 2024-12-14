@@ -5,12 +5,9 @@ import { Editor } from "@monaco-editor/react";
 import clsx from "clsx";
 import { executeCode } from "@/editor/api";
 import Link from "next/link";
+import { EditorData } from "@/editor/types";
 
-export default function CodeEditor({
-  data,
-}: {
-  data: { language: "typescript" | "javascript"; content: string }[];
-}) {
+export default function CodeEditor({ data }: { data: EditorData[] }) {
   const [index, setIndex] = useState<number>(0);
   const [value, setValue] = useState(data[0].content);
   const [output, setOutput] = useState<string | null>(null);
@@ -96,7 +93,7 @@ Expected: ${match[2]}`;
                 enabled: false,
               },
             }}
-            height="30rem"
+            height="calc(100vh - 100px)"
             theme="vs-dark"
             language={data[index].language}
             defaultValue={data[index].content}
@@ -107,7 +104,7 @@ Expected: ${match[2]}`;
         </div>
         <div className="w-1/2">
           <div
-            className={clsx("h-[30rem] p-2 border rounded-md bg-stone-900", {
+            className={clsx("h-full p-2 border rounded-md bg-stone-900", {
               "border-red-500": isError,
               "border-stone-700": !isError,
             })}

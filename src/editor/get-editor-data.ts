@@ -1,15 +1,13 @@
 import path from "path";
 import { readFile } from "node:fs/promises";
 import fs from "fs";
+import { EditorData } from "@/editor/types";
 
 const dirPath = path.join(process.cwd(), "./src/content-editor");
 
-export async function getEditorData(): Promise<
-  { language: "typescript" | "javascript"; content: string }[]
-> {
+export async function getEditorData(): Promise<EditorData[]> {
   const files = fs.readdirSync(dirPath);
-  const result: { language: "typescript" | "javascript"; content: string }[] =
-    [];
+  const result: EditorData[] = [];
 
   for (const file of files) {
     const filePath = path.join(dirPath, file);

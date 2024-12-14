@@ -3,7 +3,7 @@ Array.prototype.customAt = function (index) {
 };
 
 const array1 = [5, 12, 8, 130, 44];
-console.log(array1.customAt(-1)); // 44
+array1.customAt(-1); // 44
 
 // test
 validateResult(array1.customAt(-1), 44);

@@ -1,0 +1,27 @@
+
+## filterMap
+
+```js
+export const filterMap = (array, filterBoolean, mapCallback) => {
+  return array.reduce((acc, item, idx) => {
+    if (filterBoolean(item)) {
+      acc.push(mapCallback(item, idx));
+    }
+    return acc;
+  }, []);
+};
+
+const people = [
+  { name: "Alice", age: 25, active: true },
+  { name: "Bob", age: 30, active: false },
+  { name: "Charlie", age: 35, active: true },
+];
+
+const activeNames = filterMap(
+  people,
+  (person) => person.active,
+  (person) => person.name,
+);
+
+console.log(activeNames); // ['Alice', 'Charlie']
+```
