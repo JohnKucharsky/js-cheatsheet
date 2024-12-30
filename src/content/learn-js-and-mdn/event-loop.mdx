@@ -47,3 +47,47 @@ Promise.all([promise4, promise5]).then((values) => {
 // [ 3, 'foo', 42 ]
 // { values2: [ 3, 'foo', 42 ] }
 ```
+
+### Creating Promises
+
+- Both `promise1` and `promise2` are resolved promises.
+- They immediately resolve and queue their `.then` callbacks into the microtask queue.
+
+### Chaining `.then` Callbacks
+
+- For `promise1`, the first `.then` adds `() => console.log(1)` to the microtask queue.
+- For `promise2`, the first `.then` adds `() => console.log(3)` to the microtask queue.
+- The second `.then` calls in each chain (`console.log(2)` and
+`console.log(4)`) are only added to the microtask queue *after*
+the preceding `.then` callbacks have been executed.
+
+### Execution Order
+
+1. Microtasks are executed in the order they are added to the queue.
+2. Assuming both promises are resolved at the same time:
+    - `console.log(1)` from `promise1` executes first because it was added to the queue first.
+    - Next, `console.log(3)` from `promise2` executes.
+3. Now that the first `.then` callbacks have executed, the second `.then`
+callbacks (`console.log(2)` and `console.log(4)`) are added to the microtask
+queue in the order they appear in the chains:
+    - `console.log(2)` is added first, followed by `console.log(4)`.
+
+
+```js
+const promise1 = Promise.resolve();
+const promise2 = Promise.resolve();
+
+promise1.then(() => console.log(1)).then(() => console.log(2));
+promise2.then(() => console.log(3)).then(() => console.log(4));
+// 1 3 2 4
+```
+
+### useTimout inside loop
+
+```
+for (let i = 0; i < 4; i++) {
+  setTimeout(() => {
+    console.log(i);
+  }, 1000);
+} // 0, 1, 2, 3. All after 1s
+```

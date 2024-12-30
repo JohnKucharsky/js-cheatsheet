@@ -1,0 +1,44 @@
+
+## promise error handling
+
+```js
+new Promise((resolve, reject) => {
+  throw new Error("Whoops!");
+})
+  .catch(function (error) {
+    if (error instanceof URIError) {
+      // handle it
+    } else {
+      console.log("Can't handle such error");
+
+      throw error;
+      // throwing this or another error jumps to the next catch
+    }
+  })
+  .then(function () {
+    /* doesn't run here */
+  })
+  .catch((error) => {
+    console.error(`The unknown error has occurred: ${error.message}`);
+    // don't return anything => execution goes the normal way
+  });
+```
+
+```js
+new Promise(function (resolve, reject) {
+  setTimeout(() => {
+    reject(new Error("Whoops!"));
+  }, 1000);
+}).catch((e) => console.error(e.message)); // Whoops!
+
+// There’s an “implicit try..catch” around the function code.
+// So all synchronous errors are handled.
+// But here the error is generated not while the executor is
+// running, but later. So the promise can’t handle it.
+
+new Promise(function (resolve, reject) {
+  setTimeout(() => {
+    throw new Error("Whoops!");
+  }, 1000);
+}).catch(console.error); // unhandled error ...
+```

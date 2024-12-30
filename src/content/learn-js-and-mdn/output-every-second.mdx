@@ -1,0 +1,48 @@
+
+## Output every second
+
+[object-methods](https://javascript.info/settimeout-setinterval)
+
+### setInterval
+
+```js
+function printNumbers(from, to) {
+  let current = from;
+  let timerId;
+
+  function go() {
+    console.log(current);
+    if (current === to) {
+      clearInterval(timerId);
+    }
+    current++;
+  }
+
+  go();
+  timerId = setInterval(go, 1000);
+}
+
+printNumbers(5, 10);
+// 5 immediately, and 6 to 10 with 1s between
+```
+
+### setTimeout
+
+```js
+function printNumbers(from, to) {
+  let current = from;
+
+  function go() {
+    console.log(current);
+    if (current < to) {
+      setTimeout(go, 1000);
+    }
+    current++;
+  }
+
+  go();
+}
+
+printNumbers(5, 10);
+// 5 immediately, and 6 to 10 with 1s between
+```

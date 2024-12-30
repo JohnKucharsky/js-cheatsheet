@@ -5,6 +5,20 @@ The Map object holds key-value pairs and remembers the original
 insertion order of the keys. Any value (both objects and primitive
 values) may be used as either a key or a value.
 
+Instance methods:
+ - `Map.prototype.clear()`
+ - `Map.prototype.delete()`
+ - `Map.prototype.entries()`
+ - `Map.prototype.forEach()`
+ - `Map.prototype.get()`
+ - `Map.prototype.has()`
+ - `Map.prototype.keys()`
+ - `Map.prototype.set()`
+ - `Map.prototype.values()`
+
+Instance properties:
+ - `Map.prototype.size`
+
 ```js
 // Creating a Map and adding entries
 const map = new Map();
@@ -28,15 +42,8 @@ map.delete("country");
 console.log(map);
 // Map(2) { 'name' => 'Alice', 'age' => 25 }
 
-// Iterating over a Map
 map.set("city", "New York");
 map.set("hobby", "Painting");
-
-// Using forEach
-console.log("Using forEach:");
-map.forEach((value, key) => {
-  console.log(key, ":", value);
-});
 
 // Using for...of
 console.log("Using for...of:");
@@ -105,4 +112,39 @@ console.log(map2.get("hello")); // string value
 console.log(map2.get(keyObj)); // obj value
 console.log(map2.get(keyFunc)); // func value
 console.log(map2.get(NaN)); // NaN value
+```
+
+### WeakMap
+
+WeakMap has only the following methods:
+
+ - `weakMap.set(key, value)`
+ - `weakMap.get(key)`
+ - `weakMap.delete(key)`
+ - `weakMap.has(key)`
+
+If an object has lost all other references (like john in the code above),
+then it is to be garbage-collected automatically. But technically it’s not
+exactly specified when the cleanup happens
+
+```js
+let john = { name: "John" };
+
+const map = new Map();
+map.set(john, "...");
+
+john = null;
+console.log(map.get(john)); // undefined
+console.log(map.has(john)); // false
+console.log(map.keys());
+// [Map Iterator] { { name: 'John' } }
+
+let doe = { name: "Doe" };
+const weakMap = new WeakMap();
+weakMap.set(doe, "...");
+
+doe = null;
+console.log(weakMap.get(doe)); // undefined
+// weakMap.keys() not supported
+// [Map Iterator] { { name: 'John' } }
 ```

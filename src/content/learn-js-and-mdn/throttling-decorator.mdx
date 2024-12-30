@@ -1,6 +1,8 @@
 
 ## throttling decorator
 
+[call-apply-decorators](https://javascript.info/call-apply-decorators)
+
 When it's called multiple times, it passes the call to `f` at maximum once
 per `ms` milliseconds.
 Compared to the debounce decorator, the behavior is completely different:
@@ -19,7 +21,7 @@ We need them simultaneously to reproduce the call.
 last memorized arguments and context.
 
 The 3rd step runs not `func`, but `wrapper`, because we not only need to execute `func`,
-but once again enter the cooldown state and setup the timeout to reset it.
+but once again enter the cooldown state and set up the timeout to reset it.
 
 ```js
 function throttle(func, ms) {
@@ -60,14 +62,16 @@ const f = throttle(timeLoggedConsoleLog, 500);
 f("a");
 setTimeout(() => f("b"), 200);
 setTimeout(() => f("c"), 600); // skip
-setTimeout(() => f("d"), 600);
+setTimeout(() => f("d"), 600); // skip
+setTimeout(() => f("e"), 600);
 // { isThrottled: false }
-// Logged after 16 ms: a
+// Logged after 17 ms: a
 // { isThrottled: true }
 // { isThrottled: false }
-// Logged after 526 ms: b
+// Logged after 531 ms: b
+// { isThrottled: true }
 // { isThrottled: true }
 // { isThrottled: true }
 // { isThrottled: false }
-// Logged after 1040 ms: d
+// Logged after 1045 ms: e
 ```
