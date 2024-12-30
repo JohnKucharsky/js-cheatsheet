@@ -28,14 +28,15 @@ const getAllFiles = (dirPath: string): string[] => {
   const files = fs.readdirSync(dirPath);
   const allFiles: string[] = [];
 
-  files.forEach((file) => {
+  for (const file of files) {
     const filePath = path.join(dirPath, file);
+
     if (fs.statSync(filePath).isDirectory()) {
       allFiles.push(...getAllFiles(filePath));
     } else if (filePath.endsWith(".mdx")) {
       allFiles.push(filePath);
     }
-  });
+  }
 
   return allFiles;
 };

@@ -52,21 +52,23 @@ const data = [
 function transformItems(data) {
   const transformedItems = [];
 
-  data.forEach(category => {
+  for (const category of data) {
     const categoryName = category.name; // Store category name
-    category.items.forEach(subcategory => {
+
+    for (const subcategory of category.items) {
       const subcategoryName = subcategory.name; // Store subcategory name
-      subcategory.items.forEach(item => {
+
+      for (const item of subcategory.items) {
         transformedItems.push({
           id: item.id,
           name: item.name,
           value: item.value,
           subcategory: subcategoryName,
-          category: categoryName
+          category: categoryName,
         });
-      });
-    });
-  });
+      }
+    }
+  }
 
   return transformedItems;
 }

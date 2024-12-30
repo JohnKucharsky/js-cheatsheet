@@ -4,9 +4,11 @@
 ```js
 function omit(obj, keys) {
   const result = { ...obj };
-  keys.forEach((key) => {
+
+  for (const key of keys) {
     delete result[key];
-  });
+  }
+
   return result;
 }
 

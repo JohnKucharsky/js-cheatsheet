@@ -52,21 +52,21 @@ const data = [
 function createNestedDictionary(data) {
   const dictionary = {};
 
-  data.forEach((category) => {
+  for (const category of data) {
     dictionary[category.id] = { ...category, subcategories: {} };
 
-    category.items.forEach((subcategory) => {
+    for (const subcategory of category.items) {
       dictionary[category.id].subcategories[subcategory.id] = {
         ...subcategory,
         items: {},
       };
 
-      subcategory.items.forEach((item) => {
+      for (const item of subcategory.items) {
         dictionary[category.id].subcategories[subcategory.id].items[item.id] =
           item;
-      });
-    });
-  });
+      }
+    }
+  }
 
   return dictionary;
 }

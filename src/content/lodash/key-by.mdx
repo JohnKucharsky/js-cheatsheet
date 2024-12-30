@@ -5,11 +5,11 @@
 function keyBy(collection, iteratee) {
   const result = {};
 
-  collection.forEach((item) => {
+  for (const item of collection) {
     const key =
       typeof iteratee === "function" ? iteratee(item) : item[iteratee];
     result[key] = item;
-  });
+  }
 
   return result;
 }
@@ -21,9 +21,9 @@ const array = [
 
 const res1 = keyBy(array, ({ code }) => String.fromCharCode(code));
 console.log(res1);
-// { 'a': { 'dir': 'left', 'code': 97 }, 'd': { 'dir': 'right', 'code': 100 } }
+// { a: { dir: 'left', code: 97 }, d: { dir: 'right', code: 100 } }
 
 const res2 = keyBy(array, "dir");
 console.log(res2);
-// { 'left': { 'dir': 'left', 'code': 97 }, 'right': { 'dir': 'right', 'code': 100 } }
+// { left: { dir: 'left', code: 97 }, right: { dir: 'right', code: 100 } }
 ```

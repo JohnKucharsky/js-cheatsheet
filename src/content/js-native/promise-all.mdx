@@ -21,11 +21,11 @@ function myPromiseAll(promises) {
       return reject(new TypeError("Argument must be an array"));
     }
 
-    let results = [];
+    const results = [];
     let completedPromises = 0;
 
-    promises.forEach((promise, index) => {
-      Promise.resolve(promise)
+    for (let index = 0; index < promises.length; index++) {
+      Promise.resolve(promises[index])
         .then((value) => {
           results[index] = value;
           console.log(value);
@@ -35,7 +35,7 @@ function myPromiseAll(promises) {
           }
         })
         .catch(reject);
-    });
+    }
 
     if (promises.length === 0) {
       resolve([]);
