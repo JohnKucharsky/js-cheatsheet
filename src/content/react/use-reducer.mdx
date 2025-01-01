@@ -1,0 +1,81 @@
+
+## useReducer
+
+```tsx
+import { useState } from "react";
+
+type Messages = Record<number, string>;
+
+type Action =
+  | { type: "add_message"; message: string }
+  | { type: "remove_last_message" };
+
+const initialState: Messages = {
+  0: "Hello, Taylor",
+  1: "Hello, Alice",
+  2: "Hello, Bob",
+};
+
+function useReducer<S, A>(
+  reducer: (state: S, action: A) => S,
+  initialState: S,
+): [S, (action: A) => void] {
+  const [state, setState] = useState<S>(initialState);
+
+  function dispatch(action: A) {
+    const nextState = reducer(state, action);
+    setState(nextState);
+  }
+
+  return [state, dispatch];
+}
+
+function messengerReducer(state: Messages, action: Action): Messages {
+  switch (action.type) {
+    case "add_message": {
+      const nextId = Math.max(0, ...Object.keys(state).map(Number)) + 1;
+      return {
+        ...state,
+        [nextId]: action.message,
+      };
+    }
+    case "remove_last_message": {
+      const ids = Object.keys(state).map(Number);
+      if (ids.length === 0) return state;
+      const lastId = Math.max(...ids);
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      const { [lastId]: _, ...rest } = state;
+      return rest;
+    }
+    default:
+      throw new Error("Unknown action: " + (action as Action).type);
+  }
+}
+
+export default function App() {
+  const [messages, dispatch] = useReducer<Messages, Action>(
+    messengerReducer,
+    initialState,
+  );
+
+  return (
+    <div>
+      <ul>
+        {Object.entries(messages).map(([id, message]) => (
+          <li key={id}>{message}</li>
+        ))}
+      </ul>
+      <button
+        onClick={() =>
+          dispatch({ type: "add_message", message: "New Message" })
+        }
+      >
+        Add Message
+      </button>
+      <button onClick={() => dispatch({ type: "remove_last_message" })}>
+        Remove Last Message
+      </button>
+    </div>
+  );
+}
+```

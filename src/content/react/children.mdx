@@ -1,0 +1,26 @@
+
+## children
+
+```js
+import { ReactElement, useState } from "react";
+
+export default function App() {
+  return <TestWrapper prop={<TestComponent />} />;
+}
+
+function TestWrapper({ prop }: { prop: ReactElement }) {
+  const [bool, setBool] = useState(false);
+  console.log("TestWrapper");
+  return (
+    <>
+      <button onClick={() => setBool(!bool)}>click</button>
+      {prop}
+    </>
+  );
+}
+
+function TestComponent() {
+  console.log("TestComponent");
+  return <></>;
+}
+```
