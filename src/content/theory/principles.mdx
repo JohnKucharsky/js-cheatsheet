@@ -1,4 +1,3 @@
-[back](/)
 
 # Principles
 
@@ -183,56 +182,62 @@ When classes promise each other something, they should separate these promises (
 into many small promises, so it's easier to understand
 
 ```ts
-// bad
-interface Animal {
-  walk(): void;
-  fly(): void;
+import { FC } from "react";
+
+interface ButtonProps {
+  onClick: () => void;
+  onMouseOver: () => void;
 }
 
-class Dog implements Animal {
-  walk() {
-    console.log("Walking");
-  }
+const SubmitButton: FC<ButtonProps> = ({ onClick, onMouseOver }) => {
+  return (
+    <button onClick={onClick} onMouseOver={onMouseOver}>
+      Submit
+    </button>
+  );
+};
+// This forces `SubmitButton` to support all event handlers, even if not all are needed.
 
-  fly() {
-    throw new Error("Dogs cannot fly");
-  }
+// Good
+interface Clickable {
+  onClick: () => void;
 }
 
-class Duck implements Animal {
-  walk() {
-    console.log("Walking");
-  }
-
-  fly() {
-    console.log("Flying");
-  }
+interface Hoverable {
+  onMouseOver: () => void;
 }
 
-// good
-interface AnimalCanWalk {
-  walk(): void;
-}
+const ClickableButton: FC<Clickable> = ({ onClick }) => {
+  return <button onClick={onClick}>Submit</button>;
+};
 
-interface AnimalCanFly {
-  fly(): void;
-}
+const HoverableDiv: FC<Hoverable> = ({ onMouseOver }) => {
+  return <div onMouseOver={onMouseOver}>Hover over me!</div>;
+};
 
-class Dog implements AnimalCanWalk {
-  walk() {
-    console.log("Walking");
-  }
-}
+const SubmitButton2: FC<Clickable & Hoverable> = ({ onClick, onMouseOver }) => {
+  return (
+    <button onClick={onClick} onMouseOver={onMouseOver}>
+      Submit
+    </button>
+  );
+};
 
-class Duck implements AnimalCanWalk, AnimalCanFly {
-  walk() {
-    console.log("Walking");
-  }
+const App = () => {
+  return (
+    <div>
+        <h1>Interface segregation in React</h1>
+      {/* both are same */}
+      <SubmitButton onClick={()=>null} onMouseOver={()=>null} />
+      <SubmitButton2 onClick={()=>null} onMouseOver={()=>null} />
+      {/* separated */}
+      <ClickableButton onClick={()=>null} />
+      <HoverableDiv onMouseOver={()=>null} />
+    </div>
+  );
+};
 
-  fly() {
-    console.log("Flying");
-  }
-}
+export default App;
 ```
 
 ### Dependency inversion principle
@@ -242,31 +247,77 @@ never change. Instead, classes should use promises (interfaces, parents), so cla
 as long as they keep the promise
 
 ```ts
-interface ShoppingCart {}
-// High-level module
-class ShoppingCartService {
-  constructor(private paymentProcessor: PaymentProcessor) {}
-
-  checkout(cart: ShoppingCart) {
-    return this.paymentProcessor.processPayment(cart)
-  }
-}
+import { FC } from "react";
 
 // Abstraction
-interface PaymentProcessor {
-  processPayment(cart: ShoppingCart): boolean
+interface AuthProvider {
+  login: (username: string, password: string) => Promise<boolean>;
+  logout: () => void;
 }
 
+// High-level module (React component)
+const AuthButton: FC<{ authProvider: AuthProvider }> = ({ authProvider }) => {
+  const handleLogin = async () => {
+    const success = await authProvider.login("user", "password");
+    if (success) {
+      console.log("Logged in successfully");
+    } else {
+      console.error("Login failed");
+    }
+  };
+
+  const handleLogout = () => {
+    authProvider.logout();
+    console.log("Logged out");
+  };
+
+  return (
+    <div>
+      <button onClick={handleLogin}>Login</button>
+      <button onClick={handleLogout}>Logout</button>
+    </div>
+  );
+};
+
 // Implementation of the abstraction
-class StripePaymentProcessor implements PaymentProcessor {
-  processPayment(cart: ShoppingCart): boolean {
-    // Use the Stripe API to process the payment for the items in the shopping cart
+class FirebaseAuthProvider implements AuthProvider {
+  async login(username: string, password: string): Promise<boolean> {
+    // Simulate Firebase API call
+    console.log(`Logging in with Firebase: ${username}`);
+    return username === "user" && password === "password"; // Simulate success for demo
+  }
+
+  logout(): void {
+    console.log("Logging out with Firebase");
   }
 }
 
-// Now the ShoppingCartService depends on the abstraction, not the implementation
-const shoppingCartService = new ShoppingCartService(
-  new StripePaymentProcessor(),
-)
-shoppingCartService.checkout({})
+// Another implementation
+class LocalAuthProvider implements AuthProvider {
+  async login(username: string, password: string): Promise<boolean> {
+    console.log(`Logging in locally: ${username}`);
+    return username === "admin" && password === "1234"; // Simulate success for demo
+  }
+
+  logout(): void {
+    console.log("Logging out locally");
+  }
+}
+
+// Using the component
+const App = () => {
+  // Use any implementation of the abstraction
+  const authProvider = new FirebaseAuthProvider();
+  const localProvider = new LocalAuthProvider();
+
+  return (
+    <div>
+      <h1>Dependency Inversion in React</h1>
+      <AuthButton authProvider={authProvider} />
+      <AuthButton authProvider={localProvider} />
+    </div>
+  );
+};
+
+export default App;
 ```

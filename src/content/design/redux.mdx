@@ -24,6 +24,7 @@ class Store {
   subscribe(listener) {
     this.listeners.push(listener);
     return () => {
+      console.log("unsubscribed");
       this.listeners = this.listeners.filter((l) => l !== listener);
     };
   }
@@ -58,4 +59,10 @@ store.dispatch({ type: "DECREMENT" });
 
 // Unsubscribe from state changes
 unsubscribe();
+
+// { count: 0 }
+// { count: 1 }
+// { count: 2 }
+// { count: 1 }
+// unsubscribed
 ```

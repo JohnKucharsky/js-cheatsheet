@@ -1,0 +1,27 @@
+
+## selection sort
+
+[selection-sort](https://www.w3schools.com/dsa/dsa_algo_selectionsort.php)
+
+```js
+const selectionSort = (arr) => {
+  const n = arr.length;
+  for (let i = 0; i < n - 1; i++) {
+    let minIndex = i;
+
+    for (let j = i + 1; j < n; j++) {
+      if (arr[j] < arr[minIndex]) {
+        minIndex = j;
+      }
+    }
+
+    const minValue = arr.splice(minIndex, 1)[0];
+    arr.splice(i, 0, minValue);
+  }
+};
+
+const myArray = [64, 34, 25, 5, 22, 11, 90, 12];
+selectionSort(myArray);
+console.log(myArray);
+// [ 5, 11, 12, 22, 25, 34, 64, 90 ]
+```

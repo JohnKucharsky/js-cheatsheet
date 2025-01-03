@@ -8,7 +8,7 @@ undefined is returned
 ```js
 Array.prototype.customFind = function (callback) {
   for (let i = 0; i < this.length; i++) {
-    if (callback.call(this, this[i])) {
+    if (callback(this[i])) {
       return this[i];
     }
   }
@@ -40,7 +40,7 @@ the provided testing function. If no elements satisfy the testing function,
 ```js
 Array.prototype.customFindIndex = function (callback) {
   for (let i = 0; i < this.length; i++) {
-    if (callback.call(this, this[i])) {
+    if (callback(this[i])) {
       return i;
     }
   }
@@ -74,7 +74,7 @@ undefined is returned
 ```js
 Array.prototype.customFindLast = function (callback) {
   for (let i = this.length; i >= 0; i--) {
-    if (callback.call(this, this[i])) {
+    if (callback(this[i])) {
       return this[i];
     }
   }

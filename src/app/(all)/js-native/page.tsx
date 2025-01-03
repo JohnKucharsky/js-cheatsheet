@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import * as React from "react";
 import Link from "next/link";
 import { getMDXComponents } from "@/get-mdx-components";
-import { SectionNameEnum } from "@/lib/types";
+import { SectionName } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "JS Native",
@@ -10,12 +10,12 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const mdxItems = await getMDXComponents({
-    pathName: SectionNameEnum["js-native"],
+    pathName: SectionName["js-native"],
   });
 
   return (
     <>
-      <Link href={"/"}>back</Link>
+      <Link href={"/"}>home</Link>
       {mdxItems.map((Content, idx) => (
         <Content key={idx} />
       ))}

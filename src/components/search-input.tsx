@@ -5,11 +5,15 @@ import { useState, useTransition } from "react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
+import { DialogTrigger } from "@/components/ui/dialog";
 
 export default function SearchInput({
   documents,
+  openInNewTab,
 }: {
   documents: { slug: string }[];
+  openInNewTab?: boolean;
 }) {
   const [input, setInput] = useState<string>("");
   const [loading, startTransition] = useTransition();
@@ -37,15 +41,28 @@ export default function SearchInput({
 
       {hasData ? (
         <div className="flex flex-col gap-2 pt-2 max-h-80 overflow-y-scroll hide-scrollbar">
-          {resultData.map(({ item }) => (
-            <h5
-              className="cursor-pointer"
-              key={item.slug}
-              onClick={() => handleChangeRoute(item.slug)}
-            >
-              {item.slug}
-            </h5>
-          ))}
+          {resultData.map(({ item }) =>
+            openInNewTab ? (
+              <DialogTrigger asChild key={item.slug}>
+                <Link
+                  target={"_blank"}
+                  className="cursor-pointer"
+                  href={`/${item.slug}`}
+                  onClick={() => startTransition(() => undefined)}
+                >
+                  {item.slug}
+                </Link>
+              </DialogTrigger>
+            ) : (
+              <h5
+                key={item.slug}
+                className="cursor-pointer"
+                onClick={() => handleChangeRoute(item.slug)}
+              >
+                {item.slug}
+              </h5>
+            ),
+          )}
         </div>
       ) : (
         <h5 className="pt-2">No results found.</h5>
