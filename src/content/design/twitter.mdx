@@ -17,7 +17,8 @@ class Twitter {
 
     if (!this.follows.has(userId)) {
       this.follows.set(userId, new Set());
-      this.follows.get(userId).add(userId); // User follows themselves
+      // User follows themselves
+      this.follows.get(userId).add(userId);
     }
   }
 
@@ -29,24 +30,26 @@ class Twitter {
 
     for (const followeeId of followed) {
       if (this.tweets.has(followeeId)) {
-        feed.push(...this.tweets.get(followeeId).slice(0, 10)); // Only take recent tweets
+        feed.push(...this.tweets.get(followeeId));
       }
     }
 
-    feed.sort((a, b) => b.timestamp - a.timestamp); // Sort by timestamp
-    return feed.slice(0, 10).map((tweet) => tweet.tweetId); // Return the top 10 tweets
+    feed.sort((a, b) => b.timestamp - a.timestamp);
+    return feed.map((tweet) => tweet.tweetId);
   }
 
   follow(followerId, followeeId) {
     if (!this.follows.has(followerId)) {
       this.follows.set(followerId, new Set());
-      this.follows.get(followerId).add(followerId); // User follows themselves
+      // User follows themselves
+      this.follows.get(followerId).add(followerId);
     }
     this.follows.get(followerId).add(followeeId);
   }
 
   unfollow(followerId, followeeId) {
-    if (followerId === followeeId) return; // Cannot unfollow oneself
+      // Cannot unfollow oneself
+    if (followerId === followeeId) return;
     if (this.follows.has(followerId)) {
       this.follows.get(followerId).delete(followeeId);
     }

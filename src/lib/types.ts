@@ -1,10 +1,12 @@
-export enum SectionNameEnum {
-  design = "design",
-  "js-native" = "js-native",
-  "learn-js-and-mdn" = "learn-js-and-mdn",
-  leetcode = "leetcode",
-  lodash = "lodash",
-  react = "react",
-  theory = "theory",
-  various = "various",
-}
+export const SectionName = {
+  design: "design",
+  "js-native": "js-native",
+  "learn-js-and-mdn": "learn-js-and-mdn",
+  lodash: "lodash",
+  react: "react",
+  theory: "theory",
+  various: "various",
+  sorting: "sorting",
+} as const;
+
+export type SectionNameType = keyof typeof SectionName;

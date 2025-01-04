@@ -5,7 +5,7 @@ import { readFile } from "node:fs/promises";
 import * as runtime from "react/jsx-runtime";
 import rehypePrettyCode from "rehype-pretty-code";
 import rehypeSlug from "rehype-slug";
-import { SectionNameEnum } from "@/lib/types";
+import { SectionNameType } from "@/lib/types";
 import { MDXContent } from "mdx/types";
 import { Pluggable } from "unified";
 import { CopyToClipboard } from "@/components/copy-to-clipboard";
@@ -50,7 +50,7 @@ export const getAllFilesNames = () => {
 export async function getMDXComponents({
   pathName,
 }: {
-  pathName: SectionNameEnum;
+  pathName: SectionNameType;
 }) {
   const folderPath = path.join(contentDirectory, pathName);
   const filePaths = getAllFiles(folderPath);

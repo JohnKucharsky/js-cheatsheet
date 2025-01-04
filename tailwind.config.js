@@ -65,10 +65,11 @@ module.exports = {
               },
             },
             code: {
-              color: colors.sky[500],
+              color: colors.sky[400],
               "&::before": { content: `unset !important` },
               "&::after": { content: `unset !important` },
               fontWeight: "normal",
+              fontSize: "inherit",
             },
             "a code": {
               fontSize: "1em",

@@ -18,6 +18,15 @@ export default function Page() {
         <SearchDialog />
       </div>
       <Menu />
+      <h3>Projects</h3>
+      <ul>
+        <li>
+          <Link href={"https://github.com/JohnKucharsky/react-effector-mui"}>
+            react effector mui
+          </Link>
+        </li>
+      </ul>
+
       <h3>Links</h3>
       <div className={"flex gap-2 items-center"}>
         <Link href={"https://t.me/johnkucharsky"} className={"not-prose"}>

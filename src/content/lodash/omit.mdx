@@ -5,6 +5,11 @@
 function omit(obj, keys) {
   const result = { ...obj };
 
+  if (!Array.isArray(keys)) {
+    delete result[keys];
+    return result;
+  }
+
   for (const key of keys) {
     delete result[key];
   }
@@ -19,7 +24,11 @@ const user = {
   city: "Wonderland",
 };
 
-const omitted = omit(user, ["age", "city"]);
+const omitted = omit(user, "age");
 console.log(omitted);
-// { name: 'Alice', email: 'alice@example.com' }
+// { name: 'Alice', email: 'alice@example.com', city: 'Wonderland' }
+
+const omitted2 = omit(user, ["age", "email"]);
+console.log(omitted2);
+// { name: 'Alice', city: 'Wonderland' }
 ```

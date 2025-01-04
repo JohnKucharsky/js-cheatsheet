@@ -36,7 +36,7 @@ export default async function Page(props: {
 
   return (
     <>
-      <Link href={"/"}>back</Link>
+      <Link href={"/"}>home</Link>
       <Content />
     </>
   );

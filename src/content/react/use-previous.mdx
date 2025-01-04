@@ -12,8 +12,8 @@ function usePrevious(value: string | number) {
   const ref = useRef<string | number>();
 
   useEffect(() => {
-    console.log("useEffect", value);
     ref.current = value;
+    console.log("useEffect", ref.current);
     return () => {
       console.log("useEffect return");
     };

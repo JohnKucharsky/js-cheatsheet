@@ -2,7 +2,7 @@ import { Metadata } from "next";
 import * as React from "react";
 import Link from "next/link";
 import { getMDXComponents } from "@/get-mdx-components";
-import { SectionNameEnum } from "@/lib/types";
+import { SectionName } from "@/lib/types";
 
 export const metadata: Metadata = {
   title: "React",
@@ -10,18 +10,18 @@ export const metadata: Metadata = {
 
 export default async function Page() {
   const mdxItems = await getMDXComponents({
-    pathName: SectionNameEnum.react,
+    pathName: SectionName.react,
   });
 
   return (
     <>
-      <Link href={"/"}>back</Link>
+      <Link href={"/"}>home</Link>
       {mdxItems.map((Content, idx) => (
         <Content key={idx} />
       ))}
       <div className={"flex justify-between my-4"}>
         <Link href={"/"}>menu</Link>
-        <Link href={"/theory"}>theory</Link>
+        <Link href={"/sorting"}>sorting</Link>
       </div>
     </>
   );
