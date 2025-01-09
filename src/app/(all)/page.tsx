@@ -25,6 +25,11 @@ export default function Page() {
             react effector mui
           </Link>
         </li>
+        <li>
+          <Link href={"https://github.com/JohnKucharsky/react-redux-mui"}>
+            react redux mui
+          </Link>
+        </li>
       </ul>
 
       <h3>Links</h3>

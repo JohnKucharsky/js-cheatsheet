@@ -11,16 +11,19 @@ export async function getEditorData(): Promise<EditorData[]> {
 
   for (const file of files) {
     const filePath = path.join(dirPath, file);
+    const slug = path.basename(file, path.extname(file));
 
     if (file.endsWith(".ts")) {
       const content = await readFile(filePath, "utf-8");
       result.push({
+        slug,
         language: "typescript",
         content,
       });
     } else if (file.endsWith(".js")) {
       const content = await readFile(filePath, "utf-8");
       result.push({
+        slug,
         language: "javascript",
         content,
       });

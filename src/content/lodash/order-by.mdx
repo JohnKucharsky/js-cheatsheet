@@ -4,7 +4,7 @@
 ```js
 function orderBy(array, property, order = "asc") {
   const multiplier = order === "asc" ? 1 : -1;
-  const deepCopiedArray = structuredClone(array);
+  const deepCopiedArray = [...array];
 
   return deepCopiedArray.sort((a, b) => {
     if (a[property] < b[property]) return -1 * multiplier;

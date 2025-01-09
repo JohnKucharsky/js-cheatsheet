@@ -8,11 +8,7 @@ import { SearchIcon } from "lucide-react";
 import SearchInput from "@/components/search-input";
 import { getAllFilesNames } from "@/get-mdx-components";
 
-export default function SearchDialog({
-  openInNewTab,
-}: {
-  openInNewTab?: boolean;
-}) {
+export default function SearchDialog() {
   const documents = getAllFilesNames();
 
   return (
@@ -24,7 +20,7 @@ export default function SearchDialog({
         </button>
       </DialogTrigger>
       <DialogContent className="min-h-5 bg-stone-950 [&>button]:absolute [&>button]:top-2 [&>button]:right-2">
-        <SearchInput documents={documents} openInNewTab={openInNewTab} />
+        <SearchInput documents={documents} />
       </DialogContent>
     </Dialog>
   );

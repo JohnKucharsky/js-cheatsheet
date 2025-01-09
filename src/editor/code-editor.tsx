@@ -1,24 +1,20 @@
 "use client";
 
-import { ReactElement, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useTransition } from "react";
 import { Editor } from "@monaco-editor/react";
 import clsx from "clsx";
 import { executeCode } from "@/editor/api";
 import Link from "next/link";
 import { EditorData } from "@/editor/types";
+import { cn } from "@/lib/utils";
 
-export default function CodeEditor({
-  data,
-  searchEl,
-}: {
-  data: EditorData[];
-  searchEl: ReactElement;
-}) {
+export default function CodeEditor({ data }: { data: EditorData[] }) {
   const [index, setIndex] = useState<number>(0);
   const [value, setValue] = useState(data[0].content);
   const [output, setOutput] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [isError, setIsError] = useState<boolean>(false);
+  const [loading, startTransition] = useTransition();
 
   const editorRef = useRef<any>();
 
@@ -84,12 +80,18 @@ Expected: ${match[2]}`;
     <div>
       <div className="mb-2 flex flex-row items-center gap-3 justify-between">
         <Link href={"/"}>home</Link>
-
         <button onClick={runCode} disabled={isLoading}>
           {isLoading ? "running..." : "run"}
         </button>
         <button onClick={nextSnippet}>next</button>
-        {searchEl}
+        <Link
+          target={"_blank"}
+          className={cn({ "opacity-50": loading }, "cursor-pointer")}
+          href={`/${data[index].slug}`}
+          onClick={() => startTransition(() => undefined)}
+        >
+          {data[index].slug}
+        </Link>
       </div>
 
       <div className="flex space-x-4">
