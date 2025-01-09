@@ -1,6 +1,10 @@
 
 ## children
 
+`TestComponent` doesn't rerender on click because React reuses
+the same component instance as long as its props don't change.
+`TestComponent` was created in the `<App/>` component
+
 ```js
 import { ReactElement, useState } from "react";
 

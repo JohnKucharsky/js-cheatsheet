@@ -49,13 +49,13 @@ console.log(multiply9(9)); // 81
 const asyncPipe =
   (...functions) =>
   (initialValue) =>
-    functions.customReduce(
-      (acc, fn) => acc.then(fn),
-      Promise.resolve(initialValue),
-    );
+    functions.reduce((acc, fn) => acc.then(fn), Promise.resolve(initialValue));
 
 const p1 = async (a) => a * 5;
-const p2 = async (a) => a * 2;
+const p2 = async (a) =>
+  new Promise((resolve, reject) => {
+    setTimeout(() => resolve(a * 2), 1000);
+  });
 const f3 = (a) => a * 3;
 const p4 = async (a) => a * 4;
 
@@ -64,7 +64,7 @@ asyncPipe(p1, p2, f3, p4)(10).then(console.log); // 1200
 const asyncPipeAsync =
   (...functions) =>
   (initialValue) =>
-    functions.customReduce(async (acc, fn) => fn(await acc), initialValue);
+    functions.reduce(async (acc, fn) => fn(await acc), initialValue);
 
 asyncPipeAsync(p1, p2, f3, p4)(10).then(console.log); // 1200
 ```

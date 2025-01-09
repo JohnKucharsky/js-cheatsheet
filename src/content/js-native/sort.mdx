@@ -13,6 +13,7 @@ Array.prototype.customSort = function (compareFn) {
     compareFn = (a, b) => (String(a) > String(b) ? 1 : -1);
   }
 
+  // bubble sort
   let n = this.length;
   for (let i = 0; i < n - 1; i++) {
     let swapped = false;
