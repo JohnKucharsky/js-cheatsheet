@@ -1,33 +1,30 @@
 
-## List of topics
+# Next.js Tailwind MDX
 
-This repository contains a list of
-popular interview questions, focusing on
-JavaScript, TypeScript, and React.
+This repository contains a list of popular interview questions, 
+focusing on JavaScript, TypeScript, and React
 
-- design
-- js native
-- learn js and mdn
-- leetcode
-- lodash
-- pick random
-- react
-- theory
-- various
+## Features
 
+- **Monaco**: Integrated code editor.
+- **MDX**: Simplified content management.
+- **Tailwind**: UI components.
+- **Fuse.js**: Fuzzy search.
+- **NextAuth**: Authentication with Google.
+- **Prettier**: Code formatting.
+- **Database**: Postgres and Neon.
 
-Hey everyone! 🚀 Are you preparing for a job interview in web development? 
-I’ve got something incredible for you! This GitHub repository is packed with
-popular interview questions covering JavaScript, TypeScript, and React.
+## Libraries and Frameworks
 
-It dives into essential topics like design concepts, the core of native JavaScript,
-and must-read resources from MDN. It also includes problems with solutions and
-explanations from LeetCode and Lodash.
-
-The 'Pick Random' section is convenient for tracking your progress.
-Once you authorize with Google, it will select random questions from the
-entire site and save your progress. You can even use the website conveniently
-from your mobile phone!
-
-Whether you’re brushing up for your next interview or just expanding your
-coding knowledge, this is your one-stop resource.# browser-sandbox
+| **Name**                                        | **Version** | **Description**        |  
+|-------------------------------------------------|-------------|------------------------|  
+| [TypeScript](https://www.typescriptlang.org/)   | 5.7.x       | Type-safe JavaScript   |  
+| [React](https://react.dev/)                     | 19.x        | UI library             |  
+| [Next](https://nextjs.org/)                     | 15.x        | React framework        |  
+| [Next Auth](https://authjs.dev/)                | 5.x         | Authentication library |  
+| [Tailwind](https://tailwindcss.com/)            | 3.x         | UI components          |  
+| [MDX](https://mdxjs.com/)                       | -           | Markdown language      |
+| [PG](https://node-postgres.com/)                | 8.x         | Postgres client        |
+| [NEON](https://neon.tech/)                      | -           | Cloud-based Postgres   |
+| [Fuse.js](https://www.fusejs.io/)               | 7.x         | Fuzzy search           |
+| [Monaco](https://monaco-react.surenatoyan.com/) | 4.x         | Code editor            |
