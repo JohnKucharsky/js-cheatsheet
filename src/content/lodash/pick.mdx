@@ -3,8 +3,12 @@
 
 ```js
 function pick(obj, keys) {
-  return keys.reduce((result, key) => {
-    if (obj[key]) {
+  if (typeof keys === "string") {
+    return obj[keys] !== undefined ? { [keys]: obj[keys] } : {};
+  }
+
+  return (Array.isArray(keys) ? keys : []).reduce((result, key) => {
+    if (key in obj) {
       result[key] = obj[key];
     }
     return result;
