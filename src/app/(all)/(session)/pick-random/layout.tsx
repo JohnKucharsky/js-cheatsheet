@@ -6,61 +6,51 @@ import {
   ReactElement,
   SetStateAction,
   useEffect,
-  useMemo,
   useState,
   useTransition,
 } from "react";
 import UserInfo from "@/components/user-info";
 import HomeIcon from "@/components/icons/home-icon";
 import Link from "next/link";
-import { getAllItems, nextItem, shuffleArray } from "@/app/api/actions";
 import Spinner from "@/components/icons/spinner";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { usePathname, useRouter } from "next/navigation";
-
-interface AllItems {
-  shuffledarray: string[];
-  current_index: number;
-}
+import { useRouter } from "next/navigation";
+import {
+  getCurrentItem,
+  getTotalItems,
+  initializeShuffledItems,
+  moveToNextItem,
+} from "@/app/api/actions";
 
 export default function Layout({ children }: { children: ReactElement }) {
-  const [allItems, setAllItems] = useState<AllItems | null>(null);
+  const [currentItem, setCurrentItem] = useState<string | null>(null);
+  const [totalCount, setTotalCount] = useState<number>(0);
+  const [itemsDone, setItemsDone] = useState<number>(0);
 
   const { data: session, status } = useSession();
   const router = useRouter();
-  const pathname = usePathname();
-
-  const slug = allItems?.shuffledarray[allItems.current_index];
-  const quantity = allItems?.shuffledarray.length || 0;
-
-  const itemsLeft = useMemo(() => {
-    const currIdx = allItems?.current_index || 0;
-    return quantity - currIdx;
-  }, [quantity, allItems?.current_index]);
-
-  const withSlug = pathname.includes("pick-random/");
 
   useEffect(() => {
-    if (!withSlug && slug) {
-      router.push(`/pick-random/${slug}`);
-    }
-  }, [slug, withSlug]);
+    (async () => {
+      if (session?.user?.email) {
+        const total = await getTotalItems();
+        setTotalCount(total);
+        const current = await getCurrentItem(session?.user?.email || "");
 
-  useEffect(() => {
-    if (session?.user?.email) {
-      getAllItems(session.user.email)
-        .then((res) => {
-          setAllItems(res[0]);
-        })
-        .catch(console.error);
-    }
+        if (current.currentItem) {
+          setCurrentItem(current.currentItem);
+          setItemsDone(current.currentState);
+          router.push(`/pick-random/${current.currentItem}`);
+        } else {
+          await initializeShuffledItems(session?.user?.email || "");
+          const current = await getCurrentItem(session?.user?.email || "");
+          setCurrentItem(current.currentItem);
+          setItemsDone(current.currentState);
+          router.push(`/pick-random/${current.currentItem}`);
+        }
+      }
+    })();
   }, [session?.user?.email]);
-
-  useEffect(() => {
-    if (itemsLeft === 0 && session?.user?.email) {
-      shuffleArray(session?.user?.email).catch(console.error);
-    }
-  }, [itemsLeft, session?.user?.email]);
 
   return (
     <>
@@ -74,8 +64,8 @@ export default function Layout({ children }: { children: ReactElement }) {
             <Link href={"/"} style={{ borderBottom: "none" }}>
               <HomeIcon />
             </Link>
-            <ShuffleButton setAllItems={setAllItems} />
-            <div>{`${itemsLeft} of ${quantity}`}</div>
+            <ShuffleButton setItemsLeft={setItemsDone} />
+            <div>{`${itemsDone + 1} of ${totalCount}`}</div>
           </div>
         )}
         <div className={"flex gap-4 items-start"}>
@@ -109,9 +99,10 @@ export default function Layout({ children }: { children: ReactElement }) {
       {Boolean(session) && (
         <Fragment>
           {children}
-          {allItems && withSlug && (
+
+          {currentItem && (
             <div className={"flex flex-row justify-end mb-8 not-prose"}>
-              <NextButton allItems={allItems} setAllItems={setAllItems} />
+              <NextButton setItemsLeft={setItemsDone} />
             </div>
           )}
         </Fragment>
@@ -121,23 +112,26 @@ export default function Layout({ children }: { children: ReactElement }) {
 }
 
 function ShuffleButton({
-  setAllItems,
+  setItemsLeft,
 }: {
-  setAllItems: Dispatch<SetStateAction<AllItems | null>>;
+  setItemsLeft: Dispatch<SetStateAction<number>>;
 }) {
+  const { data: session } = useSession();
   const [loading, setLoading] = useState<boolean>(false);
+
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
-  const { data: session } = useSession();
 
   const handleClick = async () => {
     if (!session?.user?.email) return;
 
     setLoading(true);
     try {
-      const shuffledArray = await shuffleArray(session.user.email);
-      setAllItems({ current_index: 0, shuffledarray: shuffledArray });
-      startTransition(() => router.push(`/pick-random/${shuffledArray[0]}`));
+      await initializeShuffledItems(session.user.email);
+      const res = await getCurrentItem(session.user.email);
+
+      setItemsLeft(res.currentState);
+      startTransition(() => router.push(`/pick-random/${res.currentItem}`));
     } catch (error) {
       console.error(error);
     } finally {
@@ -157,15 +151,13 @@ function ShuffleButton({
 }
 
 function NextButton({
-  allItems,
-  setAllItems,
+  setItemsLeft,
 }: {
-  allItems: AllItems;
-  setAllItems: Dispatch<SetStateAction<AllItems | null>>;
+  setItemsLeft: Dispatch<SetStateAction<number>>;
 }) {
   const [loading, setLoading] = useState(false);
-
   const [isPending, startTransition] = useTransition();
+
   const router = useRouter();
 
   const { data: session } = useSession();
@@ -175,17 +167,22 @@ function NextButton({
 
     setLoading(true);
     try {
-      const newIndex = allItems.current_index + 1;
-      await nextItem({ currentIndex: newIndex, email: session.user.email });
+      await moveToNextItem(session.user.email);
+      const current = await getCurrentItem(session?.user?.email || "");
 
-      startTransition(() => {
-        if (allItems.shuffledarray[newIndex]) {
-          setAllItems({ ...allItems, current_index: newIndex });
-          router.push(`/pick-random/${allItems.shuffledarray[newIndex]}`);
-        } else {
-          router.push("/");
-        }
-      });
+      if (current.currentItem) {
+        setItemsLeft(current.currentState);
+        startTransition(() =>
+          router.push(`/pick-random/${current.currentItem}`),
+        );
+      } else {
+        await initializeShuffledItems(session?.user?.email || "");
+        const current = await getCurrentItem(session?.user?.email || "");
+        setItemsLeft(current.currentState);
+        startTransition(() =>
+          router.push(`/pick-random/${current.currentItem}`),
+        );
+      }
     } catch (error) {
       console.error(error);
     } finally {

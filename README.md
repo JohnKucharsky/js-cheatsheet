@@ -13,6 +13,7 @@ focusing on JavaScript, TypeScript, and React
 - **NextAuth**: Authentication with Google.
 - **Prettier**: Code formatting.
 - **Database**: Postgres and Neon.
+- **Drizzle**: ORM.
 
 ## Libraries and Frameworks
 
@@ -26,5 +27,6 @@ focusing on JavaScript, TypeScript, and React
 | [MDX](https://mdxjs.com/)                       | -           | Markdown language      |
 | [PG](https://node-postgres.com/)                | 8.x         | Postgres client        |
 | [NEON](https://neon.tech/)                      | -           | Cloud-based Postgres   |
+| [Drizzle](https://orm.drizzle.team/)            | 0.38.x      | ORM                    |
 | [Fuse.js](https://www.fusejs.io/)               | 7.x         | Fuzzy search           |
 | [Monaco](https://monaco-react.surenatoyan.com/) | 4.x         | Code editor            |
