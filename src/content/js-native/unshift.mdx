@@ -3,15 +3,23 @@
 
 ```js
 Array.prototype.unshift = function (...elements) {
-  const newArray = [...elements, ...this];
+  const originalLength = this.length;
+  const totalLength = elements.length + originalLength;
 
-  for (let i = 0; i < newArray.length; i++) {
-    this[i] = newArray[i];
+  // Shift existing elements to the right
+  for (let i = originalLength - 1; i >= 0; i--) {
+    this[i + elements.length] = this[i];
   }
 
-  this.length = newArray.length;
+  // Add new elements at the beginning
+  for (let i = 0; i < elements.length; i++) {
+    this[i] = elements[i];
+  }
 
-  return this.length;
+  // Update the length property
+  this.length = totalLength;
+
+  return totalLength; // Return the new length
 };
 
 const arr = [3, 4, 5];

@@ -24,30 +24,32 @@ The 3rd step runs not `func`, but `wrapper`, because we not only need to execute
 but once again enter the cooldown state and set up the timeout to reset it.
 
 ```js
-function throttle(func, ms) {
-  let isThrottled = false,
-    savedArgs,
-    savedThis;
-  function wrapper() {
+function throttle(func, delay) {
+  let isThrottled = false;
+  let savedArgs = null;
+  let savedThis = null;
+
+  const wrapper = function (...args) {
     console.log({ isThrottled });
+
     if (isThrottled) {
-      // (2)
-      savedArgs = arguments;
+      savedArgs = args;
       savedThis = this;
       return;
     }
+
     isThrottled = true;
+    func.apply(this, args);
 
-    func.apply(this, arguments); // (1)
-
-    setTimeout(function () {
-      isThrottled = false; // (3)
+    setTimeout(() => {
+      isThrottled = false;
       if (savedArgs) {
         wrapper.apply(savedThis, savedArgs);
-        savedArgs = savedThis = null;
+        savedArgs = null;
+        savedThis = null;
       }
-    }, ms);
-  }
+    }, delay);
+  };
 
   return wrapper;
 }

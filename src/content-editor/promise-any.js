@@ -18,11 +18,10 @@ Promise.customAny(promises)
   .catch(console.error);
 
 function validateResult(actualResult, expectedResult) {
-  if (JSON.stringify(actualResult) !== JSON.stringify(expectedResult)) {
+  if (actualResult !== expectedResult) {
     throw new Error(
-      `Validation failed! Result: ${JSON.stringify(actualResult)},
-       Expected: ${JSON.stringify(expectedResult)}`,
+      `Validation failed! Result: ${actualResult}, Expected: ${expectedResult}`,
     );
   }
-  console.log(actualResult);
+  console.log(`Validation passed: ${actualResult}`);
 }

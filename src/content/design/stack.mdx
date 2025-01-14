@@ -28,29 +28,25 @@ console.log(isPalindrome("cheatsheet")); // false
 ```js
 class Stack {
   constructor() {
-    this.count = 0;
-    this.storage = {};
+    this.storage = [];
   }
 
   push(value) {
-    this.storage[this.count] = value;
-    this.count++;
+    this.storage.push(value);
     return this;
   }
-  pop() {
-    if (this.count === 0) {
-      return undefined;
-    }
 
-    this.count--;
-    delete this.storage[this.count];
+  pop() {
+    this.storage.pop();
     return this;
   }
+
   size() {
-    return this.count;
+    return this.storage.length;
   }
+
   peek() {
-    return this.storage[this.count - 1];
+    return this.storage[this.storage.length - 1];
   }
 }
 
@@ -61,6 +57,6 @@ console.log(myStack.peek()); // 3
 myStack.pop();
 console.log(myStack.peek()); // 2
 myStack.push("js-cheatsheet");
-myStack.size(); // 3
-console.log(myStack.peek()); // cheatsheet
+console.log(myStack.size()); // 3
+console.log(myStack.peek()); // js-cheatsheet
 ```

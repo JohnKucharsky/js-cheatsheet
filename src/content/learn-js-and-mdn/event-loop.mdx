@@ -113,6 +113,31 @@ console.log("Promise (pending)", promise);
 // event-loop cycle: Promise (fulfilled) Promise { undefined }
 ```
 
+### event loop cycle 2
+
+```js
+async function run() {
+  console.log("run async");
+  setTimeout(() => {
+    console.log("run timeout");
+  }, 0);
+}
+
+setTimeout(() => {
+  console.log("timeout");
+}, 0);
+
+// await or not, same result
+await run();
+
+console.log("script");
+
+// run async
+// script
+// timeout
+// run timeout
+```
+
 ### while loop blocks setTimout
 
 The `setTimeout()` needs to wait for all the code for queued messages to
