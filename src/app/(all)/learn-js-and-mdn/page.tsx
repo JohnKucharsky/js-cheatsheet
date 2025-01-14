@@ -21,7 +21,7 @@ export default async function Page() {
       ))}
       <div className={"flex justify-between my-4"}>
         <Link href={"/"}>menu</Link>
-        <Link href={"/leetcode"}>leetcode</Link>
+        <Link href={"/lodash"}>lodash</Link>
       </div>
     </>
   );

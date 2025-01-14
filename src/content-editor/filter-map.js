@@ -1,4 +1,4 @@
-export const filterMap = (array, filterBoolean, mapCallback) => {
+const filterMap = (array, filterBoolean, mapCallback) => {
   return [];
 };
 

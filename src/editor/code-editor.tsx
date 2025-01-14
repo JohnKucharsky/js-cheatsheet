@@ -78,24 +78,16 @@ Expected: ${match[2]}`;
 
   return (
     <div>
-      <div className="mb-2 flex flex-row items-center gap-3 justify-between">
-        <Link href={"/"}>home</Link>
-        <button onClick={runCode} disabled={isLoading}>
-          {isLoading ? "running..." : "run"}
-        </button>
-        <button onClick={nextSnippet}>next</button>
-        <Link
-          target={"_blank"}
-          className={cn({ "opacity-50": loading }, "cursor-pointer")}
-          href={`/${data[index].slug}`}
-          onClick={() => startTransition(() => undefined)}
-        >
-          {data[index].slug}
-        </Link>
-      </div>
+      <div className="mb-2 flex flex-row items-center gap-3 justify-between"></div>
 
       <div className="flex space-x-4">
         <div className="w-1/2">
+          <div className="mb-2 flex flex-row items-center gap-3 justify-between">
+            <Link href={"/"}>home</Link>
+            <button onClick={runCode} disabled={isLoading}>
+              {isLoading ? "running..." : "run"}
+            </button>
+          </div>
           <Editor
             options={{
               minimap: {
@@ -112,6 +104,17 @@ Expected: ${match[2]}`;
           />
         </div>
         <div className="w-1/2">
+          <div className="mb-2 flex flex-row items-center gap-3 justify-between">
+            <button onClick={nextSnippet}>next</button>
+            <Link
+              target={"_blank"}
+              className={cn({ "opacity-50": loading }, "cursor-pointer")}
+              href={`/${data[index].slug}`}
+              onClick={() => startTransition(() => undefined)}
+            >
+              {data[index].slug}
+            </Link>
+          </div>
           <div
             className={clsx("h-full p-2 border rounded-md bg-stone-900", {
               "border-red-500": isError,

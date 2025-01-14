@@ -10,8 +10,7 @@ Array.prototype.customSplice = function (
   deleteCount,
   ...itemsToAdd
 ) {
-  const array = this;
-  const length = array.length;
+  const length = this.length;
 
   // Handle negative indices
   startIndex =
@@ -27,20 +26,20 @@ Array.prototype.customSplice = function (
     deleteCount = Math.max(0, Math.min(deleteCount, length - startIndex));
   }
 
-  // Extract the items to be deleted
-  const splicedItems = array.slice(startIndex, startIndex + deleteCount);
+  // Extract the array to be deleted
+  const splicedItems = this.slice(startIndex, startIndex + deleteCount);
 
-  // Create the resulting array by combining parts and items to add
+  // Create the resulting this by combining parts and items to add
   const remainingItems = [
-    ...array.slice(0, startIndex),
+    ...this.slice(0, startIndex),
     ...itemsToAdd,
-    ...array.slice(startIndex + deleteCount),
+    ...this.slice(startIndex + deleteCount),
   ];
 
   // Update the original array
-  array.length = 0; // Clear the array
+  this.length = 0; // Clear the this
   for (let i = 0; i < remainingItems.length; i++) {
-    array[i] = remainingItems[i];
+    this[i] = remainingItems[i];
   }
 
   // Return the deleted items

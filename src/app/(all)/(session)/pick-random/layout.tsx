@@ -32,22 +32,26 @@ export default function Layout({ children }: { children: ReactElement }) {
 
   useEffect(() => {
     (async () => {
-      if (session?.user?.email) {
-        const total = await getTotalItems();
-        setTotalCount(total);
-        const current = await getCurrentItem(session?.user?.email || "");
-
-        if (current.currentState !== total) {
-          setCurrentItem(current.currentItem);
-          setItemsDone(current.currentState);
-          router.push(`/pick-random/${current.currentItem}`);
-        } else {
-          await initializeShuffledItems(session?.user?.email || "");
+      try{
+        if (session?.user?.email) {
+          const total = await getTotalItems();
+          setTotalCount(total);
           const current = await getCurrentItem(session?.user?.email || "");
-          setCurrentItem(current.currentItem);
-          setItemsDone(current.currentState);
-          router.push(`/pick-random/${current.currentItem}`);
+
+          if (current.currentState !== total) {
+            setCurrentItem(current.currentItem);
+            setItemsDone(current.currentState);
+               router.push(`/pick-random/${current.currentItem}`);
+          } else {
+            await initializeShuffledItems(session?.user?.email || "");
+            const current = await getCurrentItem(session?.user?.email || "");
+            setCurrentItem(current.currentItem);
+            setItemsDone(current.currentState);
+            router.push(`/pick-random/${current.currentItem}`);
+          }
         }
+      }catch (e){
+          console.error(e)
       }
     })();
   }, [session?.user?.email]);
@@ -102,7 +106,7 @@ export default function Layout({ children }: { children: ReactElement }) {
 
           {currentItem && (
             <div className={"flex flex-row justify-end mb-8 not-prose"}>
-              <NextButton setItemsLeft={setItemsDone} total={totalCount} />
+              <NextButton setItemsLeft={setItemsDone} />
             </div>
           )}
         </Fragment>
@@ -152,10 +156,8 @@ function ShuffleButton({
 
 function NextButton({
   setItemsLeft,
-  total,
 }: {
   setItemsLeft: Dispatch<SetStateAction<number>>;
-  total: number;
 }) {
   const [loading, setLoading] = useState(false);
   const [isPending, startTransition] = useTransition();
@@ -172,7 +174,7 @@ function NextButton({
       await moveToNextItem(session.user.email);
       const current = await getCurrentItem(session?.user?.email || "");
 
-      if (current.currentState !== total) {
+      if (current.currentItem) {
         setItemsLeft(current.currentState);
         startTransition(() =>
           router.push(`/pick-random/${current.currentItem}`),
