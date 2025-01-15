@@ -40,7 +40,11 @@ export default function Page() {
           <Link href={"https://t.me/johnkucharsky"}>telegram</Link>
         </li>
         <li>
-          <Link href={"https://hh.ru/"}>hh.ru</Link>
+          <Link
+            href={"https://hh.ru/resume/d9f27928ff0e3ac9b20039ed1f4648646e454a"}
+          >
+            hh.ru
+          </Link>
         </li>
       </ul>
     </>
