@@ -48,31 +48,6 @@ Promise.all([promise4, promise5]).then((values) => {
 // { values2: [ 3, 'foo', 42 ] }
 ```
 
-### Creating Promises
-
-- Both `promise1` and `promise2` are resolved promises.
-- They immediately resolve and queue their `.then` callbacks into the microtask queue.
-
-### Chaining `.then` Callbacks
-
-- For `promise1`, the first `.then` adds `() => console.log(1)` to the microtask queue.
-- For `promise2`, the first `.then` adds `() => console.log(3)` to the microtask queue.
-- The second `.then` calls in each chain (`console.log(2)` and
-`console.log(4)`) are only added to the microtask queue *after*
-the preceding `.then` callbacks have been executed.
-
-### Execution Order
-
-1. Microtasks are executed in the order they are added to the queue.
-2. Assuming both promises are resolved at the same time:
-    - `console.log(1)` from `promise1` executes first because it was added to the queue first.
-    - Next, `console.log(3)` from `promise2` executes.
-3. Now that the first `.then` callbacks have executed, the second `.then`
-callbacks (`console.log(2)` and `console.log(4)`) are added to the microtask
-queue in the order they appear in the chains:
-    - `console.log(2)` is added first, followed by `console.log(4)`.
-
-
 ```js
 const promise1 = Promise.resolve();
 const promise2 = Promise.resolve();
@@ -161,4 +136,141 @@ while (true) {
 
 // Good, looped for 2 seconds
 // Ran after 2.01 seconds
+```
+
+### example 1
+
+```js
+console.log("Script start");
+
+setTimeout(() => {
+  console.log("setTimeout");
+}, 0);
+
+Promise.resolve()
+  .then(() => {
+    console.log("Promise 1");
+  })
+  .then(() => {
+    console.log("Promise 2");
+  });
+
+console.log("Script end");
+
+const promise1 = new Promise((resolve, reject) => {
+  console.log("Promise constructor");
+  resolve();
+}).then(() => {
+  console.log("Promise constructor resolve");
+});
+
+queueMicrotask(() => {
+  console.log("Microtask queue");
+});
+
+console.log("After Promise constructor");
+
+// Script start
+// Script end
+// Promise constructor
+// After Promise constructor
+// Promise 1
+// Promise constructor resolve
+// Microtask queue
+// Promise 2
+// setTimeout
+```
+
+### example 2
+
+```js
+function longRunningTask() {
+  console.log("Start Long-Running Task");
+
+  const startTime = Date.now();
+  while (Date.now() - startTime < 3000) {
+    // Simulate a long-running task (3 seconds)
+  }
+
+  console.log("Long-Running Task Completed");
+}
+
+function simulateNonBlocking() {
+  console.log("Start");
+
+  setTimeout(() => {
+    console.log("Non-blocking Operation");
+  }, 0);
+
+  longRunningTask();
+
+  console.log("End");
+}
+
+simulateNonBlocking();
+
+// Start
+// Start Long-Running Task
+// Long-Running Task Completed
+// End
+// Non-blocking Operation
+```
+
+### example 3
+
+```js
+console.log("Start");
+
+setTimeout(() => {
+  console.log("setTimeout 1");
+  Promise.resolve().then(() => {
+    console.log("Promise inside setTimeout 1");
+  });
+}, 0);
+
+setTimeout(() => {
+  console.log("setTimeout 2");
+}, 0);
+
+Promise.resolve()
+  .then(() => {
+    console.log("Promise 1");
+  })
+  .then(() => {
+    console.log("Promise 2");
+  });
+
+console.log("End");
+```
+
+### example 4
+
+`requestAnimationFrame` runs after other macrotasks but before any rendering tasks
+
+```js
+console.log("1");
+
+setTimeout(function () {
+  console.log("2");
+
+  Promise.resolve().then(function () {
+    console.log("3");
+  });
+}, 0);
+
+Promise.resolve().then(function () {
+  console.log("4");
+
+  setTimeout(function () {
+    console.log("5");
+  }, 0);
+});
+
+requestAnimationFrame(function () {
+  console.log("7");
+});
+
+console.log("6");
+
+// 1, 6, 4, 2, 3, 5, 7
 ```

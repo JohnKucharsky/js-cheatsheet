@@ -25,3 +25,25 @@ setTimeout(() => f("b"), 200); // skip
 setTimeout(() => f("c"), 600);
 // Logged after 1131 ms: c
 ```
+
+```js
+function debounce(func, ms) {
+  let timeout;
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), ms);
+  };
+}
+
+const obj = {
+  name: "Alice",
+  logName: function (arg1, arg2) {
+    console.log(`Name: ${this.name}, Arg1: ${arg1}, Arg2: ${arg2}`);
+  },
+};
+
+obj.debouncedLogName = debounce(obj.logName, 300);
+
+obj.debouncedLogName("first", "second");
+// Name: Alice, Arg1: first, Arg2: second
+```

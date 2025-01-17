@@ -2,25 +2,20 @@
 ## curry
 
 ```js
-function curry(func) {
+function curry(fn) {
   return function curried(...args) {
-    if (args.length >= func.length) {
-      return func.apply(this, args);
+    if (args.length >= fn.length) {
+      return fn(...args);
     } else {
-      return function (...args2) {
-        return curried.apply(this, args.concat(args2));
-      };
+      return (...nextArgs) => curried(...args, ...nextArgs);
     }
   };
 }
 
-const abc = function (a, b, c) {
-  return [a, b, c];
-};
+const sum = (a, b, c) => a + b + c;
+const curriedSum = curry(sum);
 
-const curried = curry(abc);
-
-console.log(curried(1)(2)(3)); // [1, 2, 3]
-console.log(curried(1, 2)(3)); // [1, 2, 3]
-console.log(curried(1, 2, 3)); // [1, 2, 3]
+console.log(curriedSum(1)(2)(3)); // 6
+console.log(curriedSum(1, 2)(3)); // 6
+console.log(curriedSum(1)(2, 3)); // 6
 ```

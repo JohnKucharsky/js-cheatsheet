@@ -9,71 +9,24 @@ Compared to the debounce decorator, the behavior is completely different:
 - `debounce` runs the function once after the "cooldown" period.
 - `throttle` runs it not more often than given `ms` time
 
-A call to `throttle(func, ms)` returns `wrapper`.
-
-1. During the first call, the `wrapper` just runs `func` and sets the
-cooldown state (`isThrottled = true`).
-2. In this state all calls are memorized in `savedArgs/savedThis`. Please note
-that both the context and the arguments are equally important and should be memorized.
-We need them simultaneously to reproduce the call.
-3. After `ms` milliseconds pass, `setTimeout` triggers. The cooldown state is removed
-(`isThrottled = false`) and, if we had ignored calls, `wrapper` is executed with the
-last memorized arguments and context.
-
-The 3rd step runs not `func`, but `wrapper`, because we not only need to execute `func`,
-but once again enter the cooldown state and set up the timeout to reset it.
-
 ```js
-function throttle(func, delay) {
-  let isThrottled = false;
-  let savedArgs = null;
-  let savedThis = null;
+function throttle(fn, limit) {
+  let inThrottle;
 
-  const wrapper = function (...args) {
-    console.log({ isThrottled });
-
-    if (isThrottled) {
-      savedArgs = args;
-      savedThis = this;
-      return;
+  return function (...args) {
+    if (!inThrottle) {
+      fn.apply(this, args);
+      inThrottle = true;
+      setTimeout(() => (inThrottle = false), limit);
     }
-
-    isThrottled = true;
-    func.apply(this, args);
-
-    setTimeout(() => {
-      isThrottled = false;
-      if (savedArgs) {
-        wrapper.apply(savedThis, savedArgs);
-        savedArgs = null;
-        savedThis = null;
-      }
-    }, delay);
   };
-
-  return wrapper;
 }
 
-const timeLoggedConsoleLog = (...args) => {
-  console.log(`Logged after ${Date.now() - startTime} ms:`, ...args);
-};
-
-const startTime = Date.now();
-const f = throttle(timeLoggedConsoleLog, 500);
+const f = throttle((...args) => console.log(...args), 500);
 
 f("a");
-setTimeout(() => f("b"), 200);
-setTimeout(() => f("c"), 600); // skip
+setTimeout(() => f("b"), 200); // skip
+setTimeout(() => f("c"), 600);
 setTimeout(() => f("d"), 600); // skip
-setTimeout(() => f("e"), 600);
-// { isThrottled: false }
-// Logged after 17 ms: a
-// { isThrottled: true }
-// { isThrottled: false }
-// Logged after 531 ms: b
-// { isThrottled: true }
-// { isThrottled: true }
-// { isThrottled: true }
-// { isThrottled: false }
-// Logged after 1045 ms: e
+setTimeout(() => f("e"), 600); // skip
 ```

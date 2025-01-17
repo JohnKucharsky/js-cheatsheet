@@ -1,0 +1,45 @@
+
+## async-queue
+
+```js
+class AsyncQueue {
+  constructor() {
+    this.queue = [];
+  }
+
+  enqueue(task) {
+    if (typeof task !== "function") {
+      throw new Error("Task must be a function returning a promise");
+    }
+    this.queue.push(task);
+  }
+
+  async process() {
+    const results = [];
+
+    for (const task of this.queue) {
+      const result = await task();
+      results.push(result);
+    }
+
+    return results;
+  }
+}
+
+const queue = new AsyncQueue();
+queue.enqueue(
+  () =>
+    new Promise((resolve) => {
+      setTimeout(() => resolve("Task 1"), 1000);
+    }),
+);
+queue.enqueue(
+  () =>
+    new Promise((resolve) => {
+      setTimeout(() => resolve("Task 2"), 500);
+    }),
+);
+
+queue.process().then((results) => console.log(results));
+// ['Task 1', 'Task 2']
+```

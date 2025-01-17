@@ -28,6 +28,30 @@ console.log(admin);
 ```
 
 ```js
+let user = {
+  name: "John",
+  age: 30,
+
+  sayHi() {
+    console.log(this.name);
+  },
+};
+
+const admin = user;
+user = null; // overwrite user object
+
+try {
+  admin.sayHi();
+} catch (e) {
+  console.error(e.message);
+}
+// John
+
+console.log(admin);
+// { name: 'John', age: 30, sayHi: [Function: sayHi] }
+```
+
+```js
 const user = {
   firstName: "John",
   sayHi() {
@@ -110,4 +134,132 @@ ladder.showStep(); // 0
 
 ladder.up().up().down().showStep().down().showStep();
 // shows 1 then 0
+```
+
+### example 1
+
+```js
+const obj1 = {
+  value: 5,
+  regularMethod: function () {
+    return this?.value + 10;
+  },
+  arrowMethod: () => {
+    return this?.value + 20;
+  },
+};
+
+console.log(obj1.regularMethod()); // 15
+console.log(obj1.arrowMethod()); // NaN
+```
+
+### example 2
+
+```js
+const obj2 = {
+  value: 50,
+  method: function () {
+    setTimeout(function () {
+      console.log(this.value);
+    }, 100);
+  },
+  methodArrow: function () {
+    setTimeout(() => {
+      console.log(this.value);
+    }, 100);
+  },
+};
+obj2.method(); // undefined
+obj2.methodArrow(); // 50
+```
+
+### example 3
+
+```js
+function Example() {
+  this.value = 30;
+  this.arrowMethod = () => {
+    console.log(this.value);
+  };
+}
+
+const example1 = new Example();
+example1.arrowMethod(); // 30
+```
+
+### example 4
+
+```js
+const obj5 = {
+  value: 25,
+  regularMethod: function () {
+    return this.value;
+  },
+  arrowMethod: () => {
+    return this.value;
+  },
+};
+
+const anotherObj = {
+  value: 50,
+};
+
+console.log(obj5.regularMethod.call(anotherObj)); // 50
+console.log(obj5.arrowMethod.call(anotherObj));
+// throws(this is undefined)
+```
+
+### example 5
+
+```js
+const obj7 = {
+  value: 70,
+  method: function () {
+    return {
+      getValue: () => {
+        return this.value;
+      },
+    };
+  },
+};
+
+const innerObj = obj7.method();
+console.log(innerObj.getValue()); // 70
+```
+
+### example 6
+
+```js
+class MyClass {
+  constructor() {
+    this.value = 40;
+  }
+
+  regularMethod() {
+    console.log(this.value);
+  }
+
+  arrowMethod = () => {
+    console.log(this.value);
+  };
+}
+
+const instance = new MyClass();
+instance.regularMethod(); // 40
+instance.arrowMethod();   // 40
+```
+
+### example 7
+
+```js
+const vehicle = {
+  getInfo: function () {
+    console.log(this.model + " was made in " + this.year);
+  },
+};
+
+const myCar = Object.create(vehicle);
+myCar.model = "BMW";
+myCar.year = 2010;
+myCar.getInfo();
 ```

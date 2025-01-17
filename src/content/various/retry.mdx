@@ -2,51 +2,27 @@
 ## retry
 
 ```js
-const retry = async (fn, options) => {
-  const { retries, delay = 0 } = options;
-  let attempts = 0;
-
-  while (attempts < retries) {
+async function fetchWithRetry(url, retries, delay = 1000) {
+  for (let attempt = 1; attempt <= retries; attempt++) {
     try {
-      return await fn();
+      const response = await fetch(url);
+      if (!response.ok) {
+        throw new Error(`HTTP Error: ${response.status}`);
+      }
+      return await response.json();
     } catch (error) {
-      attempts++;
+      console.error(`Attempt ${attempt} failed:`, error);
 
-      if (attempts >= retries) {
-        throw error; // Exhausted retries
+      if (attempt === retries) {
+        throw new Error(`Failed to fetch after ${retries} retries`);
       }
 
-      if (delay > 0) {
-        await new Promise((resolve) => setTimeout(resolve, delay));
-      }
+      await new Promise((resolve) => setTimeout(resolve, delay));
     }
   }
+}
 
-  throw new Error("Unexpected error: retry logic did not exit as expected.");
-};
-
-let attempt = 0;
-
-const mockFetch = () => {
-  return new Promise((resolve, reject) => {
-    attempt++;
-
-    if (attempt < 3) {
-      reject(new Error(`Attempt ${attempt}: Failed`));
-    } else {
-      resolve(`Attempt ${attempt}: Success`);
-    }
-  });
-};
-
-const testRetry = async () => {
-  try {
-    const result = await retry(mockFetch, { retries: 3, delay: 500 });
-    console.log("Result:", result); // Result: Attempt 3: Success
-  } catch (error) {
-    console.error("Failed after retries:", error);
-  }
-};
-
-testRetry().catch(console.error);
+const res = await fetchWithRetry("https://pokeapi.co/api/v2/pokemon-color", 3);
+console.log(res);
 ```
+

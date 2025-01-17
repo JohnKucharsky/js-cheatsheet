@@ -1,0 +1,164 @@
+
+## promises closures and event loop mix
+
+### example 1
+
+```js
+function createAsyncCounter() {
+  let count = 0;
+  return async function incrementAsyncCounter() {
+    count++;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    console.log("Async Counter:", count);
+  };
+}
+
+const asyncCounter = createAsyncCounter();
+
+asyncCounter(); // What will this log?
+asyncCounter().then(() => {
+  asyncCounter(); // What will this log?
+});
+
+console.log("Script complete");
+
+// Script complete
+// Async Counter: 2
+// Async Counter: 2
+// Async Counter: 3
+```
+
+### example 2
+
+```js
+function createTaskScheduler() {
+  let taskCount = 0;
+  return function scheduleTask() {
+    taskCount++;
+    setTimeout(() => {
+      console.log("Task Count:", taskCount);
+    }, taskCount * 100);
+  };
+}
+
+const scheduleTask = createTaskScheduler();
+
+scheduleTask();
+scheduleTask();
+scheduleTask();
+
+Promise.resolve().then(() => {
+  scheduleTask();
+});
+
+console.log("Tasks scheduled");
+
+// Tasks scheduled
+// Task Count: 4
+// Task Count: 4
+// Task Count: 4
+// Task Count: 4
+```
+
+### example 3
+
+```js
+function createTaskScheduler() {
+  let taskCount = 0;
+  return function scheduleTask() {
+    taskCount++;
+    const savedCount = taskCount;
+    setTimeout(() => {
+      console.log("Task Count:", savedCount);
+    }, taskCount * 100);
+  };
+}
+
+const scheduleTask = createTaskScheduler();
+
+scheduleTask();
+scheduleTask();
+scheduleTask();
+
+Promise.resolve().then(() => {
+  scheduleTask();
+});
+
+console.log("Tasks scheduled");
+
+// Tasks scheduled
+// Task Count: 1
+// Task Count: 2
+// Task Count: 3
+// Task Count: 4
+```
+
+### example 4
+
+```js
+function createCounter() {
+  let count = 0;
+  return function incrementCounter() {
+    count++;
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(count);
+      }, 200);
+    });
+  };
+}
+
+const counter = createCounter();
+
+counter()
+  .then((result) => {
+    console.log("Counter 1:", result);
+    return counter();
+  })
+  .then((result) => {
+    console.log("Counter 2:", result);
+  });
+
+console.log("Script in progress");
+
+// Script in progress
+// Counter 1: 1
+// Counter 2: 2
+```
+
+### example 5
+
+```js
+function createAsyncMultiplier() {
+  let factor = 2;
+  return function multiply(value) {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(value * factor);
+      }, 100);
+    });
+  };
+}
+
+const multiplyByTwo = createAsyncMultiplier();
+
+multiplyByTwo(5)
+  .then((result) => {
+    console.log("Multiply 1:", result);
+    return multiplyByTwo(10);
+  })
+  .then((result) => {
+    console.log("Multiply 2:", result);
+    return multiplyByTwo(20);
+  })
+  .then((result) => {
+    console.log("Multiply 3:", result);
+  });
+
+console.log("Multiplication started");
+
+// Multiplication started
+// Multiply 1: 10
+// Multiply 2: 20
+// Multiply 3: 40
+```
