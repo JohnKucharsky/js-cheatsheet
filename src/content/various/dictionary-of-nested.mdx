@@ -128,20 +128,28 @@ const data = [
   },
 ];
 
-function createNestedDictionary(data) {
-  return data.reduce((acc, category) => {
+function mapItemsToDictionary(items) {
+  return items.reduce((acc, item) => {
+    acc[item.id] = item;
+    return acc;
+  }, {});
+}
+
+function mapSubcategoriesToDictionary(subcategories) {
+  return subcategories.reduce((acc, subcategory) => {
+    acc[subcategory.id] = {
+      ...subcategory,
+      items: mapItemsToDictionary(subcategory.items),
+    };
+    return acc;
+  }, {});
+}
+
+function createNestedDictionary(categories) {
+  return categories.reduce((acc, category) => {
     acc[category.id] = {
       ...category,
-      subcategories: category.items.reduce((subAcc, subcategory) => {
-        subAcc[subcategory.id] = {
-          ...subcategory,
-          items: subcategory.items.reduce((itemAcc, item) => {
-            itemAcc[item.id] = item;
-            return itemAcc;
-          }, {}),
-        };
-        return subAcc;
-      }, {}),
+      subcategories: mapSubcategoriesToDictionary(category.items),
     };
     return acc;
   }, {});
@@ -191,39 +199,57 @@ type NestedDictionary = {
   };
 };
 
+function mapItemsToDictionary(items: Item[]): {
+  [itemId: number]: Item;
+} {
+  return items.reduce(
+    (acc, item) => {
+      acc[item.id] = item;
+      return acc;
+    },
+    {} as { [itemId: number]: Item },
+  );
+}
+
+function mapSubcategoriesToDictionary(
+  subcategories: Subcategory[],
+): {
+  [subcategoryId: number]: {
+    name: string;
+    items: { [itemId: number]: Item };
+  };
+} {
+  return subcategories.reduce(
+    (acc, subcategory) => {
+      acc[subcategory.id] = {
+        name: subcategory.name,
+        items: mapItemsToDictionary(subcategory.items),
+      };
+      return acc;
+    },
+    {} as {
+      [subcategoryId: number]: {
+        name: string;
+        items: { [itemId: number]: Item };
+      };
+    },
+  );
+}
+
 function createNestedDictionary(
-  data: Category[],
+  categories: Category[],
 ): NestedDictionary {
-  return data.reduce((acc, category) => {
+  return categories.reduce((acc, category) => {
     acc[category.id] = {
       name: category.name,
-      subcategories: category.items.reduce(
-        (subAcc, subcategory) => {
-          subAcc[subcategory.id] = {
-            name: subcategory.name,
-            items: subcategory.items.reduce(
-              (itemAcc, item) => {
-                itemAcc[item.id] = item;
-                return itemAcc;
-              },
-              {} as { [itemId: number]: Item },
-            ),
-          };
-          return subAcc;
-        },
-        {} as {
-          [subcategoryId: number]: {
-            name: string;
-            items: { [itemId: number]: Item };
-          };
-        },
+      subcategories: mapSubcategoriesToDictionary(
+        category.items,
       ),
     };
     return acc;
   }, {} as NestedDictionary);
 }
 
-// Example usage
 const data: Category[] = [
   {
     id: 1,
@@ -273,7 +299,6 @@ const data: Category[] = [
 
 const nestedDictionary = createNestedDictionary(data);
 
-// Access examples
 console.log(nestedDictionary[1].name); // Category A
 console.log(nestedDictionary[1].subcategories[5].name); // Subcategory A2
 console.log(

@@ -1,5 +1,5 @@
 
-## promises closures and event loop mix
+## promises, closures and event loop mix
 
 ### example 1
 
@@ -15,9 +15,9 @@ function createAsyncCounter() {
 
 const asyncCounter = createAsyncCounter();
 
-asyncCounter(); // What will this log?
+asyncCounter();
 asyncCounter().then(() => {
-  asyncCounter(); // What will this log?
+  asyncCounter();
 });
 
 console.log("Script complete");
@@ -29,6 +29,32 @@ console.log("Script complete");
 ```
 
 ### example 2
+
+```js
+function createAsyncCounter() {
+  let count = 0;
+  return async function incrementAsyncCounter() {
+    count++;
+    await new Promise((resolve) => setTimeout(resolve, 100));
+    console.log("Async Counter:", count);
+  };
+}
+
+const asyncCounter = createAsyncCounter();
+
+await asyncCounter();
+await asyncCounter();
+await asyncCounter();
+
+console.log("Script complete");
+
+// Async Counter: 1
+// Async Counter: 2
+// Async Counter: 3
+// Script complete
+```
+
+### example 3
 
 ```js
 function createTaskScheduler() {
@@ -48,19 +74,21 @@ scheduleTask();
 scheduleTask();
 
 Promise.resolve().then(() => {
+  console.log("promise");
   scheduleTask();
 });
 
 console.log("Tasks scheduled");
 
 // Tasks scheduled
+// promise
 // Task Count: 4
 // Task Count: 4
 // Task Count: 4
 // Task Count: 4
 ```
 
-### example 3
+### example 4
 
 ```js
 function createTaskScheduler() {
@@ -93,7 +121,7 @@ console.log("Tasks scheduled");
 // Task Count: 4
 ```
 
-### example 4
+### example 5
 
 ```js
 function createCounter() {
@@ -126,7 +154,7 @@ console.log("Script in progress");
 // Counter 2: 2
 ```
 
-### example 5
+### example 6
 
 ```js
 function createAsyncMultiplier() {
@@ -145,11 +173,11 @@ const multiplyByTwo = createAsyncMultiplier();
 multiplyByTwo(5)
   .then((result) => {
     console.log("Multiply 1:", result);
-    return multiplyByTwo(10);
+    return multiplyByTwo(result);
   })
   .then((result) => {
     console.log("Multiply 2:", result);
-    return multiplyByTwo(20);
+    return multiplyByTwo(result);
   })
   .then((result) => {
     console.log("Multiply 3:", result);
@@ -161,4 +189,5 @@ console.log("Multiplication started");
 // Multiply 1: 10
 // Multiply 2: 20
 // Multiply 3: 40
+// delay between
 ```

@@ -3,25 +3,30 @@
 
 ```js
 function memoize(fn) {
-    const cache = new Map();
+  const cache = new Map();
 
-    return function (...args) {
-        const key = JSON.stringify(args);
+  return function (...args) {
+    const key = JSON.stringify(args);
 
-        if (cache.has(key)) {
-            return cache.get(key);
-        }
+    if (cache.has(key)) {
+      return cache.get(key);
+    }
 
-        const result = fn(...args);
-        cache.set(key, result);
+    const result = fn.apply(this, args);
+    cache.set(key, result);
 
-        return result;
-    };
+    return result;
+  };
 }
 
-const add = (a, b) => a + b;
-const memoizedAdd = memoize(add);
+const adder = function (a, b) {
+  console.log(`Calculating ${a} + ${b}`);
+  return a + b;
+};
 
-console.log(memoizedAdd(1, 2)); // 3
-console.log(memoizedAdd(1, 2)); // 3 (cached)
+const memoizedAdder = memoize(adder);
+const result1 = memoizedAdder(3, 4); // Calculating 3 + 4
+console.log(result1); // 7
+const result2 = memoizedAdder(3, 4);
+console.log(result2); // 7
 ```

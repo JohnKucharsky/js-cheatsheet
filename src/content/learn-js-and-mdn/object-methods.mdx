@@ -185,9 +185,30 @@ function Example() {
 
 const example1 = new Example();
 example1.arrowMethod(); // 30
+
+const detachedMethod = example1.arrowMethod;
+detachedMethod(); // 30
 ```
 
 ### example 4
+
+```js
+function Example() {
+  this.value = 30;
+  this.regularMethod = function () {
+    console.log(this);
+  };
+}
+
+const example1 = new Example();
+example1.regularMethod();
+// Example { value: 30, regularMethod: [Function (anonymous)] }
+
+const detachedMethod = example1.regularMethod;
+detachedMethod(); // undefined
+```
+
+### example 5
 
 ```js
 const obj5 = {
@@ -209,7 +230,7 @@ console.log(obj5.arrowMethod.call(anotherObj));
 // throws(this is undefined)
 ```
 
-### example 5
+### example 6
 
 ```js
 const obj7 = {
@@ -227,29 +248,41 @@ const innerObj = obj7.method();
 console.log(innerObj.getValue()); // 70
 ```
 
-### example 6
+### example 7
 
 ```js
 class MyClass {
+  value;
+
   constructor() {
     this.value = 40;
   }
 
   regularMethod() {
-    console.log(this.value);
+    console.log(this);
   }
 
   arrowMethod = () => {
-    console.log(this.value);
+    console.log(this);
   };
 }
 
 const instance = new MyClass();
-instance.regularMethod(); // 40
-instance.arrowMethod();   // 40
+
+instance.regularMethod();
+// MyClass { value: 40, arrowMethod: [Function: arrowMethod] }
+instance.arrowMethod();
+// MyClass { value: 40, arrowMethod: [Function: arrowMethod] }
+
+const regularFn = instance.regularMethod;
+const arrowFn = instance.arrowMethod;
+
+regularFn(); // undefined
+arrowFn();
+// MyClass { value: 40, arrowMethod: [Function: arrowMethod] }
 ```
 
-### example 7
+### example 8
 
 ```js
 const vehicle = {
@@ -261,5 +294,9 @@ const vehicle = {
 const myCar = Object.create(vehicle);
 myCar.model = "BMW";
 myCar.year = 2010;
-myCar.getInfo();
+myCar.getInfo(); // BMW was made in 2010
+console.log(myCar);
+// { model: 'BMW', year: 2010 }
+console.log(myCar.__proto__);
+// { getInfo: [Function: getInfo] }
 ```

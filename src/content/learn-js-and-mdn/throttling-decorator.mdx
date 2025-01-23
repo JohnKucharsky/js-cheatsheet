@@ -1,13 +1,39 @@
 
-## throttling decorator
+## throttling and debounce decorator
 
 [call-apply-decorators](https://javascript.info/call-apply-decorators)
 
-When it's called multiple times, it passes the call to `f` at maximum once
-per `ms` milliseconds.
-Compared to the debounce decorator, the behavior is completely different:
+Compared to the debounce decorator, throttling is completely different:
 - `debounce` runs the function once after the "cooldown" period.
 - `throttle` runs it not more often than given `ms` time
+
+### debounce
+
+```js
+function debounce(func, ms) {
+  let timeout;
+
+  return function (...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), ms);
+  };
+}
+
+const timeLoggedConsoleLog = (...args) => {
+  console.log(`Logged after ${Date.now() - startTime} ms:`, ...args);
+};
+
+const startTime = Date.now();
+const f = debounce(timeLoggedConsoleLog, 500);
+
+f("a");
+setTimeout(() => f("b"), 200);
+setTimeout(() => f("c"), 600);
+setTimeout(() => f("d"), 600);
+setTimeout(() => f("e"), 600); // Logged after 1118 ms: e
+```
+
+### throttling
 
 ```js
 function throttle(fn, limit) {
@@ -22,11 +48,16 @@ function throttle(fn, limit) {
   };
 }
 
-const f = throttle((...args) => console.log(...args), 500);
+const timeLoggedConsoleLog = (...args) => {
+  console.log(`Logged after ${Date.now() - startTime} ms:`, ...args);
+};
 
-f("a");
-setTimeout(() => f("b"), 200); // skip
-setTimeout(() => f("c"), 600);
-setTimeout(() => f("d"), 600); // skip
-setTimeout(() => f("e"), 600); // skip
+const startTime = Date.now();
+const f = throttle(timeLoggedConsoleLog, 500);
+
+f("a"); // Logged after 0 ms: a
+setTimeout(() => f("b"), 200);
+setTimeout(() => f("c"), 600); // Logged after 613 ms: c
+setTimeout(() => f("d"), 600);
+setTimeout(() => f("e"), 600);
 ```

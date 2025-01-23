@@ -73,6 +73,7 @@ for (let i = 0; i < 4; i++) {
 const promise = new Promise((resolve, reject) => {
   console.log("Promise callback");
   resolve();
+  console.log("Promise callback end");
 }).then((result) => {
   console.log("Promise callback (.then)");
 });
@@ -83,6 +84,7 @@ setTimeout(() => {
 
 console.log("Promise (pending)", promise);
 // Promise callback
+// Promise callback end
 // Promise (pending) Promise { <pending> }
 // Promise callback (.then)
 // event-loop cycle: Promise (fulfilled) Promise { undefined }
@@ -188,7 +190,7 @@ function longRunningTask() {
   console.log("Start Long-Running Task");
 
   const startTime = Date.now();
-  while (Date.now() - startTime < 3000) {
+  while (Date.now() - startTime < 2000) {
     // Simulate a long-running task (3 seconds)
   }
 
@@ -200,9 +202,8 @@ function simulateNonBlocking() {
 
   setTimeout(() => {
     console.log("Non-blocking Operation");
+    longRunningTask();
   }, 0);
-
-  longRunningTask();
 
   console.log("End");
 }
@@ -210,10 +211,10 @@ function simulateNonBlocking() {
 simulateNonBlocking();
 
 // Start
-// Start Long-Running Task
-// Long-Running Task Completed
 // End
 // Non-blocking Operation
+// Start Long-Running Task
+// Long-Running Task Completed
 ```
 
 ### example 3
@@ -241,6 +242,14 @@ Promise.resolve()
   });
 
 console.log("End");
+
+// Start
+// End
+// Promise 1
+// Promise 2
+// setTimeout 1
+// Promise inside setTimeout 1
+// setTimeout 2
 ```
 
 ### example 4

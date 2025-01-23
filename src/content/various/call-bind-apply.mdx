@@ -1,0 +1,247 @@
+
+## call bind apply
+
+### example 1
+
+```js
+const counter = {
+  value: 10,
+  add(num) {
+    this.value += num;
+    return this.value;
+  },
+};
+
+function operate(method, num) {
+  return method(num);
+}
+
+function operateWithCall(method, num) {
+  return method.call(counter, num);
+}
+
+console.log(counter.add(1)); // 11
+console.log(operateWithCall(counter.add, 1)); // 12
+console.log(operate(counter.add.bind(counter), 1)); // 13
+try {
+  console.log(operate(counter.add, 1));
+} catch (e) {
+  console.error(e.message);
+  // Cannot read properties of undefined (reading 'value')
+}
+```
+
+### example 2
+
+```js
+const objA = {
+  data: "I am from objA",
+  print() {
+    console.log(this.data);
+  },
+};
+
+const objB = {
+  data: "I am from objB",
+};
+
+objA.print.call(objB); // I am from objB
+objA.print.apply(objB); // I am from objB
+```
+
+### example 3
+
+```js
+function delayMethod(obj, methodName) {
+  return function (...args) {
+    setTimeout(() => obj[methodName](...args), 1000);
+  };
+}
+
+const user = {
+  name: "Alice",
+  greet(greeting) {
+    console.log(`${greeting}, ${this.name}!`);
+  },
+};
+
+const delayedGreet = delayMethod(user, "greet");
+delayedGreet("Hello"); // After 1 second: "Hello, Alice!"
+```
+
+### example 4
+
+```js
+Function.prototype.customBind = function (context, ...args) {
+  const originalFunction = this;
+  return function (...newArgs) {
+    return originalFunction.apply(context, [...args, ...newArgs]);
+  };
+};
+
+// Test
+function greet(greeting, punctuation) {
+  console.log(`${greeting}, ${this.name}${punctuation}`);
+}
+
+const person = { name: "John" };
+const boundGreet = greet.customBind(person, "Hello");
+boundGreet("!"); // "Hello, John!"
+```
+
+### example 5
+
+```js
+const store1 = {
+  taxRate: 0.1,
+  calculateTotal(price, quantity) {
+    const subtotal = price * quantity;
+    return subtotal + subtotal * this.taxRate;
+  },
+};
+
+const store2 = {
+  taxRate: 0.2,
+};
+
+const price = 50;
+const quantity = 2;
+
+// Calculate total for `store2` using the method from `store1`
+const total = store1.calculateTotal.call(store2, price, quantity);
+console.log(total); // 120 (price * quantity + tax)
+
+// 2 solution
+store2.calculateTotal = store1.calculateTotal;
+console.log(store2.calculateTotal(price, quantity));
+```
+
+### example 6
+
+```js
+function curry(fn, ...args) {
+  return function (...newArgs) {
+    return fn.call(this, ...args, ...newArgs);
+  };
+}
+
+function multiply(a, b, c) {
+  return a * b * c;
+}
+
+const curriedMultiply = curry(multiply, 2);
+console.log(curriedMultiply(3, 4)); // 24
+const curriedMultiply2 = curry(multiply, 2, 3);
+console.log(curriedMultiply2(4)); // 24
+```
+
+### example 7
+
+```js
+function rateLimit(fn, ms) {
+  let lastCall = 0;
+
+  return function (...args) {
+    const now = Date.now();
+
+    if (now - lastCall >= ms) {
+      lastCall = now;
+      return fn.apply(this, args);
+    }
+  };
+}
+
+const logger = {
+  message: "Rate limited log",
+  log() {
+    console.log(this.message);
+  },
+};
+
+const rateLimitedLog = rateLimit(logger.log.bind(logger), 1000);
+rateLimitedLog(); // Rate limited log
+rateLimitedLog();
+setTimeout(rateLimitedLog, 1500);
+// Logs "Rate limited log" after 1.5s
+```
+
+### example 8
+
+```js
+const mathUtils = {
+  square(num) {
+    return num * num;
+  },
+};
+
+const numbers = {
+  num: 5,
+};
+
+// Use `call` to get the square of `num` in `numbers`.
+const result = mathUtils.square.call(numbers, numbers.num);
+console.log(result); // 25
+```
+
+### example 9
+
+```js
+const person = {
+  name: "John",
+};
+
+function greet() {
+  console.log(`Hello, ${this.name}`);
+}
+
+// Create a bound function
+const boundGreet = greet.bind(person);
+boundGreet(); // Hello, John
+```
+
+### example 10
+
+```js
+function delayedLog(message) {
+  console.log(message);
+}
+
+const delay = setTimeout.bind(null, delayedLog, 1000, "This is delayed!");
+delay(); // Logs after 1 second: "This is delayed!"
+
+const delay2 = () => setTimeout(delayedLog, 1000, "This is delayed!");
+delay2(); // Logs after 1 second: "This is delayed!"
+```
+
+### example 11
+
+```js
+const user = {
+  name: "Alice",
+  greet() {
+    const arrow = () => console.log(`Hello, ${this.name}`);
+    arrow.call({ name: "Bob" }); // Arrow functions ignore `call`
+  },
+};
+
+user.greet(); // Hello, Alice
+```
+
+### example 12
+
+```js
+const user = {
+  name: "Alice",
+  logName() {
+    console.log(this.name);
+  },
+};
+
+function executeCallback(callback) {
+  callback();
+}
+
+// Preserve context with `bind`
+executeCallback(user.logName.bind(user)); // Alice
+executeCallback(() => user.logName()); // Alice
+```
