@@ -14,7 +14,7 @@ import HomeIcon from "@/components/icons/home-icon";
 import Link from "next/link";
 import Spinner from "@/components/icons/spinner";
 import { useSession, signIn, signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import {
   getCurrentItem,
   getTotalItems,
@@ -23,30 +23,53 @@ import {
 } from "@/app/api/actions";
 
 export default function Layout({ children }: { children: ReactElement }) {
-  const [currentItem, setCurrentItem] = useState<string | null>(null);
   const [totalCount, setTotalCount] = useState<number>(0);
   const [itemsDone, setItemsDone] = useState<number>(0);
 
   const { data: session, status } = useSession();
   const router = useRouter();
+  const pathname = usePathname();
+
+  const slugInPath = pathname.includes("/pick-random/");
 
   useEffect(() => {
+    if (!slugInPath) return;
+
     (async () => {
       try {
         if (session?.user?.email) {
           const total = await getTotalItems();
           setTotalCount(total);
+
+          const current = await getCurrentItem(session.user.email);
+          setItemsDone(current.currentState);
+        }
+      } catch (e) {
+        console.error(e);
+      }
+    })();
+  }, [session?.user?.email]);
+
+  useEffect(() => {
+    if (slugInPath) return;
+
+    (async () => {
+      try {
+        if (session?.user?.email) {
+          const total = await getTotalItems();
+          setTotalCount(total);
+
           const current = await getCurrentItem(session.user.email);
 
           if (current.currentState !== total) {
-            setCurrentItem(current.currentItem);
             setItemsDone(current.currentState);
             router.push(`/pick-random/${current.currentItem}`);
           } else {
             await initializeShuffledItems(session.user.email);
+
             const current = await getCurrentItem(session.user.email);
-            setCurrentItem(current.currentItem);
             setItemsDone(current.currentState);
+
             router.push(`/pick-random/${current.currentItem}`);
           }
         }
@@ -100,16 +123,12 @@ export default function Layout({ children }: { children: ReactElement }) {
         </div>
       </div>
 
-      {Boolean(session) && (
-        <Fragment>
-          {children}
+      {children}
 
-          {currentItem && (
-            <div className={"flex flex-row justify-end mb-8 not-prose"}>
-              <NextButton setItemsLeft={setItemsDone} total={totalCount} />
-            </div>
-          )}
-        </Fragment>
+      {Boolean(session) && (
+        <div className={"flex flex-row justify-end mb-8 not-prose"}>
+          <NextButton setItemsLeft={setItemsDone} total={totalCount} />
+        </div>
       )}
     </>
   );

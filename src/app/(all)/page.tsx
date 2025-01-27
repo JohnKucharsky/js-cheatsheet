@@ -3,6 +3,21 @@ import { Metadata } from "next";
 import Link from "next/link";
 import SearchDialog from "@/components/search-dialog";
 
+const links = [
+  {
+    href: "https://github.com/JohnKucharsky/js-cheatsheet",
+    title: "this project",
+  },
+  {
+    href: "https://github.com/JohnKucharsky/react-effector-mui",
+    title: "react effector mui",
+  },
+  {
+    href: "https://github.com/JohnKucharsky/react-redux-mui",
+    title: "react redux mui",
+  },
+];
+
 export const metadata: Metadata = {
   title: "JS Cheatsheet",
 };
@@ -17,21 +32,11 @@ export default function Page() {
       <Menu />
       <h3>Projects</h3>
       <ul>
-        <li>
-          <Link href={"https://github.com/JohnKucharsky/js-cheatsheet"}>
-            this project
-          </Link>
-        </li>
-        <li>
-          <Link href={"https://github.com/JohnKucharsky/react-effector-mui"}>
-            react effector mui
-          </Link>
-        </li>
-        <li>
-          <Link href={"https://github.com/JohnKucharsky/react-redux-mui"}>
-            react redux mui
-          </Link>
-        </li>
+        {links.map((link) => (
+          <li key={link.title}>
+            <Link href={link.href}>{link.title}</Link>
+          </li>
+        ))}
       </ul>
 
       <h3>Contacts</h3>
