@@ -1,6 +1,18 @@
 
 ## function stack
 
+### Forward Phase (Pushing):
+1. Call `foo(2)` -> Stack: `[foo(2)]`.
+2. Call `foo(1)` -> Stack: `[foo(2), foo(1)]`.
+3. Call `foo(0)` -> Stack: `[foo(2), foo(1), foo(0)]`.
+4. Call `foo(-1)` -> Stack: `[foo(2), foo(1), foo(0), foo(-1)]`.
+
+### Backward Phase (Unwinding):
+1. Return from `foo(-1)` -> Stack: `[foo(2), foo(1), foo(0)]`.
+2. Complete `foo(0)` -> Stack: `[foo(2), foo(1)]`.
+3. Complete `foo(1)` -> Stack: `[foo(2)]`.
+4. Complete `foo(2)` -> Stack: `[]`.
+
 ```js
 function foo(i) {
   if (i < 0) {

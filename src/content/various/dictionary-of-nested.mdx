@@ -128,40 +128,27 @@ const data = [
   },
 ];
 
-function mapItemsToDictionary(items) {
-  return items.reduce((acc, item) => {
-    acc[item.id] = item;
-    return acc;
-  }, {});
-}
+function mapToDictionary(data, keys) {
+  const [currentKey, ...remainingKeys] = keys;
 
-function mapSubcategoriesToDictionary(subcategories) {
-  return subcategories.reduce((acc, subcategory) => {
-    acc[subcategory.id] = {
-      ...subcategory,
-      items: mapItemsToDictionary(subcategory.items),
+  return data.reduce((acc, item) => {
+    acc[item.id] = {
+      ...item,
+      [currentKey || "items"]: item.items
+        ? mapToDictionary(item.items, remainingKeys)
+        : undefined,
     };
     return acc;
   }, {});
 }
 
-function createNestedDictionary(categories) {
-  return categories.reduce((acc, category) => {
-    acc[category.id] = {
-      ...category,
-      subcategories: mapSubcategoriesToDictionary(category.items),
-    };
-    return acc;
-  }, {});
-}
-
-const nestedDictionary = createNestedDictionary(data);
+const nestedDictionary = mapToDictionary(data, ["subcategories", "items"]);
 
 console.log(nestedDictionary[1].name); // Category A
 console.log(nestedDictionary[1].subcategories[5].name); // Subcategory A2
 console.log(nestedDictionary[1].subcategories[5].items[7].name); // Item A2-2
 console.log(nestedDictionary[8].subcategories[9].items[11]);
-// { id: 11, name: 'Item B1-2', value: 35 }
+// { id: 11, name: 'Item B1-2', value: 35, items: undefined }
 ```
 
 ### typescript
@@ -185,55 +172,42 @@ type Category = {
   items: Subcategory[];
 };
 
-type NestedDictionary = {
-  [categoryId: number]: {
+type Subcategories = Record<
+  number,
+  {
     name: string;
-    subcategories: {
-      [subcategoryId: number]: {
-        name: string;
-        items: {
-          [itemId: number]: Item;
-        };
-      };
-    };
-  };
-};
+    items: Record<number, Item>;
+  }
+>;
 
-function mapItemsToDictionary(items: Item[]): {
-  [itemId: number]: Item;
-} {
+type NestedDictionary = Record<
+  number,
+  {
+    name: string;
+    subcategories: Subcategories;
+  }
+>;
+
+function mapItemsToDictionary(items: Item[]) {
   return items.reduce(
     (acc, item) => {
       acc[item.id] = item;
       return acc;
     },
-    {} as { [itemId: number]: Item },
+    {} as Record<number, Item>,
   );
 }
 
 function mapSubcategoriesToDictionary(
   subcategories: Subcategory[],
-): {
-  [subcategoryId: number]: {
-    name: string;
-    items: { [itemId: number]: Item };
-  };
-} {
-  return subcategories.reduce(
-    (acc, subcategory) => {
-      acc[subcategory.id] = {
-        name: subcategory.name,
-        items: mapItemsToDictionary(subcategory.items),
-      };
-      return acc;
-    },
-    {} as {
-      [subcategoryId: number]: {
-        name: string;
-        items: { [itemId: number]: Item };
-      };
-    },
-  );
+) {
+  return subcategories.reduce((acc, subcategory) => {
+    acc[subcategory.id] = {
+      name: subcategory.name,
+      items: mapItemsToDictionary(subcategory.items),
+    };
+    return acc;
+  }, {} as Subcategories);
 }
 
 function createNestedDictionary(

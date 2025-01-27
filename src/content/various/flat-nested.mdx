@@ -12,18 +12,18 @@ const data = [
         name: "Subcategory A1",
         items: [
           { id: 3, name: "Item A1-1", value: 10 },
-          { id: 4, name: "Item A1-2", value: 15 }
-        ]
+          { id: 4, name: "Item A1-2", value: 15 },
+        ],
       },
       {
         id: 5,
         name: "Subcategory A2",
         items: [
           { id: 6, name: "Item A2-1", value: 20 },
-          { id: 7, name: "Item A2-2", value: 25 }
-        ]
-      }
-    ]
+          { id: 7, name: "Item A2-2", value: 25 },
+        ],
+      },
+    ],
   },
   {
     id: 8,
@@ -34,37 +34,33 @@ const data = [
         name: "Subcategory B1",
         items: [
           { id: 10, name: "Item B1-1", value: 30 },
-          { id: 11, name: "Item B1-2", value: 35 }
-        ]
+          { id: 11, name: "Item B1-2", value: 35 },
+        ],
       },
       {
         id: 12,
         name: "Subcategory B2",
         items: [
           { id: 13, name: "Item B2-1", value: 40 },
-          { id: 14, name: "Item B2-2", value: 45 }
-        ]
-      }
-    ]
-  }
+          { id: 14, name: "Item B2-2", value: 45 },
+        ],
+      },
+    ],
+  },
 ];
 
 function transformItems(data) {
   const transformedItems = [];
 
   for (const category of data) {
-    const categoryName = category.name; // Store category name
-
     for (const subcategory of category.items) {
-      const subcategoryName = subcategory.name; // Store subcategory name
-
       for (const item of subcategory.items) {
         transformedItems.push({
           id: item.id,
           name: item.name,
           value: item.value,
-          subcategory: subcategoryName,
-          category: categoryName,
+          subcategory: subcategory.name,
+          category: category.name,
         });
       }
     }
@@ -76,91 +72,82 @@ function transformItems(data) {
 const itemsWithCategories = transformItems(data);
 
 console.log(itemsWithCategories);
+
 // [
-//   { id: 3, name: "Item A1-1", value: 10, subcategory: "Subcategory A1", category: "Category A" },
-//   { id: 4, name: "Item A1-2", value: 15, subcategory: "Subcategory A1", category: "Category A" },
-//   { id: 6, name: "Item A2-1", value: 20, subcategory: "Subcategory A2", category: "Category A" },
-//   { id: 7, name: "Item A2-2", value: 25, subcategory: "Subcategory A2", category: "Category A" },
-//   { id: 10, name: "Item B1-1", value: 30, subcategory: "Subcategory B1", category: "Category B" },
-//   { id: 11, name: "Item B1-2", value: 35, subcategory: "Subcategory B1", category: "Category B" },
-//   { id: 13, name: "Item B2-1", value: 40, subcategory: "Subcategory B2", category: "Category B" },
-//   { id: 14, name: "Item B2-2", value: 45, subcategory: "Subcategory B2", category: "Category B" }
-// ]
-```
+//   {
+//     id: 3,
+//     name: "Item A1-1",
+//     value: 10,
+//     subcategory: "Subcategory A1",
+//     category: "Category A",
+//   },
+//   {
+//     id: 4,
+//     name: "Item A1-2",
+//     value: 15,
+//     subcategory: "Subcategory A1",
+//     category: "Category A",
+//   },
+//   {
+//     id: 6,
+//     name: "Item A2-1",
+//     value: 20,
+//     subcategory: "Subcategory A2",
+//     category: "Category A",
+//   },
+//   {
+//     id: 7,
+//     name: "Item A2-2",
+//     value: 25,
+//     subcategory: "Subcategory A2",
+//     category: "Category A",
+//   },
+//   {
+//     id: 10,
+//     name: "Item B1-1",
+//     value: 30,
+//     subcategory: "Subcategory B1",
+//     category: "Category B",
+//   },
+//   {
+//     id: 11,
+//     name: "Item B1-2",
+//     value: 35,
+//     subcategory: "Subcategory B1",
+//     category: "Category B",
+//   },
+//   {
+//     id: 13,
+//     name: "Item B2-1",
+//     value: 40,
+//     subcategory: "Subcategory B2",
+//     category: "Category B",
+//   },
+//   {
+//     id: 14,
+//     name: "Item B2-2",
+//     value: 45,
+//     subcategory: "Subcategory B2",
+//     category: "Category B",
+//   },
+// ];
 
-```js
-const data = [
-  {
-    id: 1,
-    name: "Category A",
-    items: [
-      {
-        id: 2,
-        name: "Subcategory A1",
-        items: [
-          { id: 3, name: "Item A1-1", value: 10 },
-          { id: 4, name: "Item A1-2", value: 15 }
-        ]
-      },
-      {
-        id: 5,
-        name: "Subcategory A2",
-        items: [
-          { id: 6, name: "Item A2-1", value: 20 },
-          { id: 7, name: "Item A2-2", value: 25 }
-        ]
-      }
-    ]
-  },
-  {
-    id: 8,
-    name: "Category B",
-    items: [
-      {
-        id: 9,
-        name: "Subcategory B1",
-        items: [
-          { id: 10, name: "Item B1-1", value: 30 },
-          { id: 11, name: "Item B1-2", value: 35 }
-        ]
-      },
-      {
-        id: 12,
-        name: "Subcategory B2",
-        items: [
-          { id: 13, name: "Item B2-1", value: 40 },
-          { id: 14, name: "Item B2-2", value: 45 }
-        ]
-      }
-    ]
-  }
-];
-
-function transformItems(data) {
-  return data.flatMap(category =>
-    category.items.flatMap(subcategory =>
-      subcategory.items.map(item => ({
+function transformItems2(data) {
+  return data.flatMap((category) =>
+    category.items.flatMap((subcategory) =>
+      subcategory.items.map((item) => ({
         id: item.id,
         name: item.name,
         value: item.value,
         subcategory: subcategory.name,
-        category: category.name
-      }))
-    )
+        category: category.name,
+      })),
+    ),
   );
 }
 
-const itemsWithCategories = transformItems(data);
-console.log(itemsWithCategories);
+const itemsWithCategories2 = transformItems2(data);
+console.log(itemsWithCategories2);
 
-// [
-//   { id: 3, name: "Item A1-1", value: 10, subcategory: "Subcategory A1", category: "Category A" },
-//   { id: 4, name: "Item A1-2", value: 15, subcategory: "Subcategory A1", category: "Category A" },
-//   { id: 6, name: "Item A2-1", value: 20, subcategory: "Subcategory A2", category: "Category A" },
-//   { id: 7, name: "Item A2-2", value: 25, subcategory: "Subcategory A2", category: "Category A" },
-//   { id: 10, name: "Item B1-1", value: 30, subcategory: "Subcategory B1", category: "Category B" },
-//   { id: 11, name: "Item B1-2", value: 35, subcategory: "Subcategory B1", category: "Category B" },
-//   { id: 13, name: "Item B2-1", value: 40, subcategory: "Subcategory B2", category: "Category B" },
-//   { id: 14, name: "Item B2-2", value: 45, subcategory: "Subcategory B2", category: "Category B" }
-// ]
+// ...same result
 ```

@@ -217,7 +217,7 @@ const obj5 = {
     return this.value;
   },
   arrowMethod: () => {
-    return this.value;
+    return this;
   },
 };
 
@@ -225,9 +225,10 @@ const anotherObj = {
   value: 50,
 };
 
+console.log(obj5.regularMethod()); // 25
 console.log(obj5.regularMethod.call(anotherObj)); // 50
-console.log(obj5.arrowMethod.call(anotherObj));
-// throws(this is undefined)
+console.log(obj5.arrowMethod()); // undefined
+console.log(obj5.arrowMethod.call(anotherObj)); // undefined
 ```
 
 ### example 6

@@ -14,18 +14,18 @@ const user = {
 };
 
 user.sayHi(); // Hello, John!
-setTimeout(user.sayHi, 1000); // Hello, undefined!
+setTimeout(user.sayHi, 0); // Hello, undefined!
 
 // solution 1
 setTimeout(function () {
   user.sayHi(); // Hello, John!
-}, 1000);
+}, 0);
 // or shorter
-setTimeout(() => user.sayHi(), 1000); // Hello, John!
+setTimeout(() => user.sayHi(), 0); // Hello, John!
 
 // solution 2
 const sayHi = user.sayHi.bind(user);
 // can run it without an object
 sayHi(); // Hello, John!
-setTimeout(sayHi, 1000); // Hello, John!
+setTimeout(sayHi, 0); // Hello, John!
 ```

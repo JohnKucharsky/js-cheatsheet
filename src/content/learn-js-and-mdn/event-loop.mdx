@@ -9,7 +9,7 @@ const promise2 = new Promise((resolve, reject) => {
 const promise3 = 42;
 
 Promise.all([promise1, promise2, promise3]).then((values) => {
-  console.log(values);
+  console.log({ values });
 });
 
 // Using setTimeout, we can execute code after the queue is empty
@@ -44,7 +44,7 @@ Promise.all([promise4, promise5]).then((values) => {
 // { values3: [ 3, 42 ] }
 // the queue is now empty
 // { p4: Promise { [ 1337, 'hi' ] } }
-// [ 3, 'foo', 42 ]
+// { values: [ 3, 'foo', 42 ] }
 // { values2: [ 3, 'foo', 42 ] }
 ```
 
@@ -72,10 +72,10 @@ for (let i = 0; i < 4; i++) {
 ```js
 const promise = new Promise((resolve, reject) => {
   console.log("Promise callback");
-  resolve();
+  resolve("resolved");
   console.log("Promise callback end");
 }).then((result) => {
-  console.log("Promise callback (.then)");
+  console.log("Promise callback (.then)", result);
 });
 
 setTimeout(() => {
@@ -83,10 +83,11 @@ setTimeout(() => {
 }, 0);
 
 console.log("Promise (pending)", promise);
+
 // Promise callback
 // Promise callback end
 // Promise (pending) Promise { <pending> }
-// Promise callback (.then)
+// Promise callback (.then) resolved
 // event-loop cycle: Promise (fulfilled) Promise { undefined }
 ```
 
@@ -214,6 +215,7 @@ simulateNonBlocking();
 // End
 // Non-blocking Operation
 // Start Long-Running Task
+// after 2s:
 // Long-Running Task Completed
 ```
 

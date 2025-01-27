@@ -4,158 +4,137 @@
 ```typescript jsx
 import { useState } from "react";
 
-type Place = {
+type TravelNode = {
   id: number;
   title: string;
   childIds: number[];
 };
 
-type TravelPlan = Record<number, Place>;
-
-const initialTravelPlan: TravelPlan = {
-  0: {
-    id: 0,
-    title: "(Root)",
-    childIds: [1, 42],
-  },
-  1: {
-    id: 1,
-    title: "Earth",
-    childIds: [2, 10],
-  },
-  2: {
-    id: 2,
-    title: "Africa",
-    childIds: [3, 4, 5],
-  },
-  3: {
-    id: 3,
-    title: "Botswana",
-    childIds: [],
-  },
-  4: {
-    id: 4,
-    title: "Egypt",
-    childIds: [],
-  },
-  5: {
-    id: 5,
-    title: "Kenya",
-    childIds: [],
-  },
-  10: {
-    id: 10,
-    title: "Americas",
-    childIds: [11, 12, 13],
-  },
-  11: {
-    id: 11,
-    title: "Argentina",
-    childIds: [],
-  },
-  12: {
-    id: 12,
-    title: "Brazil",
-    childIds: [],
-  },
-  13: {
-    id: 13,
-    title: "Barbados",
-    childIds: [],
-  },
-  42: {
-    id: 42,
-    title: "Moon",
-    childIds: [43, 44, 45],
-  },
-  43: {
-    id: 43,
-    title: "Rheita",
-    childIds: [],
-  },
-  44: {
-    id: 44,
-    title: "Piccolomini",
-    childIds: [],
-  },
-  45: {
-    id: 45,
-    title: "Tycho",
-    childIds: [],
-  },
+type TravelPlan = {
+  [key: number]: TravelNode;
 };
 
-export default function App() {
-  const [plan, setPlan] = useState<TravelPlan>(initialTravelPlan);
+const initialTravelPlan: TravelPlan = {
+  0: { id: 0, title: "(Root)", childIds: [1, 42] },
+  1: { id: 1, title: "Earth", childIds: [2, 10] },
+  2: { id: 2, title: "Africa", childIds: [3, 4, 5] },
+  3: { id: 3, title: "Botswana", childIds: [] },
+  4: { id: 4, title: "Egypt", childIds: [] },
+  5: { id: 5, title: "Kenya", childIds: [] },
+  10: { id: 10, title: "Americas", childIds: [11, 12, 13] },
+  11: { id: 11, title: "Argentina", childIds: [] },
+  12: { id: 12, title: "Brazil", childIds: [] },
+  13: { id: 13, title: "Barbados", childIds: [] },
+  42: { id: 42, title: "Moon", childIds: [43, 44, 45] },
+  43: { id: 43, title: "Rheita", childIds: [] },
+  44: { id: 44, title: "Piccolomini", childIds: [] },
+  45: { id: 45, title: "Tycho", childIds: [] },
+};
 
-  function handleComplete(parentId: number, childId: number): void {
-    const parent = plan[parentId];
-    const nextParent = {
-      ...parent,
-      childIds: parent.childIds.filter((id) => id !== childId),
+export default function TravelPlanComponent() {
+  const [travelPlan, setTravelPlan] = useState<TravelPlan>(initialTravelPlan);
+
+  const removeNodeAndChildren = (id: number, plan: TravelPlan): TravelPlan => {
+    const newPlan = { ...plan };
+
+    const removeRecursively = (nodeId: number) => {
+      const node = newPlan[nodeId];
+      if (!node) return;
+
+      // Remove all children recursively
+      node.childIds.forEach(removeRecursively);
+
+      // Delete the current node
+      delete newPlan[nodeId];
     };
-    setPlan({
-      ...plan,
-      [parentId]: nextParent,
-    });
-  }
 
-  const root = plan[0];
-  const planetIds = root.childIds;
+    removeRecursively(id);
+    return newPlan;
+  };
+
+  const handleComplete = (id: number, parentId: number) => {
+    setTravelPlan((prevPlan) => {
+      const updatedPlan = removeNodeAndChildren(id, prevPlan);
+
+      // Remove the child from the parent's childIds array
+
+      updatedPlan[parentId] = {
+        ...updatedPlan[parentId],
+        childIds: updatedPlan[parentId].childIds.filter(
+          (childId) => childId !== id,
+        ),
+      };
+
+      return updatedPlan;
+    });
+  };
 
   return (
-    <>
-      <h2>Places to visit</h2>
-      <ol>
-        {planetIds.map((id) => (
-          <PlaceTree
-            key={id}
-            id={id}
-            parentId={0}
-            placesById={plan}
-            onComplete={handleComplete}
-          />
-        ))}
-      </ol>
-    </>
+    <div>
+      {travelPlan[0].childIds.map((childId) => (
+        <RenderPlace
+          key={childId}
+          id={childId}
+          parentId={travelPlan[0].id}
+          travelPlan={travelPlan}
+          handleComplete={handleComplete}
+        />
+      ))}
+    </div>
   );
 }
 
-type PlaceTreeProps = {
+const RenderPlace = ({
+  id,
+  parentId,
+  handleComplete,
+  travelPlan,
+}: {
   id: number;
   parentId: number;
-  placesById: TravelPlan;
-  onComplete: (parentId: number, childId: number) => void;
-};
+  handleComplete: (id: number, parentId: number) => void;
+  travelPlan: TravelPlan;
+}) => {
+  const node = travelPlan[id];
 
-function PlaceTree({ id, parentId, placesById, onComplete }: PlaceTreeProps) {
-  const place = placesById[id];
-  const childIds = place.childIds;
+  if (!node) return null;
 
   return (
-    <li>
-      {place.title}
-      <button
-        onClick={() => {
-          onComplete(parentId, id);
+    <ol style={{ paddingInlineStart: 0 }}>
+      <li
+        style={{
+          display: "flex",
+          gap: "1rem",
+          alignItems: "center",
         }}
       >
-        Complete
-      </button>
-      {childIds.length > 0 && (
+        <h5
+          style={{
+            marginBlockStart: 5,
+            marginBlockEnd: 5,
+          }}
+        >
+          {node.title}
+        </h5>
+        <button onClick={() => handleComplete(node.id, parentId)}>
+          Complete
+        </button>
+      </li>
+      {node.childIds.length > 0 && (
         <ol>
-          {childIds.map((childId) => (
-            <PlaceTree
-              key={childId}
-              id={childId}
-              parentId={id}
-              placesById={placesById}
-              onComplete={onComplete}
-            />
+          {node.childIds.map((childId) => (
+            <li key={childId}>
+              <RenderPlace
+                id={childId}
+                parentId={node.id}
+                travelPlan={travelPlan}
+                handleComplete={handleComplete}
+              />
+            </li>
           ))}
         </ol>
       )}
-    </li>
+    </ol>
   );
-}
+};
 ```

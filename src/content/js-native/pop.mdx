@@ -7,12 +7,14 @@ length of the array
 
 ```js
 Array.prototype.customPop = function () {
-  if (this.length === 0) {
+  const length = this.length;
+
+  if (length === 0) {
     return undefined;
   }
 
-  const lastElement = this[this.length - 1];
-  this.length = this.length - 1;
+  const lastElement = this[length - 1];
+  this.length = length - 1;
 
   return lastElement;
 };
