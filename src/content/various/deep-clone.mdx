@@ -23,7 +23,7 @@ function deepClone(obj) {
   return clonedObj;
 }
 
-const obj = { a: 1, b: { c: 2, d: { e: 3 } } };
+const obj = { a: 1, b: [{ c: 2, d: 3 }] };
 const clonedObj = deepClone(obj);
-console.log(clonedObj); // { a: 1, b: { c: 2, d: { e: 3 } } }
+console.log(clonedObj); // { a: 1, b: [ { c: 2, d: 3 } ] }
 ```

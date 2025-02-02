@@ -16,9 +16,6 @@ Array.prototype.unshift = function (...elements) {
     this[i] = elements[i];
   }
 
-  // Update the length property
-  this.length = totalLength;
-
   return totalLength; // Return the new length
 };
 

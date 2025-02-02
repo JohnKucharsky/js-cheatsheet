@@ -168,24 +168,6 @@ setTimeout(rateLimitedLog, 1500);
 ### example 8
 
 ```js
-const mathUtils = {
-  square(num) {
-    return num * num;
-  },
-};
-
-const numbers = {
-  num: 5,
-};
-
-// Use `call` to get the square of `num` in `numbers`.
-const result = mathUtils.square.call(numbers, numbers.num);
-console.log(result); // 25
-```
-
-### example 9
-
-```js
 const person = {
   name: "John",
 };
@@ -199,21 +181,7 @@ const boundGreet = greet.bind(person);
 boundGreet(); // Hello, John
 ```
 
-### example 10
-
-```js
-function delayedLog(message) {
-  console.log(message);
-}
-
-const delay = setTimeout.bind(null, delayedLog, 1000, "This is delayed!");
-delay(); // Logs after 1 second: "This is delayed!"
-
-const delay2 = () => setTimeout(delayedLog, 1000, "This is delayed!");
-delay2(); // Logs after 1 second: "This is delayed!"
-```
-
-### example 11
+### example 9
 
 ```js
 const user = {
@@ -227,7 +195,7 @@ const user = {
 user.greet(); // Hello, Alice
 ```
 
-### example 12
+### example 10
 
 ```js
 const user = {

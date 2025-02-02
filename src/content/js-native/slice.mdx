@@ -8,18 +8,19 @@ array will not be modified
 
 ```js
 Array.prototype.customSlice = function (start = 0, end) {
-  let endIndex = end || this.length;
+  const length = this.length;
+  let endIndex = end || length;
 
   if (start < 0) {
-    start = Math.max(this.length + start, 0);
+    start = Math.max(length + start, 0);
   }
   if (endIndex < 0) {
-    endIndex = Math.max(this.length + endIndex, 0);
+    endIndex = Math.max(length + endIndex, 0);
   }
 
   const result = [];
 
-  for (let i = start; i < endIndex && i < this.length; i++) {
+  for (let i = start; i < endIndex && i < length; i++) {
     result.push(this[i]);
   }
 
