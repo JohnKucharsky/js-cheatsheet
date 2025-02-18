@@ -20,28 +20,4 @@ console.log(copy); // { foo: 1, bar: 2 }
 // Following 2 lines of code are the same.
 const objClone = { ...obj }; // { foo: 1, bar: 2 }
 const objClone2 = Object.assign({}, obj); // { foo: 1, bar: 2 }
-
-// This is an assign function that copies full descriptors
-function completeAssign(target, ...sources) {
-  for (const source of sources) {
-    const descriptors = Object.keys(source).reduce((descriptors, key) => {
-      descriptors[key] = Object.getOwnPropertyDescriptor(source, key);
-      return descriptors;
-    }, {});
-
-    // By default, Object.assign copies enumerable Symbols, too
-    for (const sym of Object.getOwnPropertySymbols(source)) {
-      const descriptor = Object.getOwnPropertyDescriptor(source, sym);
-      if (descriptor.enumerable) {
-        descriptors[sym] = descriptor;
-      }
-    }
-    Object.defineProperties(target, descriptors);
-  }
-  return target;
-}
-
-copy = completeAssign({}, obj);
-console.log(copy);
-// { foo:1, get bar() { return 2 } }
 ```
