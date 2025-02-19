@@ -6,17 +6,17 @@ element. This method changes the length of the array
 
 ```js
 Array.prototype.customShift = function () {
-  if (this.length > 0) {
-    const firstElement = this[0];
+  if (!this.length) return;
 
-    for (let i = 0; i < this.length; i++) {
-      this[i] = this[i + 1];
-    }
+  const firstElement = this[0];
 
-    this.length -= 1;
-
-    return firstElement;
+  for (let i = 0; i < this.length; i++) {
+    this[i] = this[i + 1];
   }
+
+  this.length -= 1;
+
+  return firstElement;
 };
 
 const array1 = [1, 2, 3];
