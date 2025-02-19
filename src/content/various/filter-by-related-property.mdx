@@ -10,10 +10,10 @@ const objects = [
 ];
 
 const object_types = [
-  { id: 1, class: "Устройства" },
-  { id: 2, class: "Устройства" },
-  { id: 3, class: "Порты" },
-  { id: 4, class: "Кабели" },
+  { id: 1, class: "orange" },
+  { id: 2, class: "orange" },
+  { id: 3, class: "apple" },
+  { id: 4, class: "cheese" },
 ];
 
 const groupBy = <T, K extends string | number | symbol>(
@@ -58,7 +58,7 @@ const filterObjectsByClass = <T>(
 };
 
 const filteredObjects = filterObjectsByClass(
-  "Устройства",
+  "orange",
   objects,
   object_types,
 );
