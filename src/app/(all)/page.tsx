@@ -16,6 +16,10 @@ const links = [
     href: "https://github.com/JohnKucharsky/react-redux-mui",
     title: "react redux mui",
   },
+  {
+    href: "https://github.com/JohnKucharsky/react-mobx-mui",
+    title: "react mobx mui",
+  },
 ];
 
 export const metadata: Metadata = {
