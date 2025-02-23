@@ -26,10 +26,11 @@ console.log("Script complete");
 // { count: 1 }
 // { count: 2 }
 // Script complete
-// after 1s both:
+// 1 s delay
 // Async Counter: 2
 // Async Counter: 2
-// after 2s:
+// { count: 3 }
+// 1 s delay
 // Async Counter: 3
 ```
 
@@ -142,6 +143,9 @@ function createCounter() {
 }
 
 const counter = createCounter();
+
+// if it was called at the same time, count would
+// have not been saved in closure
 
 counter()
   .then((result) => {

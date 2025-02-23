@@ -19,16 +19,7 @@ map.set("meat", 4);
 const arrayLikeMapEntries = map.entries();
 const arrayMapEntries = Array.from(arrayLikeMapEntries);
 
-console.log(arrayMapEntries);
-// [ [ 'banana', 1 ], [ 'orange', 2 ], [ 'meat', 4 ] ]
-console.log(arrayLikeMapEntries); // MapIterator {  }
-// here iterator is already done, create new one
-const arrayLikeMapEntries2 = map.entries();
-console.log(arrayLikeMapEntries2);
-// MapIterator
-// { [ 'banana', 1 ], [ 'orange', 2 ], [ 'meat', 4 ] }
-
-const objectFromMap = Object.fromEntries(arrayLikeMapEntries2);
+const objectFromMap = Object.fromEntries(arrayMapEntries);
 console.log(objectFromMap);
 // { banana: 1, orange: 2, meat: 4 }
 

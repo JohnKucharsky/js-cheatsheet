@@ -29,9 +29,7 @@ new Promise((resolve, reject) => {
 
 ```js
 new Promise(function (resolve, reject) {
-  setTimeout(() => {
-    reject(new Error("Whoops!"));
-  }, 1000);
+  throw new Error("Whoops!");
 }).catch((e) => console.error(e.message)); // Whoops!
 
 // There’s an “implicit try..catch” around the function code.

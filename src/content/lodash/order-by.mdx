@@ -4,9 +4,9 @@
 ```js
 function orderBy(array, property, order = "asc") {
   const multiplier = order === "asc" ? 1 : -1;
-  const deepCopiedArray = [...array];
+  const copy = [...array];
 
-  return deepCopiedArray.sort((a, b) => {
+  return copy.sort((a, b) => {
     if (a[property] < b[property]) return -1 * multiplier;
     if (a[property] > b[property]) return 1 * multiplier;
     return 0;

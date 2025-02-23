@@ -119,35 +119,15 @@ console.log(store2.calculateTotal(price, quantity));
 ### example 6
 
 ```js
-function curry(fn, ...args) {
-  return function (...newArgs) {
-    return fn.call(this, ...args, ...newArgs);
-  };
-}
-
-function multiply(a, b, c) {
-  return a * b * c;
-}
-
-const curriedMultiply = curry(multiply, 2);
-console.log(curriedMultiply(3, 4)); // 24
-const curriedMultiply2 = curry(multiply, 2, 3);
-console.log(curriedMultiply2(4)); // 24
-```
-
-### example 7
-
-```js
 function rateLimit(fn, ms) {
   let lastCall = 0;
 
   return function (...args) {
     const now = Date.now();
 
-    if (now - lastCall >= ms) {
-      lastCall = now;
-      return fn.apply(this, args);
-    }
+    if (now - lastCall < ms) return;
+    lastCall = now;
+    return fn(...args);
   };
 }
 
@@ -165,7 +145,7 @@ setTimeout(rateLimitedLog, 1500);
 // Logs "Rate limited log" after 1.5s
 ```
 
-### example 8
+### example 7
 
 ```js
 const person = {
@@ -181,7 +161,7 @@ const boundGreet = greet.bind(person);
 boundGreet(); // Hello, John
 ```
 
-### example 9
+### example 8
 
 ```js
 const user = {
@@ -195,7 +175,7 @@ const user = {
 user.greet(); // Hello, Alice
 ```
 
-### example 10
+### example 9
 
 ```js
 const user = {
