@@ -7,6 +7,7 @@ export const SectionName = {
   theory: "theory",
   various: "various",
   sorting: "sorting",
+  graphs: "graphs",
 } as const;
 
 export type SectionNameType = keyof typeof SectionName;
