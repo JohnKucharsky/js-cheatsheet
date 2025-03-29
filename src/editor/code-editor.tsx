@@ -8,6 +8,21 @@ import Link from "next/link";
 import { EditorData } from "@/editor/types";
 import { cn } from "@/lib/utils";
 
+const getErrorMessage = (input: string) => {
+  const errorLineMatch = input.match(/^\s*(\w*Error):\s(.+)$/m);
+  const expectedLineMatch = input.match(/^\s*Expected:\s(.+)$/m);
+
+  if (errorLineMatch) {
+    const [, errorType, message] = errorLineMatch;
+    const expected = expectedLineMatch
+      ? `Expected: ${expectedLineMatch[1]}`
+      : "";
+    return [`${errorType}: ${message}`, expected].filter(Boolean).join("\n");
+  }
+
+  return input;
+};
+
 export default function CodeEditor({ data }: { data: EditorData[] }) {
   const [index, setIndex] = useState<number>(0);
   const [value, setValue] = useState(data[0].content);
@@ -36,20 +51,6 @@ export default function CodeEditor({ data }: { data: EditorData[] }) {
       window.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
-
-  const getErrorMessage = (input: string) => {
-    const match = input.match(
-      /Validation failed! Result: (.*), Expected: (.*)/,
-    );
-
-    if (match) {
-      return `Validation failed! 
-Result: ${match[1]} 
-Expected: ${match[2]}`;
-    }
-
-    return input;
-  };
 
   const runCode = async () => {
     const sourceCode = editorRef.current?.getValue();

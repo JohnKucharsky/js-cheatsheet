@@ -43,35 +43,17 @@ const hasPath = (
 //   return false;
 // };
 
-console.log(
-  hasPath(
-    {
-      f: ["g", "i"],
-      g: ["h"],
-      h: [],
-      i: ["g", "k"],
-      j: ["i"],
-      k: [],
-    },
-    "f",
-    "k",
-  ),
-); // true
+const adjacentList = {
+  f: ["g", "i"],
+  g: ["h"],
+  h: [],
+  i: ["g", "k"],
+  j: ["i"],
+  k: [],
+};
 
-console.log(
-  hasPath(
-    {
-      f: ["g", "i"],
-      g: ["h"],
-      h: [],
-      i: ["g", "k"],
-      j: ["i"],
-      k: [],
-    },
-    "f",
-    "j",
-  ),
-); // false
+console.log(hasPath(adjacentList, "f", "k")); // true
+console.log(hasPath(adjacentList, "f", "j")); // false
 
 console.log(
   hasPath(
