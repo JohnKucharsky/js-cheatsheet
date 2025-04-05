@@ -42,7 +42,7 @@ export default async function Page() {
 
   return (
     <>
-      <Link href={"/"}>home</Link>
+      <h1>Sorting Algorithms</h1>
       {mdxItems.map((Content, idx) => (
         <Content key={idx} />
       ))}

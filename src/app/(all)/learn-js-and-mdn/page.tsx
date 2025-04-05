@@ -44,7 +44,7 @@ export default async function Page() {
 
   return (
     <>
-      <Link href={"/"}>home</Link>
+      <h1>Most interesting examples from MDN and LearnJS</h1>
       {mdxItems.map((Content, idx) => (
         <Content key={idx} />
       ))}

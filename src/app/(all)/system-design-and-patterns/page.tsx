@@ -46,7 +46,7 @@ export default async function Page() {
 
   return (
     <>
-      <Link href={"/"}>home</Link>
+      <h1>System Design And Data Structures</h1>
       {mdxItems.map((Content, idx) => {
         return <Content key={idx} />;
       })}
