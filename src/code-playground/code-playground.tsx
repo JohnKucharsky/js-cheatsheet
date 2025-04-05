@@ -3,9 +3,9 @@
 import { useEffect, useRef, useState, useTransition } from "react";
 import { Editor } from "@monaco-editor/react";
 import clsx from "clsx";
-import { executeCode } from "@/editor/api";
+import { executeCode } from "@/code-playground/api";
 import Link from "next/link";
-import { EditorData } from "@/editor/types";
+import { EditorData } from "@/code-playground/types";
 import { cn } from "@/lib/utils";
 
 const getErrorMessage = (input: string) => {
@@ -23,7 +23,7 @@ const getErrorMessage = (input: string) => {
   return input;
 };
 
-export default function CodeEditor({ data }: { data: EditorData[] }) {
+export default function CodePlayground({ data }: { data: EditorData[] }) {
   const [index, setIndex] = useState<number>(0);
   const [value, setValue] = useState(data[0].content);
   const [output, setOutput] = useState<string | null>(null);
