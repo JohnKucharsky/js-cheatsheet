@@ -1,8 +1,11 @@
 
 ## includes
 
-Determines whether an array includes a certain value among its entries,
-returning `true` or `false` as appropriate
+The [`includes()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/includes)
+method checks if an array contains a specific value, returning `true` or `false`.
+It uses the `SameValueZero` equality comparison — meaning it treats `NaN` as equal to `NaN`.
+
+This example includes a custom implementation of `Array.prototype.includes()` with support for optional `fromIndex` and negative indexing behavior.
 
 ```js
 function sameValueZero(x, y) {

@@ -1,6 +1,18 @@
 
 ## clsx
 
+The `clsx` utility is commonly used to conditionally join class names in JavaScript and React projects.
+
+This custom implementation mimics the behavior of the [`clsx`](https://github.com/lukeed/clsx) library by:
+
+- Skipping falsy values (`false`, `null`, `undefined`, `0`, `""`, `NaN`)
+- Joining strings as-is
+- Recursively flattening arrays
+- Including keys from objects whose values are truthy
+
+This allows for clean, readable class name composition in UI code.
+
+
 ```js
 function clsx(...args) {
   const classes = [];

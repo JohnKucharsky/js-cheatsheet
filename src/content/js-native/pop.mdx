@@ -1,9 +1,10 @@
 
 ## pop
 
-The `pop()` method of Array instances removes the last element
-from an array and returns that element. This method changes the
-length of the array
+The [`pop()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/pop)
+method removes the **last element** from an array and returns it. It mutates the original array by reducing its length by one.
+
+This example provides a custom implementation of `Array.prototype.pop()` that replicates native behavior.
 
 ```js
 Array.prototype.customPop = function () {

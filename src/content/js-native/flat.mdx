@@ -1,8 +1,11 @@
 
 ## flat
 
-Creates a new array with all sub-array elements concatenated
-into it recursively up to the specified depth
+The [`flat()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flat)
+method creates a new array with all sub-array elements **recursively flattened** up to the specified depth.
+It's useful for simplifying nested arrays into a single-level array — or flattening deeply nested structures with `Infinity`.
+
+This example provides a custom implementation of `Array.prototype.flat()`, supporting variable depth.
 
 ```js
 Array.prototype.customFlat = function (depth = 1) {

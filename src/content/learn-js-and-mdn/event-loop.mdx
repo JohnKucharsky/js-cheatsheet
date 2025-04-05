@@ -1,5 +1,34 @@
 
-## event loop
+## Event Loop
+
+JavaScript’s **event loop** is the mechanism that handles asynchronous operations by managing the **call stack**, **microtask queue**, and **macrotask queue**. This section includes practical examples demonstrating how Promises, `setTimeout`, `async/await`, and synchronous code interact in different phases of the event loop.
+
+### Key Concepts Covered:
+
+- **Promise Resolution Order**
+Understand how `.then()` callbacks are queued as microtasks and run before `setTimeout`.
+
+- **Microtasks vs. Macrotasks**
+Compare how `Promise.then`, `queueMicrotask`, `setTimeout`, and `requestAnimationFrame` are scheduled and executed.
+
+- **Async/Await Behavior**
+Explore how `await` impacts execution order relative to synchronous and timed code.
+
+- **Blocking the Event Loop**
+See how synchronous loops (like `while`) delay the execution of `setTimeout`.
+
+- **Practical Examples**
+Trace execution order across complex interleavings of Promises and timeouts to build a mental model of how JavaScript scheduling works.
+
+### Why This Matters:
+Mastering the event loop helps developers avoid performance bottlenecks, race conditions, and timing bugs. It’s also a **must-know topic**
+for technical interviews and real-time app development.
+
+### 🧵 Promise.all and the Event Loop
+
+`Promise.all` resolves when all input promises (or values) are fulfilled.
+Non-promise values are treated as already resolved, but their evaluation still runs asynchronously.
+This snippet also shows how `setTimeout` helps observe the order of event loop execution and when the microtask queue is cleared.
 
 ```js
 const promise1 = Promise.resolve(3);
@@ -48,6 +77,11 @@ Promise.all([promise4, promise5]).then((values) => {
 // { values2: [ 3, 'foo', 42 ] }
 ```
 
+### 🔄 Promise Chaining and Microtask Queue Order
+
+Even though `promise1` and `promise2` are resolved immediately, their `.then()` callbacks are placed in the **microtask queue**.
+Microtasks are executed in the order they’re queued, and each `.then()` forms its own chain — leading to interleaved output.
+
 ```js
 const promise1 = Promise.resolve();
 const promise2 = Promise.resolve();
@@ -57,7 +91,10 @@ promise2.then(() => console.log(3)).then(() => console.log(4));
 // 1 3 2 4
 ```
 
-### setTimeout inside loop
+### ⏲️ `let` in Loops with `setTimeout`
+
+Using `let` in a loop ensures that each iteration captures its own block-scoped value of `i`.
+All `setTimeout` callbacks execute after 1 second, printing `0` to `3` as expected — thanks to `let`'s scoping behavior.
 
 ```js
 for (let i = 0; i < 4; i++) {
@@ -67,7 +104,11 @@ for (let i = 0; i < 4; i++) {
 } // 0, 1, 2, 3. All after 1s
 ```
 
-### event loop cycle
+### 🔁 Promise Lifecycle and Event Loop Timing
+
+This example shows the synchronous and asynchronous parts of a Promise's lifecycle.
+The executor function runs immediately, while `.then()` handlers are queued as
+microtasks and executed after the current call stack clears — before any `setTimeout` callbacks.
 
 ```js
 const promise = new Promise((resolve, reject) => {
@@ -91,7 +132,11 @@ console.log("Promise (pending)", promise);
 // event-loop cycle: Promise (fulfilled) Promise { undefined }
 ```
 
-### event loop cycle 2
+### ⚙️ Async Function and Timer Execution Order
+
+Even when using `await`, `async` functions execute their synchronous parts immediately.
+This example highlights how `setTimeout` callbacks are deferred to the **macrotask queue**,
+while synchronous code inside `async` functions runs first.
 
 ```js
 async function run() {
@@ -116,11 +161,10 @@ console.log("script");
 // run timeout
 ```
 
-### while loop blocks setTimout
+### ⏳ Blocking the Event Loop with a While Loop
 
-The `setTimeout()` needs to wait for all the code for queued messages to
-complete even though you specified a particular time limit
-for your `setTimeout()`
+This snippet demonstrates that synchronous code (a busy while loop) can block the event loop.
+Even though `setTimeout` is set to execute after 500ms, the callback is delayed until the loop finishes—after roughly 2 seconds.
 
 ```js
 const seconds = new Date().getTime() / 1000;
@@ -141,7 +185,11 @@ while (true) {
 // Ran after 2.01 seconds
 ```
 
-### example 1
+### 📜 Script, Microtasks, and Macrotasks in Execution Order
+
+This example demonstrates how JavaScript prioritizes synchronous code first,
+followed by microtasks (`.then`, `queueMicrotask`), and finally macrotasks (`setTimeout`).
+It reveals the precise order in which the event loop processes each queue.
 
 ```js
 console.log("Script start");
@@ -184,7 +232,10 @@ console.log("After Promise constructor");
 // setTimeout
 ```
 
-### example 2
+### 🕒 Blocking Inside Async Callbacks
+
+Even though the task is scheduled with `setTimeout`, once it begins, the **long-running synchronous task blocks** the event loop.
+This illustrates how JavaScript remains single-threaded—even asynchronous calls can't interrupt blocking operations.
 
 ```js
 function longRunningTask() {
@@ -219,7 +270,10 @@ simulateNonBlocking();
 // Long-Running Task Completed
 ```
 
-### example 3
+### 🧬 Nested Microtasks in Macrotasks
+
+Microtasks (like `.then()`) always run **before** macrotasks (`setTimeout`).
+Even when a Promise is placed inside a `setTimeout`, its callback becomes a microtask and runs immediately after the current macrotask finishes.
 
 ```js
 console.log("Start");
@@ -254,9 +308,11 @@ console.log("End");
 // setTimeout 2
 ```
 
-### example 4
+### 🎥 requestAnimationFrame and Task Ordering
 
-`requestAnimationFrame` runs after other macrotasks but before any rendering tasks
+This example shows how different task types (`setTimeout`, Promises, `requestAnimationFrame`) are prioritized.
+Microtasks (`.then`) run before macrotasks (`setTimeout`), and `requestAnimationFrame` is
+queued to run right before the next paint — **after all other queues** are cleared.
 
 ```js
 console.log("1");

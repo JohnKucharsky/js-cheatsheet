@@ -1,11 +1,12 @@
 
 ## sort
 
-Sorts the elements of an array in place and returns the reference
-to the same array, now sorted. The default sort order is ascending,
-built upon converting the elements into strings, then comparing their
-sequences of UTF-16 code units values. The time and space complexity
-of the sort cannot be guaranteed as it depends on the implementation
+The [`sort()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/sort)
+method sorts the elements of an array **in place**, changing the array's order and returning the reference to the sorted array.
+By default, the sort order is ascending, and it compares elements as strings based on their UTF-16 code unit values.
+
+This custom implementation of `Array.prototype.sort()` uses the **bubble sort** algorithm and accepts an optional compare function to define the sorting criteria.
+
 
 ```js
 Array.prototype.customSort = function (compareFn) {

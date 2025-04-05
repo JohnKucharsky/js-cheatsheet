@@ -1,7 +1,30 @@
 
-## call bind apply
+## call, bind, and apply
 
-### example 1
+JavaScript’s `call()`, `bind()`, and `apply()` methods are powerful tools for controlling function context (`this`) at runtime.
+They are especially useful when borrowing methods, delaying execution, or separating data from behavior.
+
+- **`call()`** immediately invokes the function with a specified `this` context and arguments.
+- **`apply()`** is similar to `call()`, but it takes arguments as an array.
+- **`bind()`** returns a new function with a permanently bound context.
+
+These methods are commonly used when:
+- Reusing methods across different objects
+- Passing methods as callbacks without losing context
+- Implementing decorators or delayed invocation
+- Writing functional utilities like `rateLimit`
+
+This section also demonstrates how arrow functions behave differently with `this`, and includes a custom implementation of `Function.prototype.bind`.
+
+
+### Example: Losing and Rebinding Context
+
+This example demonstrates what happens when a method loses its context (`this`) and how to recover it using `call()` and `bind()`:
+
+- Calling `counter.add(1)` works as expected — `this` refers to `counter`.
+- When passing `counter.add` directly to another function (`operate`), it loses context and throws an error.
+- Using `call()` explicitly sets the context.
+- Using `bind()` returns a new function with `this` permanently bound to `counter`.
 
 ```js
 const counter = {
@@ -31,7 +54,12 @@ try {
 }
 ```
 
-### example 2
+### Example 1: Using `call` and `apply` to Change Context
+
+This example shows how `call()` and `apply()` can be used to invoke a method with a different `this` context:
+
+- `objA.print.call(objB)` executes `objA.print` with `objB` as `this`, so it logs `"I am from objB"`.
+- `apply()` works similarly, but takes arguments as an array.
 
 ```js
 const objA = {
@@ -49,7 +77,14 @@ objA.print.call(objB); // I am from objB
 objA.print.apply(objB); // I am from objB
 ```
 
-### example 3
+### Example 2: Preserving Method Context with `setTimeout`
+
+This example shows how to preserve the `this` context when calling a method asynchronously using `setTimeout`.
+
+The `delayMethod` function returns a wrapper that defers method execution by 1 second while ensuring that `this` still refers to the original object.
+
+- `user.greet()` uses `this.name`, so it’s crucial to call it with the correct context.
+- Wrapping it with `obj[methodName](...args)` inside the timeout maintains the correct `this`.
 
 ```js
 function delayMethod(obj, methodName) {
@@ -69,7 +104,16 @@ const delayedGreet = delayMethod(user, "greet");
 delayedGreet("Hello"); // After 1 second: "Hello, Alice!"
 ```
 
-### example 4
+### Example 3: Custom `bind()` Implementation
+
+This example demonstrates how to implement a simplified version of `Function.prototype.bind()`.
+
+The `customBind` function:
+
+- Stores a reference to the original function.
+- Returns a new function that, when called, invokes the original with a fixed `this` context and any partially applied arguments.
+
+This mimics native `bind()` behavior, including partial application of arguments.
 
 ```js
 Function.prototype.customBind = function (context, ...args) {
@@ -88,7 +132,12 @@ const boundGreet = greet.customBind(person, "Hello");
 boundGreet("!"); // "Hello, John!"
 ```
 
-### example 5
+### Example 4: Sharing Methods Across Objects with `call()`
+
+In this example, the `calculateTotal` method from `store1` is reused for `store2` by using `Function.prototype.call()`.
+
+- `call()` sets `this` to `store2`, so the method computes tax using `store2.taxRate`.
+- As an alternative, the method is directly assigned to `store2`, allowing normal invocation syntax.
 
 ```js
 const store1 = {
@@ -115,7 +164,13 @@ store2.calculateTotal = store1.calculateTotal;
 console.log(store2.calculateTotal(price, quantity));
 ```
 
-### example 6
+### Example 5: `bind()` for Context in Rate-Limited Function
+
+This example demonstrates how to use `bind()` to ensure the correct `this` context when passing an object's method to a wrapper function.
+
+- `logger.log` is passed into `rateLimit()` which returns a throttled version of the method.
+- Since `log` relies on `this.message`, `bind(logger)` is required to preserve the context.
+- Without `bind()`, `this.message` would be `undefined` when `log()` is called inside the throttled wrapper.
 
 ```js
 function rateLimit(fn, ms) {
@@ -144,7 +199,13 @@ setTimeout(rateLimitedLog, 1500);
 // Logs "Rate limited log" after 1.5s
 ```
 
-### example 7
+### Example 6: Using `bind()` to Preserve `this`
+
+In this example, `greet()` is a regular function that relies on `this.name`. When it's not called in the context of an object, `this` would be `undefined`.
+
+To ensure the correct context (`person`), we create a bound version of the function using `bind(person)`.
+
+This guarantees that `this.name` inside `greet()` always refers to `"John"`, even if called independently.
 
 ```js
 const person = {
@@ -160,7 +221,15 @@ const boundGreet = greet.bind(person);
 boundGreet(); // Hello, John
 ```
 
-### example 8
+### Example 7: Arrow Functions Ignore `call`
+
+In this example, the `arrow` function is defined inside the `greet()` method using an arrow function.
+
+Arrow functions do not have their own `this` — they inherit `this` from their enclosing lexical context.
+So even when using `call()` with a different `this` value (`{ name: "Bob" }`), the arrow function still uses
+`this.name` from the outer `greet()` context, which is `user`.
+
+Thus, the output is: `Hello, Alice`.
 
 ```js
 const user = {
@@ -174,7 +243,14 @@ const user = {
 user.greet(); // Hello, Alice
 ```
 
-### example 9
+### Example 8: Preserving `this` in Callbacks
+
+When passing a method like `user.logName` to another function (e.g. `executeCallback`), the `this` context is lost unless it is explicitly preserved.
+
+- `bind(user)` ensures that `this` always refers to `user`.
+- An arrow function `() => user.logName()` also preserves the context by calling the method directly on `user`.
+
+Both approaches ensure the correct `this` context, so the output is: `Alice`.
 
 ```js
 const user = {

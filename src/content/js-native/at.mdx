@@ -1,9 +1,11 @@
 
 ## at
 
-Takes an integer value and returns the item at that index,
-allowing for positive and negative integers. Negative integers
-count back from the last item in the array
+The [`at()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/at)
+method takes an integer and returns the item at that index — supporting both **positive and negative** integers.
+Negative values count from the end of the array, making it cleaner than using `array.length - index`.
+
+This example shows a custom implementation of `Array.prototype.at()` to mimic the native behavior.
 
 ```js
 Array.prototype.customAt = function (index) {

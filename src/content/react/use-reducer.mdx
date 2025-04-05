@@ -1,6 +1,16 @@
 
 ## useReducer
 
+The `useReducer` hook is a more advanced alternative to `useState` for managing complex state logic in React.
+It allows you to handle state transitions using a reducer function, similar to how Redux works. `useReducer`
+is especially useful when the state depends on previous state values or involves more complex state updates.
+
+In this example, `useReducer` is used to manage a collection of messages. The `messengerReducer` function defines
+the logic for adding and removing messages. The reducer receives the current state and an action, then returns the updated state based on the action type.
+
+The `useReducer` hook returns the current state and a dispatch function to trigger state updates. The state is updated
+when a button is clicked, either to add a new message or remove the last message.
+
 ```tsx
 import { useState } from "react";
 

@@ -1,9 +1,11 @@
-
 ## bind
 
-In the line `(*)` we take the method `user.sayHi` and bind it to `user`. The `sayHi` is a "bound" function,
-that can be called alone or passed to `setTimeout` - doesn't matter, the context will be right.
-Here we can see that arguments are passed "as is", only `this` is fixed by `bind`
+This example demonstrates how the `bind` method is used to fix the `this` context of a function.
+
+In JavaScript, methods like `setTimeout` lose the original object context when passing a function reference.
+Using `bind`, we can permanently associate a method with its object (`user`), ensuring `this.firstName` refers to the correct value.
+
+This is useful when passing object methods as callbacks, especially in asynchronous operations.
 
 ```js
 const user = {

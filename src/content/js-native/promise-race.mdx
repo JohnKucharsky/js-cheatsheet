@@ -1,7 +1,11 @@
 
 ## Promise.race
 
-Similar to `Promise.all`, but waits only for the first settled promise and gets its result (or error).
+The [`Promise.race()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/race)
+method returns a promise that **settles as soon as the first input promise settles** — whether it fulfills or rejects.
+This makes it useful when you're interested only in the fastest outcome, regardless of its result.
+
+This example includes a custom implementation of `Promise.race()` that resolves or rejects based on whichever promise finishes first.
 
 ```js
 Promise.customRace = function (promises) {

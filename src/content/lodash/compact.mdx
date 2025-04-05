@@ -1,8 +1,11 @@
 
 ## compact
 
-Creates an array with all falsey values removed. The values false, null, 0, "",
-undefined, and NaN are falsey
+The [`_.compact()`](https://lodash.com/docs/4.17.15#compact) function in Lodash creates an array by removing
+all falsey values from the provided array. Falsey values include `false`, `null`, `0`, `""`, `undefined`, and `NaN`.
+This is useful for cleaning up arrays and removing unwanted, invalid values.
+
+This example shows a custom implementation of Lodash's `_.compact()` function to filter out falsey values from the input array.
 
 ```js
 const compact = (inputArray) => inputArray.filter(Boolean);

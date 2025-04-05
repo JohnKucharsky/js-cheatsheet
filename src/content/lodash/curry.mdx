@@ -1,6 +1,13 @@
 
 ## curry
 
+The [`_.curry()`](https://lodash.com/docs/4.17.15#curry) function in Lodash transforms a
+function into a curried version that can be called with a series of partial arguments. Instead of
+calling the function with all arguments at once, you can call it progressively, one argument at a time.
+
+This example shows a custom implementation of currying for the `sum` function, allowing it to be invoked
+with one argument at a time or multiple arguments in a sequence.
+
 ```js
 function curry(fn) {
   return function curried(...args) {

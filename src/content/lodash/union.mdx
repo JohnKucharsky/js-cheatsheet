@@ -1,7 +1,12 @@
 
 ## union
 
-Creates an array of unique values, in order, from all given arrays
+The [`_.union()`](https://lodash.com/docs/4.17.15#union) method creates a new array of unique values by
+combining all given arrays, preserving the order of elements.
+
+This custom implementation utilizes the `Set` object to remove duplicates and `concat()` to merge all arrays before
+applying `Array.from()` to convert the set back into an array.
+
 
 ```js
 const union = (...arrays) => {

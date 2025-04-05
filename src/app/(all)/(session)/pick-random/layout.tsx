@@ -122,7 +122,7 @@ export default function Layout({ children }: { children: ReactElement }) {
         </div>
       </div>
 
-      {children}
+      {Boolean(session) && children}
 
       {Boolean(session) && (
         <div className={"flex flex-row justify-end mb-8 not-prose"}>

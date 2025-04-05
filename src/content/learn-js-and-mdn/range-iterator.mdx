@@ -1,5 +1,9 @@
 
-## range iterator
+## Range Iterator
+
+This example demonstrates how to create a custom iterator using the iterator protocol.
+The `makeRangeIterator` function generates numbers from `start` to `end` with a defined `step`, manually implementing the `next()` method.
+It’s useful for creating lazy sequences or custom iteration logic without relying on generators.
 
 ```js
 function makeRangeIterator(start = 0, end = Infinity, step = 1) {

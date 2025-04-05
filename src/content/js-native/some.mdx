@@ -1,10 +1,11 @@
 
 ## some
 
-Tests whether at least one element in the array passes the test
-implemented by the provided function. It returns true if, in the
-array, it finds an element for which the provided function returns
-`true`; otherwise it returns `false`. It doesn't modify the array
+The [`some()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/some)
+method tests whether **at least one element** in the array passes the test implemented by the provided function.
+It returns `true` if any element satisfies the condition; otherwise, it returns `false`. This method does not modify the original array.
+
+This custom implementation of `Array.prototype.some()` iterates through the array and returns `true` if any element passes the provided test.
 
 ```js
 Array.prototype.customSome = function (callback) {

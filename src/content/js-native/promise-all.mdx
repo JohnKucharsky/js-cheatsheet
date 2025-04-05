@@ -1,12 +1,13 @@
 
 ## Promise.all
 
-The Promise.all() static method takes an iterable of promises as
-input and returns a single Promise. This returned promise fulfills
-when all the input's promises fulfill (including when an empty
-iterable is passed), with an array of the fulfillment values. It
-rejects when any of the input's promises rejects, with this first
-rejection reason.
+The [`Promise.all()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/all)
+static method takes an iterable of promises and returns a single `Promise` that:
+
+- **fulfills** when all input promises have fulfilled, returning an array of results in the original order
+- **rejects** immediately if any promise rejects, with the first rejection reason
+
+This example includes a custom implementation of `Promise.all()` that resolves all promises and preserves their order, even if they complete at different times.
 
 ```js
 function myPromiseAll(promises) {

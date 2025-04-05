@@ -1,8 +1,11 @@
 
 ## shift
 
-Removes the first element from an array and returns that removed
-element. This method changes the length of the array
+The [`shift()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/shift)
+method removes the **first element** from an array and returns it,
+shifting the remaining elements down. This method mutates the array by reducing its length.
+
+This custom implementation of `Array.prototype.shift()` manually shifts the array elements and returns the removed first element.
 
 ```js
 Array.prototype.customShift = function () {

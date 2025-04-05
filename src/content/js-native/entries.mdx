@@ -1,8 +1,11 @@
 
 ## entries
 
-Returns a new array iterator object that contains the key/value pairs
-for each index in the array
+The [`entries()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/entries)
+method returns a new array iterator object containing `[index, value]` pairs for each element.
+It’s commonly used in `for...of` loops to iterate with both index and value.
+
+This example recreates `Array.prototype.entries()` using a generator to yield key/value pairs.
 
 ```js
 Array.prototype.customEntries = function () {

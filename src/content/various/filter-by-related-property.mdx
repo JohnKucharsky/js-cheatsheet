@@ -1,6 +1,15 @@
 
 ## filter by related property
 
+This utility filters a list of objects based on a **related property** found in another array — similar to a **join + filter** operation.
+
+In this example, we filter items in the `objects` array based on the `class` value of their related `object_type`, which is matched against the `object_types` array.
+
+### Highlights:
+- `groupBy()` helps group `object_types` by `class` for fast lookup.
+- `filterObjectsByClass()` efficiently filters items by matching related object type's class.
+- Uses TypeScript generics for reusability and type safety.
+
 ```ts
 const objects = [
   { id: 1, name: "Test 1", object_type: 1 },

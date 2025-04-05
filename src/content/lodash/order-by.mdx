@@ -1,6 +1,12 @@
 
 ## orderBy
 
+The [`_.orderBy()`](https://lodash.com/docs/4.17.15#orderBy) method sorts an array of objects based on
+one or more properties. You can specify the sort order for each property as either ascending (`"asc"`) or descending (`"desc"`).
+
+This custom implementation replicates the `_.orderBy()` method by accepting an array, a property to sort by, and
+an optional order parameter (`"asc"` by default). The array is first copied to avoid mutation, then sorted based on the specified property and order.
+
 ```js
 function orderBy(array, property, order = "asc") {
   const multiplier = order === "asc" ? 1 : -1;

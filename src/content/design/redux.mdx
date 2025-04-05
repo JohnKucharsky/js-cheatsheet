@@ -1,7 +1,9 @@
 
-## redux
+## Redux
 
-Redux pattern
+An implementation of the **Redux pattern** using vanilla JavaScript. This custom `Store` class manages state using a reducer and supports dispatching actions and subscribing to state changes.
+
+Redux is commonly used for predictable state management in frontend applications like React.
 
 ```js
 class Store {
@@ -17,7 +19,6 @@ class Store {
 
   dispatch(action) {
     this.state = this.reducer(this.state, action);
-
     this.listeners.forEach((listener) => listener());
   }
 

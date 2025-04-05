@@ -1,9 +1,11 @@
 
 ## Object.assign
 
-The `Object.assign()` static method copies all enumerable
-own properties from one or more source objects to a target
-object. It returns the modified target object.
+The [`Object.assign()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/assign)
+method copies all **enumerable own properties** from one or more source objects to a target object.
+It returns the **modified target**, making it useful for shallow cloning or merging multiple objects.
+
+This example also shows how `Object.assign()` behaves similarly to the spread operator (`...`) when cloning simple objects.
 
 ```js
 const obj = {

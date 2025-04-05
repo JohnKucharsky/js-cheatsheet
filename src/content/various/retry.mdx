@@ -1,5 +1,10 @@
 
-## retry
+## Retry with exponential backoff
+
+This snippet demonstrates how to implement a retry mechanism when fetching data from an API.
+It attempts to fetch the resource multiple times (up to a given `retries` limit) and waits a specified `delay` between each retry.
+If the request ultimately fails, it throws an error. This is particularly useful for handling flaky network requests
+or ensuring robustness when dealing with unstable APIs.
 
 ```js
 async function fetchWithRetry(url, retries, delay = 1000) {

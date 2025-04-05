@@ -1,6 +1,11 @@
 
 ## unshift
 
+The `unshift()` method adds one or more elements to the **beginning** of an array and returns the **new length** of the array.
+
+In this custom implementation, the method first shifts all existing elements to the right to make space for the new elements.
+Then, it inserts the new elements at the beginning of the array and returns the updated length.
+
 ```js
 Array.prototype.unshift = function (...elements) {
   const originalLength = this.length;

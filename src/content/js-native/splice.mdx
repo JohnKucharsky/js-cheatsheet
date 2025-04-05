@@ -1,8 +1,11 @@
 
 ## splice
 
-Changes the contents of an array by removing or replacing
-existing elements and/or adding new elements in place
+The [`splice()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/splice)
+method changes the contents of an array by **removing or replacing** existing elements and/or adding new elements in place.
+
+This custom implementation of `Array.prototype.splice()` handles negative indices, normalization of `deleteCount`,
+and array modification in place, while returning the removed elements.
 
 ```js
 Array.prototype.customSplice = function (

@@ -1,5 +1,9 @@
+## Memoize
 
-## memoize
+Memoization is an optimization technique that caches the result of function calls based on their input arguments.
+If the same inputs occur again, the cached result is returned instead of recalculating.
+
+This example wraps a basic function (`adder`) with a `memoize` utility using a `Map` and `JSON.stringify` to store and retrieve results by argument key.
 
 ```js
 function memoize(fn) {

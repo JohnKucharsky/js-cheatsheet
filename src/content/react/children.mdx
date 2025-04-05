@@ -1,9 +1,13 @@
 
 ## children
 
-`TestComponent` doesn't rerender on click because React reuses
-the same component instance as long as its props don't change.
-`TestComponent` was created in the `<App/>` component
+The [`children`](https://react.dev/learn/passing-props-to-a-component#passing-jsx-as-children) concept in React
+refers to any child components or elements passed into a parent component. In this example, the `TestComponent`
+is rendered by the `TestWrapper` component, but React does not rerender `TestComponent` after clicking the button
+because the props have not changed. React reuses the same component instance as long as its props remain unchanged.
+
+This custom implementation demonstrates how React optimizes rendering by not rerendering `TestComponent` unless the
+props passed to it change, despite the state change in the parent component (`TestWrapper`).
 
 ```js
 import { ReactElement, useState } from "react";

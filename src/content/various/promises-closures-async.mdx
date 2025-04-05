@@ -1,7 +1,25 @@
 
 ## promises, closures and event loop mix
 
-### example 1
+This section demonstrates how **JavaScript promises**, **closures**, and the **event loop** interact in real-world scenarios. These examples cover:
+
+- How closures preserve state across async calls
+- What happens when you `await` vs. run multiple async calls in parallel
+- The importance of capturing variables in closures before `setTimeout`
+- How the event loop schedules tasks with `setTimeout`, `Promise`, and `console.log`
+- Sequential chaining of promises with closures
+
+Perfect for understanding async behavior, state retention, and timing execution in complex JavaScript code.
+
+### Example 1: Async function with closure and delayed execution
+
+This example shows how **closures** capture state (`count`) and how **`await`** affects the execution order.
+Each call to `asyncCounter()` increments `count` and logs it immediately. However, `await` delays further code inside the async function,
+allowing subsequent calls to update `count` before the first finishes.
+
+- Multiple calls to the same async function share the same closure state.
+- `console.log("Script complete")` runs immediately because `await` yields control to the event loop.
+
 
 ```js
 function createAsyncCounter() {
@@ -34,7 +52,11 @@ console.log("Script complete");
 // Async Counter: 3
 ```
 
-### example 2
+### Example 2: Sequential async calls with `await` and closure
+
+This example demonstrates how sequential `await` calls work with closures. Each async call completes before the next one begins,
+ensuring the counter increments correctly. The `count` variable is preserved across invocations due to the closure, and each `setTimeout`
+resolves after 1 second, leading to predictable, step-by-step output.
 
 ```js
 function createAsyncCounter() {
@@ -62,7 +84,12 @@ console.log("Script complete");
 // Script complete
 ```
 
-### example 3
+### Example 3: Task scheduling with closures and async timing
+
+This example highlights how closure captures the shared `taskCount` variable, which is incremented before each scheduled task.
+All tasks reference the same `taskCount` value by the time their `setTimeout` callbacks run, resulting in each log displaying `Task Count: 3`.
+It also demonstrates how microtasks (like `Promise.resolve().then`) run before timers and the event loop order between synchronous code, promises, and `setTimeout`.
+
 
 ```js
 function createTaskScheduler() {
@@ -95,7 +122,11 @@ console.log("Tasks scheduled");
 // Task Count: 3
 ```
 
-### example 4
+### Example 4: Scheduling tasks with preserved state using closures
+
+In this version, the closure captures the `taskCount` value in a separate variable `savedCount` before scheduling the `setTimeout`.
+This ensures that each task logs the correct value at the time it was created, rather than referencing the final shared `taskCount`.
+The result is that each `setTimeout` logs a different value in increasing order, showcasing how to avoid timing issues by saving state early.
 
 ```js
 function createTaskScheduler() {
@@ -127,7 +158,11 @@ console.log("Tasks scheduled");
 // Task Count: 3
 ```
 
-### example 5
+### Example 5: Preserving async state with closure in chained promises
+
+This example demonstrates how closures can maintain and update state (`count`) across multiple asynchronous calls.
+Because the promise is chained (`then -> then`), each `counter()` call executes sequentially, allowing `count` to increment between calls.
+The use of `setTimeout` inside the promise simulates asynchronous work, and the closure ensures the `count` value is correctly preserved across executions.
 
 ```js
 function createCounter() {
@@ -164,7 +199,11 @@ console.log("Script in progress");
 // Counter 2: 2
 ```
 
-### example 6
+### Example 6: Asynchronous multiplier using closure and chained promises
+
+This example showcases how closures can maintain internal state (`factor = 2`) in an asynchronous function.
+The `multiplyByTwo` function, returned by `createAsyncMultiplier`, remembers the `factor` across multiple chained `.then()` calls.
+Each multiplication is delayed with `setTimeout`, and the result of one multiplication is passed to the next, demonstrating sequential asynchronous logic with shared state.
 
 ```js
 function createAsyncMultiplier() {

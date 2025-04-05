@@ -1,15 +1,12 @@
 
 ## Map.groupBy
 
-The `Map.groupBy()` static method groups the elements of a given
-iterable using the values returned by a provided callback function.
-The final returned Map uses the unique values from the test function
-as keys, which can be used to get the array of elements in each group.
+The [`Map.groupBy()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Map/groupBy)
+static method groups elements from an iterable based on the return value of a callback function.
+It returns a new `Map` where each key is the grouping criterion and each value is an array of items in that group.
 
-The method is primarily useful when grouping elements that are associated
-with an object, and in particular when that object might change over time.
-If the object is invariant, you might instead represent it using a string,
-and group elements with `Object.groupBy()`.
+This example provides a polyfill-style custom implementation of `Map.groupBy()` and demonstrates grouping numbers,
+objects by property, and even using objects as keys for advanced use cases.
 
 ```js
 // Map.groupBy isn't available yet

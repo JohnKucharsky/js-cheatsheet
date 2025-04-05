@@ -1,9 +1,13 @@
 
 ## partition
 
-Creates an array of elements split into two groups, the first of which contains
-elements predicate returns truthy for, the second of which contains elements
-predicate returns falsey for. The predicate is invoked with one argument: (value)
+The [`_.partition()`](https://lodash.com/docs/4.17.15#partition) method splits an array into two groups
+based on a predicate function. The first group contains elements for which the predicate returns truthy,
+and the second group contains elements for which the predicate returns falsey. The predicate function is
+invoked with one argument: the value of the element.
+
+This custom implementation mimics the `_.partition()` method by using the `reduce()` function to iterate over
+the array and push elements into two arrays based on the result of the predicate.
 
 ```js
 function partition(array, predicate) {

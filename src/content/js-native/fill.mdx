@@ -1,8 +1,11 @@
 
 ## fill
 
-Changes all elements within a range of indices in an array to a static value.
-It returns the modified array
+The [`fill()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/fill)
+method changes all elements in an array between the specified `start` and `end` indices to a **static value**, in place.
+It returns the **modified array** and is useful for quickly initializing or resetting arrays.
+
+This example includes a custom implementation of `Array.prototype.fill()` with support for negative indices.
 
 ```js
 Array.prototype.customFill = function (value, start = 0, end = this.length) {

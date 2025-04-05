@@ -1,8 +1,11 @@
 
 ## toSorted
 
-The copying version of the `sort()` method. It returns a
-new array with the elements sorted in ascending order.
+The [`toSorted()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/toSorted)
+method is a copying version of the `sort()` method. It **returns a new array** with the elements sorted in ascending order.
+
+This custom implementation mimics the behavior of `toSorted()` by creating a shallow copy of the original array and performing
+a sort operation on it without modifying the original array.
 
 ```js
 Array.prototype.customSort = function (compareFn) {

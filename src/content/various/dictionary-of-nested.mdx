@@ -1,6 +1,21 @@
 
 ## dictionary of nested arrays
 
+This example demonstrates how to transform a deeply nested array structure (e.g., categories → subcategories → items)
+into a dictionary (object-based) format for **fast lookup** by `id`.
+
+### Benefits:
+- Constant-time access to categories, subcategories, and items by their `id`.
+- Improves performance for large datasets with frequent lookups.
+- Easy to traverse and mutate without relying on nested `find()` calls.
+
+### Approaches Covered:
+- **Plain JS implementation** using nested loops to assign items into objects keyed by `id`.
+- **Recursive `mapToDictionary` utility** that supports arbitrary nesting levels via a `keys` argument.
+- **TypeScript** version with strict typing and reusable helper functions for building deeply nested dictionaries.
+
+Great for building normalized state for UIs, lookup tables, or improving nested data traversal.
+
 ```js
 const data = [
   {

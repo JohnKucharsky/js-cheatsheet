@@ -1,9 +1,9 @@
 
 ## find
 
-Returns the first element in the provided array that satisfies the
-provided testing function. If no values satisfy the testing function,
-undefined is returned
+The [`find()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/find) method returns
+the **first element** in the array that satisfies the provided testing function.
+If no match is found, it returns `undefined`. Ideal for retrieving an item based on a condition without iterating the entire array manually.
 
 ```js
 Array.prototype.customFind = function (callback) {
@@ -31,11 +31,11 @@ const result1 = inventory.customFind(({ name }) => name === "nothing");
 console.log(result1); // undefined
 ```
 
-## findIndex
+### findIndex
 
-Returns the index of the first element in an array that satisfies
-the provided testing function. If no elements satisfy the testing function,
--1 is returned
+The [`findIndex()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findIndex)
+method returns the **index** of the first element that passes the provided test function.
+If no element matches, it returns `-1`. Useful for locating the position of an item instead of the item itself.
 
 ```js
 Array.prototype.customFindIndex = function (callback) {
@@ -65,11 +65,11 @@ const result1 = inventory.customFindIndex(({ name }) => name === "nothing");
 console.log(result1); // -1
 ```
 
-## findLast
+### findLast
 
-Iterates the array in reverse order and returns the value of the first element that
-satisfies the provided testing function. If no elements satisfy the testing function,
-undefined is returned
+The [`findLast()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/findLast) method
+iterates the array **in reverse** and returns the **first value** that satisfies the given condition.
+If no element matches, `undefined` is returned. Useful when you want the **last matching item** in an array without reversing it manually.
 
 ```js
 Array.prototype.customFindLast = function (callback) {

@@ -1,6 +1,13 @@
 
 ## intersection
 
+The [`_.intersection()`](https://lodash.com/docs/4.17.15#intersection) method
+computes the intersection of two or more arrays. It returns a new array containing the
+elements that are present in all provided arrays.
+
+This custom implementation compares two arrays by converting them to `Set` objects for
+efficient lookup and finding the common elements between them.
+
 ```js
 const intersection = function (nums1, nums2) {
   const set1 = new Set(nums1);

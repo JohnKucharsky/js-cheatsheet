@@ -1,10 +1,15 @@
 
-## has path
+## Has Path (Graph Traversal)
+
+Determines whether a path exists between two nodes in a directed graph.
+Includes both **Depth-First Search (DFS)** and **Breadth-First Search (BFS)** implementations.
+
+The graph is represented as an **adjacency list**.
 
 ```ts
 type Graph = Record<string, string[]>;
 
-// depth first
+// Depth-First Search
 const hasPath = (
   graph: Graph,
   src: string,
@@ -21,27 +26,29 @@ const hasPath = (
   return false;
 };
 
-// breadth first
-// const hasPath = (
-//   graph: Graph,
-//   src: string,
-//   dst: string,
-// ): boolean => {
-//   const queue: string[] = [src];
-//
-//   while (queue.length) {
-//     const current = queue.shift();
-//     if (current === dst) return true;
-//     console.log(queue, current);
-//     if (current && graph[current]) {
-//       for (const neighbor of graph[current]) {
-//         queue.push(neighbor);
-//       }
-//     }
-//   }
-//
-//   return false;
-// };
+// Breadth-First Search (uncomment to use)
+/*
+const hasPath = (
+  graph: Graph,
+  src: string,
+  dst: string,
+): boolean => {
+  const queue: string[] = [src];
+
+  while (queue.length) {
+    const current = queue.shift();
+    if (current === dst) return true;
+
+    if (current && graph[current]) {
+      for (const neighbor of graph[current]) {
+        queue.push(neighbor);
+      }
+    }
+  }
+
+  return false;
+};
+*/
 
 const adjacentList = {
   f: ["g", "i"],

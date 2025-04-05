@@ -1,10 +1,11 @@
 
-## reducer
+## Reducer pattern with actions
 
-The function you pass to `reduce` is known as a “reducer”. It takes the result
-so far and the current item, then it returns the next result. React reducers are
-an example of the same idea: they take the state so far and the action, and return
-the next state. In this way, they accumulate actions over time into state
+This example demonstrates the use of a reducer function similar to the pattern used in React’s `useReducer`.
+The reducer function handles different types of actions (`added`, `changed`, `deleted`) to manage a list of tasks.
+It accumulates state changes over time as actions are applied via
+[`Array.prototype.reduce`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reduce),
+making it a powerful pattern for predictable state updates in complex logic flows.
 
 ```js
 function tasksReducer(tasks, action) {

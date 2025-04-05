@@ -1,10 +1,13 @@
 
 ## usePrevious
 
-`useEffect` runs after the component has been rendered to the DOM,
-which is why `usePrevious` returns before the `useEffect` fires.
-The value of the ref is updated after the hook has already returned,
-which causes the returned value to lag behind the current value
+The `usePrevious` custom hook allows you to track the previous value of a state variable in React.
+This hook leverages the `useRef` hook to store the previous value of a given state, and `useEffect`
+to update the ref value after the component has rendered. This approach makes it possible to access the
+value before the current one, which is useful for cases where you need to compare the previous and current values of a variable.
+
+In this example, the `usePrevious` hook tracks the previous count state value. The value of the `ref` is
+updated inside the `useEffect`, which runs after the component has rendered. The previous value is stored in the ref and is returned by the hook.
 
 ```tsx
 import { useState, useEffect, useRef } from "react";

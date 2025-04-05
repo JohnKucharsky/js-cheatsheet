@@ -1,10 +1,11 @@
 
 ## reverse
 
-Reverses an array in place and returns the reference to the same array,
-the first array element now becoming the last, and the last array element
-becoming the first. In other words, elements order in the array will be
-turned towards the direction opposite to that previously stated
+The [`reverse()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/reverse)
+method reverses an array **in place** and returns the **modified array**.
+The first element becomes the last, and the last becomes the first, effectively reversing the array's order.
+
+This custom implementation of `Array.prototype.reverse()` reverses the array elements by swapping them in place.
 
 ```js
 Array.prototype.customReverse = function () {

@@ -1,6 +1,11 @@
 
 ## omit
 
+The [`_.omit()`](https://lodash.com/docs/4.17.15#omit) method creates a shallow copy of an object without the
+specified properties. The properties to omit can be provided as a single key or an array of keys.
+
+This custom implementation removes the given properties from the object by first creating a copy and then deleting the specified keys.
+
 ```js
 function omit(obj, keys) {
   const result = { ...obj };

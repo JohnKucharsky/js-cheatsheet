@@ -1,6 +1,13 @@
 
 ## difference
 
+The [`_.difference()`](https://lodash.com/docs/4.17.15#difference) method returns the elements from
+the first array that are not present in any of the other arrays provided. It computes the difference
+by using the `Set` data structure for efficient lookups.
+
+This custom implementation compares two arrays and finds the elements unique to each array, returning the
+differences in two parts: one for elements in `arr1` but not in `arr2`, and one for elements in `arr2` but not in `arr1`.
+
 ```js
 const findDifference = function (arr1, arr2) {
   const set1 = new Set(arr1);
@@ -28,7 +35,12 @@ console.log(result); // [ [ 1 ], [] ]
 
 ## differenceBy
 
-Same as difference but with objects, key required
+The [`_.differenceBy()`](https://lodash.com/docs/4.17.15#differenceBy) method works like `difference()`,
+but allows you to compare elements by a specific property or transformation function. You pass a key or
+iteratee to compare the objects by their properties.
+
+In this custom implementation, we compare objects in `arr1` and `arr2` by a key (`x`), and return the
+differences based on that key.
 
 ```js
 const differenceBy = (arr1, arr2, key) => {

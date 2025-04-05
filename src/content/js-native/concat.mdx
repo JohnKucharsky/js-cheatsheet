@@ -1,8 +1,10 @@
 
 ## concat
 
-Merge two or more arrays. This method does not change the
-existing arrays, but instead returns a new array
+The [`concat()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/concat) method
+merges two or more arrays and returns a **new array** without modifying the original.
+It also handles non-array values by appending them as-is. This custom implementation replicates native behavior by
+flattening one level of array input while preserving nested structures.
 
 ```js
 Array.prototype.myConcat = function (...arrays) {

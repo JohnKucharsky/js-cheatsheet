@@ -1,11 +1,11 @@
 import path from "path";
 import { readFile } from "node:fs/promises";
 import fs from "fs";
-import { EditorData } from "@/code-playground/types";
+import { EditorData } from "@/javascript-challenges/types";
 
 const dirPath = path.join(process.cwd(), "./src/content-editor");
 
-export async function getCodePlaygroundData(): Promise<EditorData[]> {
+export async function javascriptChallengesData(): Promise<EditorData[]> {
   const files = fs.readdirSync(dirPath);
   const result: EditorData[] = [];
 

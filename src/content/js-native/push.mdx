@@ -1,8 +1,11 @@
 
 ## push
 
-Adds the specified elements to the end of an array and returns
-the new length of the array.
+The [`push()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/push)
+method adds one or more elements to the **end of an array** and returns the **new length** of the array.
+It's a common and efficient way to grow an array in-place.
+
+This example demonstrates a custom implementation of `Array.prototype.push()` that handles multiple arguments and mimics native behavior.
 
 ```js
 Array.prototype.customPush = function () {

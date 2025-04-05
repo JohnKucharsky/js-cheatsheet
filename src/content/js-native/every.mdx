@@ -1,8 +1,11 @@
 
 ## every
 
-Tests whether all elements in the array pass the test implemented by the provided function.
-It returns a boolean value
+The [`every()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/every)
+method tests whether **all elements** in an array pass the test implemented by the provided callback.
+It returns a **boolean** — `true` if all elements satisfy the condition, and `false` otherwise.
+
+This example includes a custom implementation of `Array.prototype.every()` and shows how it can be used for subset checks.
 
 ```js
 Array.prototype.customEvery = function (callback) {

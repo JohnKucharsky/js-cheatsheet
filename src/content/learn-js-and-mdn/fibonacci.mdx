@@ -1,10 +1,14 @@
 
-## fibonacci
+## Fibonacci
 
-The sequence of [Fibonacci numbers](https://en.wikipedia.org/wiki/Fibonacci_number) has
-the formula <code>F<sub>n</sub> = F<sub>n-1</sub> + F<sub>n-2</sub></code>. In other words,
-the next number is a sum of the two preceding ones.
-First two numbers are `1`, then `2(1+1)`, then `3(1+2)`, `5(2+3)` and so on: `1, 1, 2, 3, 5, 8, 13, 21...`
+The [Fibonacci sequence](https://en.wikipedia.org/wiki/Fibonacci_number) is a series where each number is the sum of the two preceding ones:
+**`1, 1, 2, 3, 5, 8, 13, 21, ...`**
+
+This example shows two ways to calculate the `n`-th Fibonacci number:
+
+### 🔁 Iterative Approach
+
+Efficient and suitable for large values of `n` (like 77). Uses a loop and keeps track of the last two values.
 
 ```js
 function fib(n) {
@@ -22,6 +26,10 @@ console.log(fib(3)); // 2
 console.log(fib(7)); // 13
 console.log(fib(77)); // 5527939700884757
 ```
+
+### 🔁 Recursive Approach
+Elegant but inefficient for large `n` due to repeated calculations (exponential time complexity). Best for learning recursion.
+
 
 ```js
 function fib(n) {

@@ -1,7 +1,11 @@
 
-## promise chaining
+## Promise Chaining
 
 [promise-chaining](https://javascript.info/promise-chaining)
+
+This example demonstrates how to chain Promises to perform sequential asynchronous operations.
+Each `.then()` receives the result of the previous one, allowing for clean, readable logic
+with predictable timing — in this case, doubling a number step by step with 1-second delays.
 
 ```js
 new Promise(function (resolve, reject) {

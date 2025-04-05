@@ -1,5 +1,9 @@
 
-## proxy
+## Proxy
+
+This example uses a `Proxy` to intercept property access on an object.
+When a key is found in the `dictionary`, the translation is returned; otherwise, the original key is returned as a fallback.
+Proxies are powerful for defining custom behavior for fundamental operations like `get`, `set`, and more.
 
 ```js
 let dictionary = {

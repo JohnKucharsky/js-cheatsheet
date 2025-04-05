@@ -1,10 +1,13 @@
 
 ## Promise.any
 
-Similar to `Promise.race`, but waits only for the first fulfilled promise and gets its result.
-If all the given promises are rejected, then the returned promise is rejected with
-[`AggregateError`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AggregateError) - a
-special error object that stores all promise errors in its `errors` property.
+The [`Promise.any()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Promise/any)
+method returns a promise that **fulfills as soon as any of the input promises is fulfilled**.
+If **all** promises reject, it rejects with an [`AggregateError`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/AggregateError)
+containing all rejection reasons.
+
+This example demonstrates a custom implementation of `Promise.any()` that resolves with the first successful result or throws an aggregate error if none succeed.
+
 
 ```js
 Promise.customAny = function (promises) {

@@ -1,6 +1,13 @@
 
 ## keyBy
 
+The [`_.keyBy()`](https://lodash.com/docs/4.17.15#keyBy) method creates an object composed of
+keys generated from the results of running each element in the collection through an iteratee
+function. The iteratee can be a function or property name.
+
+This custom implementation maps each item in the collection to a key determined by the provided iteratee,
+and then assigns the item to that key in the result object.
+
 ```js
 function keyBy(collection, iteratee) {
   const result = {};

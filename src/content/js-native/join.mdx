@@ -1,9 +1,11 @@
 
 ## join
 
-Creates and returns a new string by concatenating all the elements in this array,
-separated by commas or a specified separator string. If the array has only
-one item, then that item will be returned without using the separator
+The [`join()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/join)
+method creates and returns a **string** by concatenating all elements of an array, separated by a specified string (default is a comma).
+If the array has only one item, that item is returned as-is. It’s useful for formatting output or combining array values into CSV-like strings.
+
+This example includes a custom implementation of `Array.prototype.join()` that replicates the native behavior.
 
 ```js
 Array.prototype.customJoin = function (separator = ",") {

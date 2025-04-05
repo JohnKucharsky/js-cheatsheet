@@ -1,6 +1,23 @@
 
 ## group list by quarters
 
+Groups monthly financial data by calendar quarters using the [`getQuarter()`](https://date-fns.org/docs/getQuarter) method from
+the [`date-fns`](https://date-fns.org/) library. Each group includes individual monthly entries and an optional cumulative total for the quarter.
+
+Useful for:
+- Visualizing quarterly reports
+- Aggregating financial or performance data
+- Preparing charting datasets or grouped UI views
+
+### Steps:
+1. `groupDataByQuarter(data)` – Organizes data into a dictionary using keys like `"2023-Q1"` based on the `date` field.
+2. `initializeDates(groupedQuarters)` – Prepares a simplified structure listing quarters and associated month strings.
+3. `initializeRestData(groupedQuarters)` – Flattens the quarterly structure into tax-specific groups, returning an array of metrics (`profit`, `profit_percent`) with their per-quarter values and totals.
+
+This modular approach is helpful when formatting data for analytics dashboards or quarterly reports.
+
+
+
 ```js
 import { getQuarter, parseISO } from "date-fns";
 

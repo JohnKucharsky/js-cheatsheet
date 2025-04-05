@@ -1,12 +1,11 @@
 
 ## flatMap
 
-The `flatMap()` method of Array instances returns a new array
-formed by applying a given callback function to each element
-of the array, and then flattening the result by one level.
-It is identical to a `map()` followed by a `flat()` of depth 1
-`arr.map(...args).flat()`, but slightly more efficient than
-calling those two methods separately.
+The [`flatMap()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/flatMap)
+method first maps each element using a given callback function, then **flattens the result by one level**.
+It behaves like `array.map(...).flat()`, but is more efficient and expressive for nested transformations.
+
+This example demonstrates both native usage and a custom implementation of `Array.prototype.flatMap()` using a real-world data structure.
 
 ```js
 Array.prototype.customFlatMap = function (callback, thisArg) {

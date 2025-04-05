@@ -1,8 +1,11 @@
 
 ## indexOf
 
-Returns the first index at which a given element can be found in the array,
-or -1 if it is not present
+The [`indexOf()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Array/indexOf)
+method returns the **first index** at which a given element can be found in the array, or `-1` if it is not present.
+It uses **strict equality (`===`)** for comparison and supports an optional `fromIndex` to control the search starting point.
+
+This custom implementation of `Array.prototype.indexOf()` also handles negative indexing by adjusting the start position.
 
 ```js
 Array.prototype.customIndexOf = function (searchElement, fromIndex = 0) {

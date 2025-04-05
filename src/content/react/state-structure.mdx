@@ -1,5 +1,17 @@
 
-## normalized state
+## Normalized State
+
+The concept of **normalized state** is commonly used in managing complex data structures, such as nested objects or arrays,
+in a way that makes it easier to update and manage state in applications. This approach involves flattening the structure into
+a more accessible format, often using an object with unique IDs as keys, and maintaining relationships between the entities via arrays of IDs (as seen in `childIds`).
+
+In this example, the `TravelPlanComponent` component simulates a travel planning system where each location (node) has a
+title and a set of child locations (nested nodes). The `normalized state` design keeps all the locations in a flat object,
+and relationships between locations are managed using the `childIds` array.
+
+The `removeNodeAndChildren` function recursively removes a node and its children from the state, and `handleComplete` ensures
+that a child node is removed from its parent node’s `childIds`. This architecture makes it easier to update and delete nodes
+or manage complex state in React applications, especially with deep nested structures.
 
 ```typescript jsx
 import { useState } from "react";

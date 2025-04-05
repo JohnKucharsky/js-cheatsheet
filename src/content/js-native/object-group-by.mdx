@@ -1,10 +1,11 @@
 
 ## Object.groupBy
 
-Groups the elements of a given iterable according to the
-string values returned by a provided callback function. The
-returned object has separate properties for each group,
-containing arrays with the elements in the group.
+The [`Object.groupBy()`](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Object/groupBy)
+static method groups elements of an iterable based on the **string key** returned by a callback function.
+It returns a plain object with keys representing group names and values as arrays of grouped items.
+
+This example shows a manual implementation using `Array.prototype.reduce()` to group inventory items by their `type` field.
 
 ```js
 const groupBy = (arr, callback) => {

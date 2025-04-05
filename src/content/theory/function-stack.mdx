@@ -1,5 +1,15 @@
 
-## function stack
+## Function Stack
+
+The **call stack** is a critical concept in JavaScript that keeps track of function calls. When a function is called,
+it is "pushed" onto the stack. Once the function finishes execution, it is "popped" off the stack. This stack-based approach
+is essential for understanding recursion and function execution order in JavaScript.
+
+In the **forward phase**, the function calls accumulate as the recursion continues, with each new function invocation pushing
+itself onto the stack. In the **backward phase**, as functions start to return, they unwind and are popped from the stack, completing their execution.
+
+This behavior is demonstrated in the following example, where `foo` is called recursively until it hits the base case,
+then the stack is unwound as each function completes.
 
 ### Forward Phase (Pushing):
 1. Call `foo(2)` -> Stack: `[foo(2)]`.

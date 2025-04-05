@@ -1,11 +1,15 @@
+## Async Generators
 
-## async generators
+This example demonstrates how to use an `async function*` (asynchronous generator) to yield values over time with a delay.
+The `generateSequence` function yields numbers from `start` to `end`, waiting one second between each using `await`.
+
+The `for await...of` loop is used to consume the generator asynchronously, making it perfect for streaming data,
+timers, or controlled iteration over async events.
 
 ```js
 async function* generateSequence(start, end) {
   for (let i = start; i <= end; i++) {
     await new Promise((resolve) => setTimeout(resolve, 1000));
-
     yield i;
   }
 }

@@ -1,5 +1,9 @@
 
-## undirected path
+## Undirected Path
+
+Checks if a path exists between two nodes in an **undirected graph**, using **DFS** with a `visited` set to avoid cycles.
+
+The graph is built from an `edges` list using an **adjacency list** structure.
 
 ```ts
 const undirectedPath = (
@@ -29,7 +33,7 @@ const hasPath = (
   src: string,
   dst: string,
   visited: Set<string>,
-) => {
+): boolean => {
   if (src === dst) return true;
   if (visited.has(src)) return false;
   visited.add(src);
