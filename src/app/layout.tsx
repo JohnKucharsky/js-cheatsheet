@@ -43,6 +43,9 @@ export const metadata: Metadata = {
     description:
       "Hands-on JS/TS reference with runnable examples and real-world patterns. Perfect for developers who learn by doing.",
   },
+  alternates: {
+    canonical: "https://js-cheatsheet-v1.vercel.app/",
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
