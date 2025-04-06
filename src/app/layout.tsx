@@ -47,6 +47,9 @@ export const metadata: Metadata = {
   alternates: {
     canonical: "https://js-cheatsheet-v1.vercel.app/",
   },
+  verification: {
+    google: "37ZlqSpXYZR62lAsbAt1LXa4CM9Q_-dOjTHankiqE9w",
+  },
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
