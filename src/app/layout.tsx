@@ -28,6 +28,7 @@ export const metadata: Metadata = {
     "learn TypeScript",
     "React",
     "system design",
+    "kucharsky js-cheatsheet",
   ],
   openGraph: {
     title: "JavaScript & TypeScript Cheatsheets – Learn by Example",
